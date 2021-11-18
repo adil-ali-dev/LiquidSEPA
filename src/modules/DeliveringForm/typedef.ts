@@ -84,16 +84,15 @@ export type FormProps = {
   iban: Iban;
   ibanVerified: null | boolean;
   address: Address;
-  accountSelectRef: RefObject<HTMLDivElement>;
+  textAreaRef: RefObject<HTMLTextAreaElement>;
   deliver: Product;
   receive: Product;
-  selectOpened: boolean;
+  isLoggedIn: boolean;
   handleSwapClick: () => void;
   handleDeliverChange: (event: ChangeEvent<HTMLInputElement>) => void;
   handleInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
   handleContinueClick: (event: FormEvent<HTMLFormElement>) => void;
-  handleSelectPress: (v: boolean) => void;
-  handleAddPress: (type: 'account' | 'address') => void;
+  handleEnterTextAreaPress: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
 };
 
 export type FormGroupProps = {
@@ -110,16 +109,13 @@ export type FormInputProps = {
   label: string;
   value: string;
   error?: boolean;
-  reference?: RefObject<HTMLDivElement>;
+  reference?: RefObject<HTMLTextAreaElement>;
   autoFocus?: boolean;
   verified?: null | boolean;
   rowsMax?: number;
   withExtraProps?: boolean;
-  account?: { name: string, id: string };
-  selectOpened: boolean;
-  handleAddPress: (type: 'account' | 'address') => void;
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  handleSelectPress: (v: boolean) => void;
+  handleEnterTextAreaPress?: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
 };
 
 export type RequisitesHeaderProps = {
@@ -156,9 +152,4 @@ export type Props = {
   next: boolean;
   widgetRef: RefObject<HTMLDivElement>;
   children: ReactNode;
-};
-
-export type AddPaymentMeanProps = {
-  show: boolean;
-  handleClose: () => void;
 };

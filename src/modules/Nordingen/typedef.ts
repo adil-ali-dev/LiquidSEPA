@@ -1,4 +1,5 @@
-import { ChangeEvent, FormEvent, KeyboardEvent, ReactNode, ReactNodeArray, RefObject } from 'react';
+import React, { ChangeEvent, FormEvent, ReactNode, ReactNodeArray } from 'react';
+import { Autocomplete } from '../../components/Autocomplete';
 import { Bank } from '../../graphql/Nordigen/typedef';
 
 export type Props = {
@@ -46,18 +47,4 @@ export type ModalFormProps = ModalHeaderProps & ModalFooterProps & {
 export type CreatedAccount = {
   iban: string;
   name: string;
-};
-
-export type FormInputProps = {
-  background?: boolean;
-  label: string;
-  value: string;
-  error?: boolean;
-  reference?: RefObject<HTMLTextAreaElement>;
-  autoFocus?: boolean;
-  verified?: null | boolean;
-  rowsMax?: number;
-  withExtraProps?: boolean;
-  handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  handleEnterTextAreaPress?: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
 };

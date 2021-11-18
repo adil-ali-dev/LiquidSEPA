@@ -24,3 +24,9 @@ export type LogInData = {
     sessionKey: string;
   }
 };
+
+export type AuthEidSignupData = {
+  authEidSignup: {
+    requestId: string;
+  }
+};

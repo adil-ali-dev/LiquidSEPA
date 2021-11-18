@@ -1,4 +1,4 @@
-# DigitalEights
+# LiquidSEPA
 
 ## Packages installation
 

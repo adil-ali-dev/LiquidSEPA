@@ -1,5 +1,6 @@
 import React, { ChangeEvent, ComponentType, FormEvent, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState, MouseEvent } from 'react';
 import { isMobile } from 'react-device-detect';
+import { Grid, Typography } from '@material-ui/core';
 
 import { ProductType, BLOCKSTREAM_ASSET_ID, SIDESWAP_PREFIX, REFUND_ADDRESS } from '../../constants';
 import { Address, Iban, Props, PaymentDetails, NameOnAccount, Product, ConfirmationDetails } from './typedef';
@@ -17,7 +18,6 @@ import { RequisitesHeader } from './components/requisites-header';
 import { RequisitesMain } from './components/requisites-main';
 import { RequisitesFooter } from './components/requisites-footer';
 import { Payment } from './components/payment';
-import { AddPaymentMean } from './components/add-payment-mean';
 
 const MAX_CONFS = 2;
 const WIDGET_MARGIN_TOP = 72;
@@ -59,7 +59,7 @@ const getInputData = (value: number, fixed: number) => {
 };
 
 export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () => {
-  const accountSelectRef = useRef<HTMLDivElement>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const widgetRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -73,7 +73,6 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const [confirmationDetails, setConfirmationDetails] = useState<null | ConfirmationDetails>(null);
 
   const [payment, setPayment] = useState<null | PaymentDetails>(null);
-  const [selectOpened, setSelectOpened] = useState(false);
 
   const { next, setNext } = useDeliveringFormStatusContext();
   const { setNordigenIban, modalControls, iban: nordigenIban } = useNordigenContext();
@@ -85,6 +84,8 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const feeEstimation = useFeeEstimation();
   const rfqStatus = useRfqStatus();
   const txStatus = useTxStatus();
+
+  const isLoggedIn = false; // PLACEHOLDER
 
   const sellSide = useMemo(() => {
     return deliver.product === ProductType.EURX;
@@ -130,8 +131,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
 
   useEffect(() => {
     setReceive(prevReceive => ({
-      ...prevReceive, ...getInputData(feeEstimation.data.receive, sellSide ? 2 : 8)
-    }
+      ...prevReceive, ...getInputData(feeEstimation.data.receive, sellSide ? 2 : 8) }
     ));
   }, [feeEstimation.data.receive]);
 
@@ -256,7 +256,12 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     setDeliver({ ...deliver, amount, placeholder, error: minError || maxError || null });
   }, [deliver]);
 
-  const handleSelectPress = (v: boolean) => setSelectOpened(v);
+  const handleEnterTextAreaPress = useCallback((event: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Enter' && formRef?.current) {
+      formRef.current.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+      event.preventDefault();
+    }
+  }, []);
 
   const handleContinueClick = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -319,10 +324,6 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     });
   }, []);
 
-  const handleAddPress = (type: 'account' | 'address') => {
-    modalControls.open(type);
-  };
-
   return (
     <Component next={ next } widgetRef={ widgetRef }>
       {
@@ -366,18 +367,16 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
             address={ address }
             deliver={ deliver }
             receive={ receive }
-            selectOpened={ selectOpened }
-            accountSelectRef={ accountSelectRef }
+            textAreaRef={ textAreaRef }
+            isLoggedIn={ isLoggedIn }
             handleSwapClick={ handleSwapClick }
             handleDeliverChange={ handleDeliverChange }
             handleInputChange={ sellSide ? handleIbanChange : handleAddressChange }
             handleContinueClick={ handleContinueClick }
-            handleSelectPress={ handleSelectPress }
-            handleAddPress={ handleAddPress }
+            handleEnterTextAreaPress={ handleEnterTextAreaPress }
           />
         )
       }
-      <AddPaymentMean show={ false } handleClose={ () => {} }/>
     </Component>
   );
 };

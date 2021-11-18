@@ -28,3 +28,11 @@ export const LOG_IN = gql`
     }
   }
 `;
+
+export const AUTH_EID_SIGNUP = gql`
+  mutation PegXMutations {
+    authEidSignup {
+      requestId
+    }
+  }
+`;

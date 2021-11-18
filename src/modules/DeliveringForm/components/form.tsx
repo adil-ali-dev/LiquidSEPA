@@ -1,7 +1,6 @@
 import React, { FC, memo } from 'react';
-import { Button, Grid, Typography, CircularProgress, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
+import { Button, Grid, Typography, CircularProgress } from '@material-ui/core';
 import { isMobile } from 'react-device-detect';
-import clsx from 'clsx';
 
 import { FormProps } from '../typedef';
 import { useStyles } from '../style';
@@ -20,15 +19,13 @@ export const Form = memo<FormProps>(({
   receive,
   iban,
   ibanVerified,
-  accountSelectRef,
+  textAreaRef,
   address,
-  selectOpened,
   handleSwapClick,
   handleDeliverChange,
   handleInputChange,
   handleContinueClick,
-  handleSelectPress,
-  handleAddPress
+  handleEnterTextAreaPress
 }) => {
   const classes = useStyles();
 
@@ -61,9 +58,6 @@ export const Form = memo<FormProps>(({
           product={ receive }
           handleSwapClick={ handleSwapClick }
         />
-
-        <Grid className={ classes.separator }/>
-
         {
           sellSide ? (
             <FormInput
@@ -71,29 +65,24 @@ export const Form = memo<FormProps>(({
               value={ iban.value }
               error={ iban.value.length >= 14 && !!iban.error }
               verified={ !!iban.value.length && !iban.error && ibanVerified }
-              selectOpened={ selectOpened }
               withExtraProps
               autoFocus={ !isMobile && !!deliver.amount }
               handleChange={ handleInputChange }
-              handleSelectPress={ handleSelectPress }
-              handleAddPress={ handleAddPress }
+              handleEnterTextAreaPress={ handleEnterTextAreaPress }
             />
           ) : (
             <FormInput
               label="Your receiving Liquid address"
               value={ address.value }
               error={ !!address.value && !!address.error }
-              selectOpened={ selectOpened }
               withExtraProps
-              reference={ accountSelectRef }
+              reference={ textAreaRef }
               autoFocus={ !isMobile && !!deliver.amount }
               handleChange={ handleInputChange }
-              handleSelectPress={ handleSelectPress }
-              handleAddPress={ handleAddPress }
+              handleEnterTextAreaPress={ handleEnterTextAreaPress }
             />
           )
         }
-
         <Grid className={ classes.formErrorContainer }>
           <Typography className={ classes.formErrorText }>
             {

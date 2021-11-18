@@ -63,9 +63,8 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
   },
 
   modalInfoBank: {
-    width: 429,
     marginTop: 32,
-    height: 76
+    height: 101
   },
 
   modalInfoOption: {
@@ -177,108 +176,5 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
     [breakpoints.down('md')]: {
       padding: '40px 20px 26px'
     }
-  },
-
-  formGroup: {
-    padding: '14px',
-    border: '1px solid #41748F',
-    borderRadius: '12px',
-    backgroundColor: '#002C44',
-    marginTop: 32,
-
-    '&:focus-within': {
-      borderColor: palette.primary.main,
-      backgroundColor: '#012438'
-    }
-  },
-
-  formGroupPlate: {
-    backgroundColor: '#004765 !important',
-    border: '1px solid #004765 !important',
-    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between'
-  },
-
-  formGroupFixedHeight: {
-    height: '80px'
-  },
-
-  formGroupError: {
-    borderColor: `${ palette.error.main } !important`
-  },
-
-  formGroupSpace: {
-    marginTop: '32px'
-  },
-
-  formGroupLong: {
-    minHeight: '180px',
-    cursor: 'default'
-  },
-
-  formGroupMedium: {
-    marginTop: 12,
-    minHeight: '125px',
-    cursor: 'default'
-  },
-
-  formGroupBackground: {
-    backgroundColor: '#012438'
-  },
-
-  commonLabel: {
-    color: palette.text.secondary,
-    fontSize: '14px !important',
-    lineHeight: '14px !important',
-    cursor: 'pointer'
-  },
-
-  formGroupInput: {
-    flex: 1,
-    marginTop: '6px',
-    color: palette.text.primary,
-    fontSize: '16px',
-    lineHeight: '22px',
-    width: '100%',
-
-    '& div': {
-      border: 'none'
-    }
-  },
-
-  formGroupInputLong: {
-    height: '90px',
-    alignItems: 'flex-start !important'
-  },
-
-  formGroupInputMedium: {
-    // height: 70
-  },
-
-  formGroupPlateVerifiedContainer: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-
-  formGroupPlateVerifiedIcon: {
-    marginRight: 7
-  },
-
-  formGroupPlateVerifiedText: {
-    fontSize: '14px',
-    lineHeight: '17px',
-    color: palette.primary.main
-  },
-
-  formGroupRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-
-  modalFlag: {
-    marginRight: 14
   }
 }));

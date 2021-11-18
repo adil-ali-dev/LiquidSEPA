@@ -61,6 +61,16 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
     fontWeight: 500
   },
 
+  registerButton: {
+    marginLeft: 24,
+    backgroundColor: palette.primary.main,
+    border: 'none',
+
+    '&:hover': {
+      backgroundColor: palette.primary.dark
+    }
+  },
+
   headerLogoIcon: {
     width: '100%',
     height: '100%'
@@ -82,6 +92,8 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
   },
 
   registerQrWrapper: {
+    height: 212,
+    width: 212,
     background: '#FFF',
     padding: 16,
     display: 'flex',
@@ -89,6 +101,10 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
     alignItems: 'center',
     borderRadius: 8,
     margin: '24px auto'
+  },
+
+  registerQrEmpty: {
+    backgroundColor: 'transparent'
   },
 
   registerInfoBox: {

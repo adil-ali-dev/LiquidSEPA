@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { Button, Grid, Typography, ButtonBase } from '@material-ui/core';
-import QRCode from 'qrcode.react';
+import QRCode from 'react-qr-code';
 import clsx from 'clsx';
 
 import { RequisitesMainProps } from '../typedef';
@@ -22,7 +22,7 @@ export const RequisitesMain = memo<RequisitesMainProps>(({
     <Grid className={ clsx(classes.details, classes.detailsAddress) }>
       <Grid className={ classes.detailsAddressContainer }>
         <Grid className={ classes.detailsQRContainer }>
-          { details?.qrValue && <QRCode value={ details.qrValue } size={ 134 } renderAs="svg"/> }
+          { details?.qrValue && <QRCode value={ details.qrValue } size={ 134 }/> }
         </Grid>
         <Grid className={ classes.detailsAddressInfo }>
           <Typography className={ classes.detailsAddressText }>
