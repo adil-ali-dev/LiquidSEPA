@@ -1,0 +1,13 @@
+version: "2"
+services:
+  rollthecoin-staging:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - ~/nginx/www/digitaleights:/code/build
+    networks:
+      - genoa-net
+
+networks:
+  genoa-net:
