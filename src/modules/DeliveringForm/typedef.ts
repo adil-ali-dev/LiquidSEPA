@@ -96,6 +96,7 @@ export type FormProps = {
   handleEnterTextAreaPress: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
   handleSelectPress: (state: boolean) => void
   handleAddPress: (type: 'account' | 'address') => void
+  handleChooseAccount: (address: string) => void
 };
 
 export type FormGroupProps = {
@@ -136,6 +137,7 @@ export type FormInputLoggedinProps = {
   handleEnterTextAreaPress?: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
   handleAddPress: (type: 'account' | 'address') => void
   handleSelectPress: (state: boolean) => void
+  handleChooseAccount: (address: string) => void
 };
 
 export type RequisitesHeaderProps = {
@@ -173,3 +175,8 @@ export type Props = {
   widgetRef: RefObject<HTMLDivElement>;
   children: ReactNode;
 };
+
+export type AccountListItem = {
+  label: string;
+  xbtAddress: string;
+}

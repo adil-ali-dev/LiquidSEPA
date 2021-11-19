@@ -133,7 +133,6 @@ export const ModalNordigenLoggedin: FC<ModalNordigenLoggedinProps> = ({
           loading || (final && !error)
             ? <CircularProgress className={ classes.buttonIndicator } color="inherit" size={ 21 }/>
             : (modalType === 'account' ? 'Add account' : 'Whitelist adress')
-
         }
       </Button>
     </Grid>

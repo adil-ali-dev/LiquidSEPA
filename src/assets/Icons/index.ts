@@ -18,3 +18,4 @@ export { ReactComponent as ErrorIcon } from './error.svg';
 export { ReactComponent as NordigenLogoIcon } from './nordigen-logo.svg';
 export { ReactComponent as AuthEidLogoIcon } from './auth-eid-logo.svg';
 export { ReactComponent as UsdTIcon } from './usdt.svg';
+export { ReactComponent as DotsIcon } from './dots.svg';

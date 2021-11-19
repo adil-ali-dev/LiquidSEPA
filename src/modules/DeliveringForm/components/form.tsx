@@ -30,7 +30,8 @@ export const Form = memo<FormProps>(({
   handleContinueClick,
   handleSelectPress,
   handleAddPress,
-  handleEnterTextAreaPress
+  handleEnterTextAreaPress,
+  handleChooseAccount
 }) => {
   const classes = useStyles();
 
@@ -49,6 +50,7 @@ export const Form = memo<FormProps>(({
           handleSelectPress={ handleSelectPress }
           handleAddPress={ handleAddPress }
           account={{}}
+          handleChooseAccount={handleChooseAccount}
         />
       ) : (
         <FormInputLoggedin
@@ -62,6 +64,7 @@ export const Form = memo<FormProps>(({
           handleSelectPress={ handleSelectPress }
           handleAddPress={ handleAddPress }
           account={{}}
+          handleChooseAccount={handleChooseAccount}
         />
       );
     } else {

@@ -32,7 +32,7 @@ export const SessionProvider: FC<Props> = ({ children }) => {
   };
 
   const value = {
-    status,
+    status: !status,
     create,
     destroy,
     loading: sessionStatus.loading,

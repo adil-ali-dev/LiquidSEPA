@@ -137,13 +137,13 @@ const createdTheme = createMuiTheme({
         left: '1px !important'
       },
       paper: {
-        backgroundColor: '#012438',
+        backgroundColor: '#FFF',
         borderRadius: 12,
         boxShadow: 'none',
         border: `1px solid ${ palette.primary.main }`,
-        borderTop: 'none',
-        borderTopLeftRadius: 0,
-        borderTopRightRadius: 0
+        // borderTop: 'none',
+        // borderTopLeftRadius: 0,
+        // borderTopRightRadius: 0
       },
       noOptions: {
         color: palette.text.secondary,

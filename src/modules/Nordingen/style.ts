@@ -84,7 +84,7 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
   modalInfoOptionLabel: {
     fontSize: '16px',
     lineHeight: '24px',
-    color: palette.text.primary
+    color: '#142A36'
   },
 
   modalInfoContainer: {
