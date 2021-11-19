@@ -212,5 +212,5 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center'
-  },
+  }
 }));

@@ -44,3 +44,11 @@ export const AUTH_EID_AUTHORIZE = gql`
     }
   }
 `;
+
+export const SESSION_STATUS = gql`
+  mutation PegXMutations {
+    userSession {
+      hasSession
+    }
+  }
+`;

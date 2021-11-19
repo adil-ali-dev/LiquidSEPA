@@ -10,7 +10,6 @@ export const BLOCKSTREAM_ASSET_URL = process.env.REACT_APP_BLOCKSTREAM_ASSET_URL
 export const SECOND_API_ASSET_URL = process.env.REACT_APP_SECOND_ASSET_API_URL as string;
 export const SECOND_ASSET_URL = process.env.REACT_APP_SECOND_ASSET_URL as string;
 
-
 export const SIDESWAP_PREFIX = process.env.REACT_APP_SIDESWAP_PREFIX as string;
 
 export const LOGIN = process.env.REACT_APP_LOGIN as string;

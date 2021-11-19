@@ -18,6 +18,7 @@ import { RequisitesHeader } from './components/requisites-header';
 import { RequisitesMain } from './components/requisites-main';
 import { RequisitesFooter } from './components/requisites-footer';
 import { Payment } from './components/payment';
+import { useSessionContext } from '../../contexts/Session';
 
 const MAX_CONFS = 2;
 const WIDGET_MARGIN_TOP = 72;
@@ -85,8 +86,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const feeEstimation = useFeeEstimation();
   const rfqStatus = useRfqStatus();
   const txStatus = useTxStatus();
-
-  const isLoggedIn = true; // PLACEHOLDER
+  const { status: isLoggedIn } = useSessionContext();
 
   const sellSide = useMemo(() => {
     return deliver.product === ProductType.EURX;
@@ -132,7 +132,8 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
 
   useEffect(() => {
     setReceive(prevReceive => ({
-      ...prevReceive, ...getInputData(feeEstimation.data.receive, sellSide ? 2 : 8) }
+      ...prevReceive, ...getInputData(feeEstimation.data.receive, sellSide ? 2 : 8)
+    }
     ));
   }, [feeEstimation.data.receive]);
 

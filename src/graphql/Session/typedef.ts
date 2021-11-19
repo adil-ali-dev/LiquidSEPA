@@ -36,3 +36,9 @@ export type AuthEidAuthorizeData = {
     requestId: string;
   }
 };
+
+export type UserSessionData = {
+  userSession: {
+    hasSession: boolean;
+  }
+};

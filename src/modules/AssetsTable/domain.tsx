@@ -14,9 +14,9 @@ export const withAssetsTableDomain = (Component: ComponentType<TableProps>) => (
   const [assets, setAssets] = useState<Asset[]>([]);
 
   const firstAssetData = useQuery('firstAsset', BlockStreamApi.fetchDefaultAsset);
-  const secondAssetData = useQuery('secondAsset', BlockStreamApi.fetchSecondAsset)
+  const secondAssetData = useQuery('secondAsset', BlockStreamApi.fetchSecondAsset);
 
-  const isLoading = firstAssetData.isLoading || secondAssetData.isLoading
+  const isLoading = firstAssetData.isLoading || secondAssetData.isLoading;
 
   useEffect(() => {
     if (!isLoading && firstAssetData.data && secondAssetData.data) {
@@ -51,8 +51,8 @@ export const withAssetsTableDomain = (Component: ComponentType<TableProps>) => (
     <Component>
       {
         (isLoading || !assets.length)
-          ? <LoadingTableRow length={TABLE_COLUMNS} />
-          : assets.map(asset => <TableRow asset={asset} key={asset.issuer} />)
+          ? <LoadingTableRow length={ TABLE_COLUMNS }/>
+          : assets.map(asset => <TableRow asset={ asset } key={ asset.issuer }/>)
       }
     </Component>
   );

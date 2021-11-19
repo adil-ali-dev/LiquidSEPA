@@ -10,6 +10,7 @@ import { useStyles } from './style';
 import { Modal } from '../Modal';
 import { AuthEidLogoIcon } from '../../assets/Icons';
 import { useAuthEidAuthorize, useAuthEidSignup } from '../../graphql/Session/hooks';
+import { useSessionContext } from '../../contexts/Session';
 
 const faqRegExp = new RegExp(FAQ_PATH);
 
@@ -18,6 +19,7 @@ export const Header = memo(() => {
   const history = useHistory();
   const { pathname } = useLocation();
   const { setNext } = useDeliveringFormStatusContext();
+  const { status, destroy } = useSessionContext();
   // @ts-ignore
   const registerData = useAuthEidSignup();
   const loginData = useAuthEidAuthorize();
@@ -52,6 +54,8 @@ export const Header = memo(() => {
     loginData.authEidAuthorize();
   };
 
+  const handleLogoutClick = () => destroy();
+
   const renderQr = () => {
     if (loading) return <CircularProgress/>;
     if (error || !data?.requestId) {
@@ -74,12 +78,25 @@ export const Header = memo(() => {
               <Link className={ classes.headerLink } to={ FAQ_PATH } onClick={ handleFAQClick }>
                 FAQ
               </Link>
-              <Button className={ classes.headerButton } onClick={ handleLoginClick }>
-                Login
-              </Button>
-              <Button className={ clsx(classes.headerButton, classes.registerButton) } onClick={ handleRegisterClick }>
-                Register
-              </Button>
+              { status
+                ? (
+                  <Button className={ classes.headerButton } onClick={ handleLogoutClick }>
+                    Logout
+                  </Button>
+                )
+                : (
+                  <>
+                    <Button className={ classes.headerButton } onClick={ handleLoginClick }>
+                      Login
+                    </Button>
+                    <Button
+                      className={ clsx(classes.headerButton, classes.registerButton) }
+                      onClick={ handleRegisterClick }
+                    >
+                      Register
+                    </Button>
+                  </>
+                ) }
             </Grid>
           </Grid>
         </Grid>

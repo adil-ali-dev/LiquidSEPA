@@ -11,6 +11,7 @@ import { ModalNordigenInfo } from './components/modal-nordigen-info';
 import { FormInput } from '../DeliveringForm/components/form-input';
 import { ModalNordigenForm } from './components/modal-nordigen-form';
 import { ModalNordigenLoggedin } from './components/modal-nordigen-loggedin';
+import { useSessionContext } from '../../contexts/Session';
 
 const ADDRESS_KEY_NAME = 'address-key';
 
@@ -29,10 +30,11 @@ export const withNordigenDomain = (Component: ComponentType<Props>) => () => {
 
   const { modalStatus, iban, modalControls, setNordigenIban, modalType } = useNordigenContext();
   const nordigen = useNordigen(address);
+  const { status: isLoggedIn } = useSessionContext();
 
   useEffect(() => {
-    if (country?.code) nordigen.getBanksByCountry(country.code)
-  }, [country])
+    if (country?.code) nordigen.getBanksByCountry(country.code);
+  }, [country]);
 
   const disabled = useMemo(() => {
     if (!modalStep) {
@@ -151,7 +153,6 @@ export const withNordigenDomain = (Component: ComponentType<Props>) => () => {
     }
   }, [modalStep, bank, bankSelected, address, nordigen.link, final, account, error]);
 
-
   const handleCountryChange =
     (event: ChangeEvent<Record<string, unknown>> | null, value: null | { code: string, name: string }) => {
       if (!value) return;
@@ -159,73 +160,70 @@ export const withNordigenDomain = (Component: ComponentType<Props>) => () => {
       setCountry(value);
     };
 
-  const isLoggedIn = true // PLACEHOLDER
-
   const handleWhitelist = () => {
-    alert('submit')
-  }
+    alert('submit');
+  };
 
   return (
-    <Component modalStatus={modalStatus} handleModalCloseClick={handleModalCloseClick}>
-      {isLoggedIn
+    <Component modalStatus={ modalStatus } handleModalCloseClick={ handleModalCloseClick }>
+      { isLoggedIn
         ? (
           <ModalNordigenLoggedin
-            modalType={modalType}
-            final={final}
-            error={error}
-            loading={nordigen.loading || nordigen.banksLoading}
-            banks={nordigen.banks}
-            address={address}
-            bank={bank}
-            handleCountryChange={handleCountryChange}
-            handleBankChange={handleBankChange}
-            handleAddressChange={handleAddressChange}
-            handleModalSubmit={handleWhitelist}
+            modalType={ modalType }
+            final={ final }
+            error={ error }
+            loading={ nordigen.loading || nordigen.banksLoading }
+            banks={ nordigen.banks }
+            address={ address }
+            bank={ bank }
+            handleCountryChange={ handleCountryChange }
+            handleBankChange={ handleBankChange }
+            handleAddressChange={ handleAddressChange }
+            handleModalSubmit={ handleWhitelist }
           />
         )
         : (
           <ModalNordigenForm
-            iban={iban || account?.iban}
-            step={modalStep}
-            error={final && error}
-            loading={nordigen.loading}
-            disabled={disabled}
-            bankSelected={bankSelected}
-            final={final}
-            address={address}
-            handleSubmit={handleModalSubmit}
-            completed={!!account}
+            iban={ iban || account?.iban }
+            step={ modalStep }
+            error={ final && error }
+            loading={ nordigen.loading }
+            disabled={ disabled }
+            bankSelected={ bankSelected }
+            final={ final }
+            address={ address }
+            handleSubmit={ handleModalSubmit }
+            completed={ !!account }
           >
             {
               modalStep ? (
                 <ModalNordigenInfo
                   headline="We use nordigen to validate IBAN"
                   message="You will be redirected to the nordigen website"
-                  error={final && error}
-                  final={final}
-                  handleChange={handleBankChange}
-                  bank={bank}
-                  options={nordigen.banks || []}
-                  bankSelected={bankSelected}
-                  completed={!!account}
-                  optionsLoading={nordigen.banksLoading}
+                  error={ final && error }
+                  final={ final }
+                  handleChange={ handleBankChange }
+                  bank={ bank }
+                  options={ nordigen.banks || [] }
+                  bankSelected={ bankSelected }
+                  completed={ !!account }
+                  optionsLoading={ nordigen.banksLoading }
                 />
               ) : (
                 <FormInput
                   label="Your receiving Liquid address"
-                  value={address}
+                  value={ address }
                   withExtraProps
                   background
-                  rowsMax={3}
-                  autoFocus={!isMobile}
-                  handleChange={handleAddressChange}
-                  handleEnterTextAreaPress={handleEnterTextAreaPress}
+                  rowsMax={ 3 }
+                  autoFocus={ !isMobile }
+                  handleChange={ handleAddressChange }
+                  handleEnterTextAreaPress={ handleEnterTextAreaPress }
                 />
               )
             }
           </ModalNordigenForm>
-        )
-      }
+        ) }
     </Component>
   );
 };

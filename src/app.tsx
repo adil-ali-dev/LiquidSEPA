@@ -8,6 +8,7 @@ import { GQL_HTTP_URL } from './constants';
 import { theme } from './theme';
 import { Routes } from './routes';
 import { NordigenProvider } from './contexts/Nordigen';
+import { SessionProvider } from './contexts/Session';
 
 const httpLink = createHttpLink({
   uri: GQL_HTTP_URL,
@@ -27,9 +28,11 @@ export const App: FC = () => (
       <ThemeProvider theme={ theme }>
         <StylesProvider injectFirst>
           <CssBaseline/>
-          <NordigenProvider>
-            <Routes/>
-          </NordigenProvider>
+          <SessionProvider>
+            <NordigenProvider>
+              <Routes/>
+            </NordigenProvider>
+          </SessionProvider>
         </StylesProvider>
       </ThemeProvider>
     </ApolloProvider>
