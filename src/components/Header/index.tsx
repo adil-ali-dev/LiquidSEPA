@@ -9,7 +9,7 @@ import { useDeliveringFormStatusContext } from '../../contexts/DeliveringForm';
 import { useStyles } from './style';
 import { Modal } from '../Modal';
 import { AuthEidLogoIcon } from '../../assets/Icons';
-import { useAuthEidAuthorize, useAuthEidSignup } from '../../graphql/Auth/hooks';
+import { useAuthEidAuthorize, useAuthEidSignup } from '../../graphql/Session/hooks';
 
 const faqRegExp = new RegExp(FAQ_PATH);
 
