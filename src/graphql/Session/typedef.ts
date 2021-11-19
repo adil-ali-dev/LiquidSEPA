@@ -1,28 +1,7 @@
-export type SignUpVariables = {
-  iban: string;
-  address: string;
-  email: string;
-  password: string;
-};
+import { SignatureStatus, AuthEidStatusData } from '../typedef';
 
-export type SignUpData = {
-  signup: {
-    error: boolean;
-    errorMessage: null | string;
-    sessionId: string;
-  }
-};
-
-export type LogInVariables = {
-  email: string;
-  password: string;
-};
-
-export type LogInData = {
-  simpleLogin: {
-    status: boolean;
-    sessionKey: string;
-  }
+export type AuthEidStatusVariables = {
+  requestId: string;
 };
 
 export type AuthEidSignupData = {
@@ -31,10 +10,18 @@ export type AuthEidSignupData = {
   }
 };
 
+export type AuthEidSignupStatusData = {
+  authEidSignupStatus: AuthEidStatusData;
+};
+
 export type AuthEidAuthorizeData = {
   authEidAuthorize: {
     requestId: string;
   }
+};
+
+export type AuthEidAuthorizeStatusData = {
+  authEidSignupStatus: AuthEidStatusData;
 };
 
 export type UserSessionData = {

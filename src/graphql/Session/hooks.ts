@@ -1,48 +1,142 @@
-import { useMutation } from '@apollo/client';
+import { useEffect, useState } from 'react';
+import { useLazyQuery, useMutation } from '@apollo/client';
 
-import { SignUpData, SignUpVariables, LogInData, LogInVariables, AuthEidSignupData, AuthEidAuthorizeData, UserSessionData } from './typedef';
-import { SIGN_UP, LOG_IN, AUTH_EID_SIGNUP, AUTH_EID_AUTHORIZE, SESSION_STATUS } from './queries';
+import { AUTH_EID_SIGNUP, AUTH_EID_LOGIN, FETCH_AUTH_EID_SIGNUP_STATUS, FETCH_AUTH_EID_LOGIN_STATUS, SESSION_STATUS } from './queries';
+import { AuthEidSignupData, AuthEidAuthorizeData, AuthEidStatusVariables, AuthEidSignupStatusData, UserSessionData, AuthEidAuthorizeStatusData } from './typedef';
+import { useSessionContext } from '../../contexts/Session';
+import { authEidStatusHandler } from '../auth-eid-handler';
 
-export const useSignUp = () => {
-  const [createAccount, { data, ...result }] = useMutation<SignUpData, SignUpVariables>(SIGN_UP);
-
-  const signUp = (variables: SignUpVariables) => {
-    createAccount({ variables });
-  };
-
-  return { ...result, data: data?.signup, signUp };
-};
-
-export const useLogIn = () => {
-  const [createSession, { data, ...result }] = useMutation<LogInData, LogInVariables>(LOG_IN);
-
-  const logIn = (variables: LogInVariables) => {
-    createSession({ variables });
-  };
-
-  return { ...result, data: data?.simpleLogin, logIn };
-};
+const POLL_INTERVAL = 1000;
 
 export const useAuthEidSignup = () => {
-  const [requestAuthEidReg, { data, ...result }] = useMutation<AuthEidSignupData>(AUTH_EID_SIGNUP);
+  const [requestAuthEidReg, signupData] = useMutation<AuthEidSignupData>(AUTH_EID_SIGNUP);
+  const [fetchStatus, statusData] = useLazyQuery<AuthEidSignupStatusData, AuthEidStatusVariables>(FETCH_AUTH_EID_SIGNUP_STATUS, {
+    pollInterval: POLL_INTERVAL
+  });
+
+  const [waiting, setWaiting] = useState(false);
+
+  const { create } = useSessionContext();
+
+  useEffect(() => {
+    const requestId = signupData.data?.authEidSignup.requestId;
+    console.log(requestId);
+
+    if (!requestId) return;
+
+    fetchStatus({ variables: { requestId } });
+  }, [signupData.data?.authEidSignup.requestId]);
+
+  useEffect(() => {
+    if (!signupData.error) return;
+
+    setWaiting(false);
+  }, [signupData.error]);
+
+  useEffect(() => {
+    if (waiting) return;
+
+    statusData.stopPolling?.();
+  }, [waiting]);
+
+  useEffect(() => {
+    const status = statusData.data?.authEidSignupStatus.status;
+    if (!status) return;
+
+    const success = () => {
+      waiting && setWaiting(false);
+      create();
+    };
+
+    const wait = () => {
+      setWaiting(true);
+    };
+
+    const failure = () => {
+      waiting && setWaiting(false);
+      authEidSignup();
+    };
+
+    authEidStatusHandler(status, [success, wait, failure]);
+  }, [statusData.data?.authEidSignupStatus.status]);
 
   const authEidSignup = () => {
     // eslint-disable-next-line no-console
     requestAuthEidReg().catch(e => console.log(e));
   };
 
-  return { ...result, data: data?.authEidSignup, authEidSignup };
+  return {
+    ...signupData,
+    data: signupData.data?.authEidSignup,
+    stopPolling: statusData.stopPolling,
+    requestId: signupData.data?.authEidSignup.requestId,
+    waiting,
+    authEidSignup
+  };
 };
 
-export const useAuthEidAuthorize = () => {
-  const [requestAuthEidAuth, { data, ...result }] = useMutation<AuthEidAuthorizeData>(AUTH_EID_AUTHORIZE);
+export const useAuthEidLogin = () => {
+  const [requestAuthEidAuth, authData] = useMutation<AuthEidAuthorizeData>(AUTH_EID_LOGIN, { fetchPolicy: 'no-cache' });
+  const [fetchStatus, statusData] = useLazyQuery<AuthEidAuthorizeStatusData, AuthEidStatusVariables>(FETCH_AUTH_EID_LOGIN_STATUS, {
+    pollInterval: POLL_INTERVAL
+  });
 
-  const authEidAuthorize = () => {
+  const [waiting, setWaiting] = useState(false);
+
+  const { create } = useSessionContext();
+
+  useEffect(() => {
+    if (!authData.data?.authEidAuthorize.requestId) return;
+
+    setWaiting(true);
+    fetchStatus({ variables: { requestId: authData.data?.authEidAuthorize.requestId } });
+  }, [authData.data?.authEidAuthorize.requestId]);
+
+  useEffect(() => {
+    if (!authData.error) return;
+
+    setWaiting(false);
+  }, [authData.error]);
+
+  useEffect(() => {
+    if (waiting) return;
+
+    statusData.stopPolling?.();
+  }, [waiting]);
+
+  useEffect(() => {
+    const status = statusData.data?.authEidSignupStatus.status;
+    if (!status) return;
+
+    const success = () => {
+      waiting && setWaiting(false);
+      create();
+    };
+
+    const wait = () => {
+      setWaiting(true);
+    };
+
+    const failure = () => {
+      waiting && setWaiting(false);
+      authEidLogin();
+    };
+
+    authEidStatusHandler(status, [success, wait, failure]);
+  }, [statusData.data?.authEidSignupStatus.status]);
+
+  const authEidLogin = () => {
     // eslint-disable-next-line no-console
     requestAuthEidAuth().catch(e => console.log(e));
   };
 
-  return { ...result, data: data?.authEidAuthorize, authEidAuthorize };
+  return {
+    ...authData,
+    stopPolling: statusData.stopPolling,
+    data: authData.data?.authEidAuthorize,
+    waiting,
+    authEidLogin
+  };
 };
 
 export const useSessionStatus = () => {
