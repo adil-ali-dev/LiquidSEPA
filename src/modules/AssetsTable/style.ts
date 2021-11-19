@@ -81,7 +81,6 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
   },
 
   assetsTableBodyCellLinkIssuer: {
-    color: 'transparent',
     display: 'flex',
     width: '100%',
     height: '16px'

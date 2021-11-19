@@ -73,6 +73,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const [confirmationDetails, setConfirmationDetails] = useState<null | ConfirmationDetails>(null);
 
   const [payment, setPayment] = useState<null | PaymentDetails>(null);
+  const [selectOpened, setSelectOpened] = useState(false);
 
   const { next, setNext } = useDeliveringFormStatusContext();
   const { setNordigenIban, modalControls, iban: nordigenIban } = useNordigenContext();
@@ -85,7 +86,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const rfqStatus = useRfqStatus();
   const txStatus = useTxStatus();
 
-  const isLoggedIn = false; // PLACEHOLDER
+  const isLoggedIn = true; // PLACEHOLDER
 
   const sellSide = useMemo(() => {
     return deliver.product === ProductType.EURX;
@@ -324,6 +325,12 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     });
   }, []);
 
+  const handleSelectPress = (v: boolean) => setSelectOpened(v);
+
+  const handleAddPress = (type: 'account' | 'address') => {
+    modalControls.open(type);
+  };
+
   return (
     <Component next={ next } widgetRef={ widgetRef }>
       {
@@ -369,11 +376,14 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
             receive={ receive }
             textAreaRef={ textAreaRef }
             isLoggedIn={ isLoggedIn }
+            selectOpened={ selectOpened }
             handleSwapClick={ handleSwapClick }
             handleDeliverChange={ handleDeliverChange }
             handleInputChange={ sellSide ? handleIbanChange : handleAddressChange }
             handleContinueClick={ handleContinueClick }
             handleEnterTextAreaPress={ handleEnterTextAreaPress }
+            handleSelectPress={ handleSelectPress }
+            handleAddPress={ handleAddPress }
           />
         )
       }

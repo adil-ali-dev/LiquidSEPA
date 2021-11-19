@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Grid, Link, Typography } from '@material-ui/core';
 
 import { TableRowProps } from '../typedef';
-import { EurXIcon } from '../../../assets/Icons';
+import { EurXIcon, UsdTIcon } from '../../../assets/Icons';
 import { useStyles } from '../style';
 import { Issuer } from './issuer';
 
@@ -13,7 +13,10 @@ export const TableRow: FC<TableRowProps> = ({ asset }) => {
     <Grid className={ classes.assetsTableRow } key={ asset.link }>
       <Grid className={ classes.assetsTableBodyCell }>
         <Grid className={ classes.assetsTableBodyCellIconContainer }>
-          <EurXIcon className={ classes.assetsTableBodyCellIcon }/>
+          {asset.productName === 'EURx'
+            ? <EurXIcon className={ classes.assetsTableBodyCellIcon }/>
+            : <UsdTIcon className={ classes.assetsTableBodyCellIcon } />
+          }
         </Grid>
         <Typography>{ asset.productName }</Typography>
       </Grid>

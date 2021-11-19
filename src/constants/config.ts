@@ -7,6 +7,9 @@ export const LIVE = MODE === 'live';
 export const BLOCKSTREAM_ASSET_ID = process.env.REACT_APP_BLOCKSTREAM_ASSET_ID as string;
 export const BLOCKSTREAM_API_ASSET_URL = process.env.REACT_APP_BLOCKSTREAM_API_ASSET_URL as string;
 export const BLOCKSTREAM_ASSET_URL = process.env.REACT_APP_BLOCKSTREAM_ASSET_URL as string;
+export const SECOND_API_ASSET_URL = process.env.REACT_APP_SECOND_ASSET_API_URL as string;
+export const SECOND_ASSET_URL = process.env.REACT_APP_SECOND_ASSET_URL as string;
+
 
 export const SIDESWAP_PREFIX = process.env.REACT_APP_SIDESWAP_PREFIX as string;
 

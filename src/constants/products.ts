@@ -1,4 +1,5 @@
 export enum ProductType {
   EURX = 'EURx',
-  EUR = 'EUR'
+  EUR = 'EUR',
+  USDT = 'USDt'
 }
