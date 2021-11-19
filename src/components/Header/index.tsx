@@ -9,7 +9,7 @@ import { useDeliveringFormStatusContext } from '../../contexts/DeliveringForm';
 import { useStyles } from './style';
 import { Modal } from '../Modal';
 import { AuthEidLogoIcon } from '../../assets/Icons';
-import { useAuthEidSignup } from '../../graphql/Auth/hooks';
+import { useAuthEidAuthorize, useAuthEidSignup } from '../../graphql/Auth/hooks';
 
 const faqRegExp = new RegExp(FAQ_PATH);
 
@@ -19,9 +19,15 @@ export const Header = memo(() => {
   const { pathname } = useLocation();
   const { setNext } = useDeliveringFormStatusContext();
   // @ts-ignore
-  const { data, authEidSignup, loading, error } = useAuthEidSignup();
+  const registerData = useAuthEidSignup();
+  const loginData = useAuthEidAuthorize();
 
   const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState<'register' | 'login' | null>(null);
+
+  const loading = registerData.loading || loginData.loading;
+  const data = registerData.data || loginData.data;
+  const error = registerData.error || loginData.error;
 
   const handleLogoClick = useCallback(() => {
     setNext(false);
@@ -35,8 +41,15 @@ export const Header = memo(() => {
   }, [pathname]);
 
   const handleRegisterClick = () => {
+    setModalType('register');
     setShowModal(true);
-    authEidSignup();
+    registerData.authEidSignup();
+  };
+
+  const handleLoginClick = () => {
+    setModalType('login');
+    setShowModal(true);
+    loginData.authEidAuthorize();
   };
 
   const renderQr = () => {
@@ -61,7 +74,7 @@ export const Header = memo(() => {
               <Link className={ classes.headerLink } to={ FAQ_PATH } onClick={ handleFAQClick }>
                 FAQ
               </Link>
-              <Button className={ classes.headerButton } onClick={ () => {} }>
+              <Button className={ classes.headerButton } onClick={ handleLoginClick }>
                 Login
               </Button>
               <Button className={ clsx(classes.headerButton, classes.registerButton) } onClick={ handleRegisterClick }>
@@ -75,7 +88,7 @@ export const Header = memo(() => {
       <Modal status={ showModal } handleClose={ () => setShowModal(false) }>
         <Grid className={ classes.registerModal }>
           <Typography variant="h2" className={ classes.registerHeading }>
-            Register with Auth eID
+            { modalType === 'login' ? 'Authorize' : 'Register' } with Auth eID
           </Typography>
           <Grid
             className={ clsx(

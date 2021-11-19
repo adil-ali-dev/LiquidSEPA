@@ -36,3 +36,11 @@ export const AUTH_EID_SIGNUP = gql`
     }
   }
 `;
+
+export const AUTH_EID_AUTHORIZE = gql`
+  mutation PegXMutations {
+    authEidAuthorize {
+      requestId
+    }
+  }
+`;

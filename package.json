@@ -10,7 +10,8 @@
   },
   "scripts": {
     "start:dev": "cross-env PORT=9001 react-scripts start",
-    "build": "cross-env REACT_APP_MODE=live react-scripts build",
+    "build:staging": "cross-env REACT_APP_MODE=staging react-scripts build",
+    "build:live": "cross-env REACT_APP_MODE=live react-scripts build",
     "lint": "eslint ."
   },
   "dependencies": {

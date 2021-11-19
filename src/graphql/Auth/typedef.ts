@@ -30,3 +30,9 @@ export type AuthEidSignupData = {
     requestId: string;
   }
 };
+
+export type AuthEidAuthorizeData = {
+  authEidAuthorize: {
+    requestId: string;
+  }
+};

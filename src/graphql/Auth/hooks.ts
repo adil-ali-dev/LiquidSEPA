@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 
-import { SignUpData, SignUpVariables, LogInData, LogInVariables, AuthEidSignupData } from './typedef';
-import { SIGN_UP, LOG_IN, AUTH_EID_SIGNUP } from './queries';
+import { SignUpData, SignUpVariables, LogInData, LogInVariables, AuthEidSignupData, AuthEidAuthorizeData } from './typedef';
+import { SIGN_UP, LOG_IN, AUTH_EID_SIGNUP, AUTH_EID_AUTHORIZE } from './queries';
 
 export const useSignUp = () => {
   const [createAccount, { data, ...result }] = useMutation<SignUpData, SignUpVariables>(SIGN_UP);
@@ -32,4 +32,15 @@ export const useAuthEidSignup = () => {
   };
 
   return { ...result, data: data?.authEidSignup, authEidSignup };
+};
+
+export const useAuthEidAuthorize = () => {
+  const [requestAuthEidAuth, { data, ...result }] = useMutation<AuthEidAuthorizeData>(AUTH_EID_AUTHORIZE);
+
+  const authEidAuthorize = () => {
+    // eslint-disable-next-line no-console
+    requestAuthEidAuth().catch(e => console.log(e));
+  };
+
+  return { ...result, data: data?.authEidAuthorize, authEidAuthorize };
 };
