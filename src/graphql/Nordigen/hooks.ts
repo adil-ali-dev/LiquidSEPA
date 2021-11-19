@@ -15,7 +15,6 @@ export const useNordigen = (address: string) => {
   const [fetchAccounts, accounts] = useLazyQuery<AccountsData, AccountsVariables>(FETCH_LIST_OF_ACCOUNTS, { fetchPolicy: 'no-cache' });
   // eslint-disable-next-line max-len
   const [postAccount, account] = useLazyQuery<SaveBankAccountData, SaveBankAccountVariables>(CREATE_ACCOUNT, { fetchPolicy: 'no-cache' });
-  // eslint-disable-next-line no-console
 
   const reqId = window.localStorage.getItem(REQ_ID_KEY);
 

@@ -64,7 +64,8 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
 
   modalInfoBank: {
     marginTop: 32,
-    height: 101
+    height: 76,
+    width: 429
   },
 
   modalInfoOption: {
@@ -83,7 +84,7 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
   modalInfoOptionLabel: {
     fontSize: '16px',
     lineHeight: '24px',
-    color: palette.text.primary
+    color: '#142A36'
   },
 
   modalInfoContainer: {
@@ -176,5 +177,40 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
     [breakpoints.down('md')]: {
       padding: '40px 20px 26px'
     }
+  },
+
+  modalFlag: {
+    marginRight: 14
+  },
+
+  formGroup: {
+    padding: '14px',
+    border: '1px solid #41748F',
+    borderRadius: '12px',
+    backgroundColor: '#002C44',
+    marginTop: 32,
+    width: 429,
+
+    '&:focus-within': {
+      borderColor: palette.primary.main,
+      backgroundColor: '#012438'
+    },
+
+    '& .MuiInputBase-root': {
+      width: '100%'
+    }
+  },
+
+  commonLabel: {
+    color: palette.text.secondary,
+    fontSize: '14px !important',
+    lineHeight: '14px !important',
+    cursor: 'pointer'
+  },
+
+  formGroupRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   }
 }));

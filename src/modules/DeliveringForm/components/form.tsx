@@ -8,6 +8,7 @@ import { SwapArrowsIcon } from '../../../assets/Icons';
 import { FormInput } from './form-input';
 import { FormGroup } from './form-group';
 import { ConverterService } from '../../../services';
+import { FormInputLoggedin } from './form-input-loggedin';
 
 export const Form = memo<FormProps>(({
   formRef,
@@ -19,15 +20,79 @@ export const Form = memo<FormProps>(({
   receive,
   iban,
   ibanVerified,
-  textAreaRef,
   address,
+  selectOpened,
+  textAreaRef,
+  isLoggedIn,
   handleSwapClick,
   handleDeliverChange,
   handleInputChange,
   handleContinueClick,
-  handleEnterTextAreaPress
+  handleSelectPress,
+  handleAddPress,
+  handleEnterTextAreaPress,
+  handleChooseAccount
 }) => {
   const classes = useStyles();
+
+  const renderContent = () => {
+    if (isLoggedIn) {
+      return sellSide ? (
+        <FormInputLoggedin
+          label="Your receiving IBAN account"
+          value={ iban.value }
+          error={ iban.value.length >= 14 && !!iban.error }
+          verified={ !!iban.value.length && !iban.error && ibanVerified }
+          selectOpened={ selectOpened }
+          withExtraProps
+          autoFocus={ !isMobile && !!deliver.amount }
+          handleChange={ handleInputChange }
+          handleSelectPress={ handleSelectPress }
+          handleAddPress={ handleAddPress }
+          account={{}}
+          handleChooseAccount={handleChooseAccount}
+        />
+      ) : (
+        <FormInputLoggedin
+          label="Your receiving Liquid address"
+          value={ address.value }
+          error={ !!address.value && !!address.error }
+          selectOpened={ selectOpened }
+          withExtraProps
+          autoFocus={ !isMobile && !!deliver.amount }
+          handleChange={ handleInputChange }
+          handleSelectPress={ handleSelectPress }
+          handleAddPress={ handleAddPress }
+          account={{}}
+          handleChooseAccount={handleChooseAccount}
+        />
+      );
+    } else {
+      return sellSide ? (
+        <FormInput
+          label="Your receiving IBAN account"
+          value={ iban.value }
+          error={ iban.value.length >= 14 && !!iban.error }
+          verified={ !!iban.value.length && !iban.error && ibanVerified }
+          withExtraProps
+          autoFocus={ !isMobile && !!deliver.amount }
+          handleChange={ handleInputChange }
+          handleEnterTextAreaPress={ handleEnterTextAreaPress }
+        />
+      ) : (
+        <FormInput
+          label="Your receiving Liquid address"
+          value={ address.value }
+          error={ !!address.value && !!address.error }
+          withExtraProps
+          reference={ textAreaRef }
+          autoFocus={ !isMobile && !!deliver.amount }
+          handleChange={ handleInputChange }
+          handleEnterTextAreaPress={ handleEnterTextAreaPress }
+        />
+      );
+    }
+  };
 
   return (
     <form className={ classes.form } ref={ formRef } onSubmit={ handleContinueClick }>
@@ -58,31 +123,7 @@ export const Form = memo<FormProps>(({
           product={ receive }
           handleSwapClick={ handleSwapClick }
         />
-        {
-          sellSide ? (
-            <FormInput
-              label="Your receiving IBAN account"
-              value={ iban.value }
-              error={ iban.value.length >= 14 && !!iban.error }
-              verified={ !!iban.value.length && !iban.error && ibanVerified }
-              withExtraProps
-              autoFocus={ !isMobile && !!deliver.amount }
-              handleChange={ handleInputChange }
-              handleEnterTextAreaPress={ handleEnterTextAreaPress }
-            />
-          ) : (
-            <FormInput
-              label="Your receiving Liquid address"
-              value={ address.value }
-              error={ !!address.value && !!address.error }
-              withExtraProps
-              reference={ textAreaRef }
-              autoFocus={ !isMobile && !!deliver.amount }
-              handleChange={ handleInputChange }
-              handleEnterTextAreaPress={ handleEnterTextAreaPress }
-            />
-          )
-        }
+        { renderContent() }
         <Grid className={ classes.formErrorContainer }>
           <Typography className={ classes.formErrorText }>
             {

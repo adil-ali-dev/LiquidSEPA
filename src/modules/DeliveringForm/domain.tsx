@@ -1,6 +1,5 @@
 import React, { ChangeEvent, ComponentType, FormEvent, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState, MouseEvent } from 'react';
 import { isMobile } from 'react-device-detect';
-import { Grid, Typography } from '@material-ui/core';
 
 import { ProductType, BLOCKSTREAM_ASSET_ID, SIDESWAP_PREFIX, REFUND_ADDRESS } from '../../constants';
 import { Address, Iban, Props, PaymentDetails, NameOnAccount, Product, ConfirmationDetails } from './typedef';
@@ -18,6 +17,7 @@ import { RequisitesHeader } from './components/requisites-header';
 import { RequisitesMain } from './components/requisites-main';
 import { RequisitesFooter } from './components/requisites-footer';
 import { Payment } from './components/payment';
+import { useSessionContext } from '../../contexts/Session';
 
 const MAX_CONFS = 2;
 const WIDGET_MARGIN_TOP = 72;
@@ -73,6 +73,8 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const [confirmationDetails, setConfirmationDetails] = useState<null | ConfirmationDetails>(null);
 
   const [payment, setPayment] = useState<null | PaymentDetails>(null);
+  const [selectOpened, setSelectOpened] = useState(false);
+  const [modalType, setModalType] = useState<string>('')
 
   const { next, setNext } = useDeliveringFormStatusContext();
   const { setNordigenIban, modalControls, iban: nordigenIban } = useNordigenContext();
@@ -84,8 +86,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const feeEstimation = useFeeEstimation();
   const rfqStatus = useRfqStatus();
   const txStatus = useTxStatus();
-
-  const isLoggedIn = false; // PLACEHOLDER
+  const { status: isLoggedIn } = useSessionContext();
 
   const sellSide = useMemo(() => {
     return deliver.product === ProductType.EURX;
@@ -131,7 +132,8 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
 
   useEffect(() => {
     setReceive(prevReceive => ({
-      ...prevReceive, ...getInputData(feeEstimation.data.receive, sellSide ? 2 : 8) }
+      ...prevReceive, ...getInputData(feeEstimation.data.receive, sellSide ? 2 : 8)
+    }
     ));
   }, [feeEstimation.data.receive]);
 
@@ -148,7 +150,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   useEffect(() => {
     if (confirmation.data) {
       const commonQuery = {
-        amount: `${ deliver.amount }`,
+        amount: `${deliver.amount}`,
         label: deliver.product,
         message: deliver.product,
         assetid: BLOCKSTREAM_ASSET_ID
@@ -164,8 +166,8 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
 
       setConfirmationDetails({
         ...confirmation.data,
-        appToAppValue: `${ SIDESWAP_PREFIX }/?${ appToAppQuery }`,
-        qrValue: `${ ADDRESS_TYPE }:${ confirmation.data.trackingCode }?${ qrQuery }`
+        appToAppValue: `${SIDESWAP_PREFIX}/?${appToAppQuery}`,
+        qrValue: `${ADDRESS_TYPE}:${confirmation.data.trackingCode}?${qrQuery}`
       });
     }
   }, [confirmation.data]);
@@ -250,8 +252,8 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
       );
 
     const maxError =
-      amount > MAX_DELIVER && `Maximum amount to deliver is ${ MAX_DELIVER_SEPARATED } ${ deliver.product }`;
-    const minError = amount < MIN_DELIVER && `Minimum amount to deliver is ${ MIN_DELIVER } ${ deliver.product }`;
+      amount > MAX_DELIVER && `Maximum amount to deliver is ${MAX_DELIVER_SEPARATED} ${deliver.product}`;
+    const minError = amount < MIN_DELIVER && `Minimum amount to deliver is ${MIN_DELIVER} ${deliver.product}`;
 
     setDeliver({ ...deliver, amount, placeholder, error: minError || maxError || null });
   }, [deliver]);
@@ -324,56 +326,75 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     });
   }, []);
 
+  const handleSelectPress = (v: boolean) => setSelectOpened(v);
+
+  const handleAddPress = (type: 'account' | 'address') => {
+    setModalType(type)
+    modalControls.open(type);
+  };
+
+  const handleChooseAccount = (xbtAddress: string) => {
+    if (modalType === 'address') {
+      setIban({ error: '', value: xbtAddress.replaceAll(' ', '')})
+    } else {
+      setAddress({ error: '', value: xbtAddress })
+    }
+  }
+
   return (
-    <Component next={ next } widgetRef={ widgetRef }>
+    <Component next={next} widgetRef={widgetRef}>
       {
         next && (payment ? (
           <Payment
-            paymentDetails={ payment }
-            confirmed={ confirmations === MAX_CONFS }
-            sellSide={ sellSide }
-            confs={ confirmations }
-            handleTxCopyClick={ handleTxCopyClick }
+            paymentDetails={payment}
+            confirmed={confirmations === MAX_CONFS}
+            sellSide={sellSide}
+            confs={confirmations}
+            handleTxCopyClick={handleTxCopyClick}
           />
         ) : (
           <>
             <RequisitesHeader
-              sellSide={ sellSide }
-              productName={ deliver.product }
-              amount={ deliver.amount }
-              handleBackClick={ handleBackClick }
+              sellSide={sellSide}
+              productName={deliver.product}
+              amount={deliver.amount}
+              handleBackClick={handleBackClick}
             />
             <RequisitesMain
-              sellSide={ sellSide }
-              details={ confirmationDetails }
-              handleAddressCopyClick={ handleCopyClick }
-              handleIbanCopyClick={ handleIbanCopyClick }
-              handleRefCopyClick={ handleRefCopyClick }
+              sellSide={sellSide}
+              details={confirmationDetails}
+              handleAddressCopyClick={handleCopyClick}
+              handleIbanCopyClick={handleIbanCopyClick}
+              handleRefCopyClick={handleRefCopyClick}
             />
             <RequisitesFooter
-              sellSide={ sellSide }
-              value={ sellSide ? iban.value : address.value }
+              sellSide={sellSide}
+              value={sellSide ? iban.value : address.value}
             />
           </>
         )) || (
           <Form
-            formRef={ formRef }
-            sellSide={ sellSide }
-            disabled={ disabledContinue }
-            loading={ loading }
-            iban={ iban }
-            ibanVerified={ ibanVerified }
-            fee={ feeEstimation.data.fee }
-            address={ address }
-            deliver={ deliver }
-            receive={ receive }
-            textAreaRef={ textAreaRef }
-            isLoggedIn={ isLoggedIn }
-            handleSwapClick={ handleSwapClick }
-            handleDeliverChange={ handleDeliverChange }
-            handleInputChange={ sellSide ? handleIbanChange : handleAddressChange }
-            handleContinueClick={ handleContinueClick }
-            handleEnterTextAreaPress={ handleEnterTextAreaPress }
+            formRef={formRef}
+            sellSide={sellSide}
+            disabled={disabledContinue}
+            loading={loading}
+            iban={iban}
+            ibanVerified={ibanVerified}
+            fee={feeEstimation.data.fee}
+            address={address}
+            deliver={deliver}
+            receive={receive}
+            textAreaRef={textAreaRef}
+            isLoggedIn={isLoggedIn}
+            selectOpened={selectOpened}
+            handleSwapClick={handleSwapClick}
+            handleDeliverChange={handleDeliverChange}
+            handleInputChange={sellSide ? handleIbanChange : handleAddressChange}
+            handleContinueClick={handleContinueClick}
+            handleEnterTextAreaPress={handleEnterTextAreaPress}
+            handleSelectPress={handleSelectPress}
+            handleAddPress={handleAddPress}
+            handleChooseAccount={handleChooseAccount}
           />
         )
       }

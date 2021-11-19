@@ -1,4 +1,4 @@
-import React, { memo, useCallback, MouseEvent, useState } from 'react';
+import React, { memo, useCallback, MouseEvent, useState, useEffect } from 'react';
 import { Grid, Button, Typography, Link as MuiLink, CircularProgress } from '@material-ui/core';
 import { Link, useLocation, useHistory } from 'react-router-dom';
 import QRCode from 'react-qr-code';
@@ -9,7 +9,8 @@ import { useDeliveringFormStatusContext } from '../../contexts/DeliveringForm';
 import { useStyles } from './style';
 import { Modal } from '../Modal';
 import { AuthEidLogoIcon } from '../../assets/Icons';
-import { useAuthEidAuthorize, useAuthEidSignup } from '../../graphql/Auth/hooks';
+import { useAuthEidLogin, useAuthEidSignup } from '../../graphql/Session/hooks';
+import { useSessionContext } from '../../contexts/Session';
 
 const faqRegExp = new RegExp(FAQ_PATH);
 
@@ -18,9 +19,9 @@ export const Header = memo(() => {
   const history = useHistory();
   const { pathname } = useLocation();
   const { setNext } = useDeliveringFormStatusContext();
-  // @ts-ignore
+  const { status, destroy } = useSessionContext();
   const registerData = useAuthEidSignup();
-  const loginData = useAuthEidAuthorize();
+  const loginData = useAuthEidLogin();
 
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState<'register' | 'login' | null>(null);
@@ -28,6 +29,17 @@ export const Header = memo(() => {
   const loading = registerData.loading || loginData.loading;
   const data = registerData.data || loginData.data;
   const error = registerData.error || loginData.error;
+
+  useEffect(() => {
+    if (showModal) return;
+
+    registerData.stopPolling?.();
+    loginData.stopPolling?.();
+  }, [showModal]);
+
+  useEffect(() => {
+    (status && showModal) && setShowModal(false);
+  }, [status]);
 
   const handleLogoClick = useCallback(() => {
     setNext(false);
@@ -49,8 +61,10 @@ export const Header = memo(() => {
   const handleLoginClick = () => {
     setModalType('login');
     setShowModal(true);
-    loginData.authEidAuthorize();
+    loginData.authEidLogin();
   };
+
+  const handleLogoutClick = () => destroy();
 
   const renderQr = () => {
     if (loading) return <CircularProgress/>;
@@ -74,12 +88,25 @@ export const Header = memo(() => {
               <Link className={ classes.headerLink } to={ FAQ_PATH } onClick={ handleFAQClick }>
                 FAQ
               </Link>
-              <Button className={ classes.headerButton } onClick={ handleLoginClick }>
-                Login
-              </Button>
-              <Button className={ clsx(classes.headerButton, classes.registerButton) } onClick={ handleRegisterClick }>
-                Register
-              </Button>
+              { status
+                ? (
+                  <Button className={ classes.headerButton } onClick={ handleLogoutClick }>
+                    Logout
+                  </Button>
+                )
+                : (
+                  <>
+                    <Button className={ classes.headerButton } onClick={ handleLoginClick }>
+                      Login
+                    </Button>
+                    <Button
+                      className={ clsx(classes.headerButton, classes.registerButton) }
+                      onClick={ handleRegisterClick }
+                    >
+                      Register
+                    </Button>
+                  </>
+                ) }
             </Grid>
           </Grid>
         </Grid>

@@ -88,11 +88,15 @@ export type FormProps = {
   deliver: Product;
   receive: Product;
   isLoggedIn: boolean;
+  selectOpened: boolean;
   handleSwapClick: () => void;
   handleDeliverChange: (event: ChangeEvent<HTMLInputElement>) => void;
   handleInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
   handleContinueClick: (event: FormEvent<HTMLFormElement>) => void;
   handleEnterTextAreaPress: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
+  handleSelectPress: (state: boolean) => void
+  handleAddPress: (type: 'account' | 'address') => void
+  handleChooseAccount: (address: string) => void
 };
 
 export type FormGroupProps = {
@@ -116,6 +120,24 @@ export type FormInputProps = {
   withExtraProps?: boolean;
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
   handleEnterTextAreaPress?: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
+};
+
+export type FormInputLoggedinProps = {
+  background?: boolean;
+  label: string;
+  value: string;
+  error?: boolean;
+  autoFocus?: boolean;
+  verified?: null | boolean;
+  rowsMax?: number;
+  withExtraProps?: boolean;
+  selectOpened: boolean;
+  account: any;
+  handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  handleEnterTextAreaPress?: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
+  handleAddPress: (type: 'account' | 'address') => void
+  handleSelectPress: (state: boolean) => void
+  handleChooseAccount: (address: string) => void
 };
 
 export type RequisitesHeaderProps = {
@@ -153,3 +175,8 @@ export type Props = {
   widgetRef: RefObject<HTMLDivElement>;
   children: ReactNode;
 };
+
+export type AccountListItem = {
+  label: string;
+  xbtAddress: string;
+}
