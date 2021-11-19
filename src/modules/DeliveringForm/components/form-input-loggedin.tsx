@@ -24,11 +24,24 @@ export const FormInputLoggedin = memo<FormInputLoggedinProps>(({
 }) => {
   const classes = useStyles();
 
-  const accountsList: any[] = [] // Placeholder
+  const _placeholderFnc = () => (
+    label.includes('address')
+      ? [
+        { label: 'Address1', xbtAddress: 'mw5byYhwaNq9c7Nk6CriHviG4KMg7nS4Gw' },
+        { label: 'Address2', xbtAddress: 'mqQh6zbbfaRtNh7b5SuCBMMB7tVcGn1AzN' },
+        { label: 'Address3', xbtAddress: 'mr8LPUR8opDfnrgLVTPaQYWguZEV7xnht7' }
+      ]
+      : [
+        { label: 'Account1', xbtAddress: 'EE581249689829811519' },
+        { label: 'Account2', xbtAddress: 'EE911254276187433778' },
+        { label: 'Account3', xbtAddress: 'EE561297945933294310' }
+      ]
+  )
+  const accountsList = _placeholderFnc()
 
   const renderListItems = (list: AccountListItem[]) => (
     list.map(({ label, xbtAddress }) => (
-      <Grid className={classes.listItem} onClick={() => handleChooseAccount(xbtAddress)}>
+      <Grid key={xbtAddress} className={classes.listItem} onClick={() => handleChooseAccount(xbtAddress)}>
         <Grid className={classes.listItemTextWrap}>
           <Typography className={classes.listItemHeading}>{label}</Typography>
           <Typography className={classes.listItemText}>{xbtAddress}</Typography>

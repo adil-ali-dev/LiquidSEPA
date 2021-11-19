@@ -754,6 +754,7 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
     },
 
     listItem: {
+      marginTop: 24,
       padding: '0 24px',
       display: 'flex',
       justifyContent: 'space-between',
@@ -773,7 +774,8 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
     },
 
     listItemTextWrap: {
-      maxWidth: '80%'
+      maxWidth: '80%',
+      wordBreak: 'break-word'
     },
 
     listItemMoreButton: {}
