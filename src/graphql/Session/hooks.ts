@@ -142,10 +142,10 @@ export const useAuthEidLogin = () => {
 export const useSessionStatus = () => {
   const [requestSessionStatus, { data, error, loading }] = useMutation<UserSessionData>(SESSION_STATUS);
 
-  const sessionStatus = () => {
+  useEffect(() => {
     // eslint-disable-next-line no-console
     requestSessionStatus().catch(e => console.log(e));
-  };
+  }, []);
 
-  return { status: data?.userSession.hasSession, error: !!error, sessionStatus, loading };
+  return { status: data?.userSession.hasSession, error: !!error, loading };
 };
