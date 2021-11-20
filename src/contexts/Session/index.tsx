@@ -41,7 +41,7 @@ export const SessionProvider: FC<Props> = ({ children }) => {
 
   return (
     <SessionContext.Provider value={ value }>
-      { sessionStatus.loading ? null : children }
+      { children }
     </SessionContext.Provider>
   );
 };
