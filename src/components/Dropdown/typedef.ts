@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEvent } from 'react'
+import { ChangeEvent, KeyboardEvent, ReactNode } from 'react'
 
 import { Bank, Country } from '../../graphql/Nordigen/typedef'
 
@@ -24,8 +24,10 @@ export type DropdownContentProps = {
   show: boolean
   list: AccountListItem[] | Country[] | Bank[]
   listType: 'account' | 'address' | 'bank' | 'country'
+  className?: string
   handleAddPress?: (type: string) => void
-  handleItemPress: (v: string) => void
+  handleItemPress?: (v: string) => void
+  renderList?: () => ReactNode
 }
 
 export type AccountListItem = {

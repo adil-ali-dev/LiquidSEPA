@@ -31,7 +31,7 @@
     "react-router-dom": "5.2.0"
   },
   "devDependencies": {
-    "@types/pluralize": "0.0.29",
+    "@types/pluralize": "^0.0.29",
     "@types/qrcode.react": "1.0.1",
     "@types/react": "17.0.5",
     "@types/react-dom": "17.0.3",

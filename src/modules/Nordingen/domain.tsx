@@ -97,7 +97,7 @@ export const withNordigenDomain = (Component: ComponentType<Props>) => () => {
     });
   }, []);
 
-  const handleBankChange = useCallback((event: ChangeEvent<Record<string, unknown>>, value: null | Bank) => {
+  const handleBankChange = useCallback((value: Bank | null) => {
     if (!value) return;
 
     setBank(value);
@@ -154,7 +154,7 @@ export const withNordigenDomain = (Component: ComponentType<Props>) => () => {
   }, [modalStep, bank, bankSelected, address, nordigen.link, final, account, error]);
 
   const handleCountryChange =
-    (event: ChangeEvent<Record<string, unknown>> | null, value: null | { code: string, name: string }) => {
+    (value: null | { code: string, name: string }) => {
       if (!value) return;
 
       setCountry(value);

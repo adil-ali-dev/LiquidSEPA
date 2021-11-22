@@ -69,6 +69,7 @@ export const ModalNordigenInfo = memo<ModalInfoProps>(({
       renderOption={ renderOption }
       label="Select your bank"
       getOptionLabel={ option => option.name }
+      type="bank"
     />
   );
 });

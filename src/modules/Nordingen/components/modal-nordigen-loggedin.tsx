@@ -27,31 +27,8 @@ export const ModalNordigenLoggedin: FC<ModalNordigenLoggedinProps> = ({
   const classes = useStyles();
 
   useEffect(() => {
-    handleCountryChange(null, nordigenCountries[0]);
+    handleCountryChange(nordigenCountries[0]);
   }, []);
-
-  const renderCountry = (option: {
-    code: string,
-    name: string
-  }) => (
-    <Grid className={ classes.modalInfoOption }>
-      <Grid className={ classes.modalFlag }>
-        <Flag style={ classes.modalFlagItem } countryCode={ option.code } svg/>
-      </Grid>
-      <Typography className={ classes.modalInfoOptionLabel }>
-        { option.name }
-      </Typography>
-    </Grid>
-  );
-
-  const renderBank = (option: Bank) => (
-    <Grid className={ classes.modalInfoOption }>
-      <img className={ classes.modalInfoOptionIcon } src={ option.logo } alt={ option.name }/>
-      <Typography className={ classes.modalInfoOptionLabel }>
-        { option.name }
-      </Typography>
-    </Grid>
-  );
 
   return (
     <Grid className={ classes.modal }>
@@ -67,9 +44,9 @@ export const ModalNordigenLoggedin: FC<ModalNordigenLoggedinProps> = ({
               options={ nordigenCountries }
               handleChange={ handleCountryChange }
               value={ nordigenCountries[0] }
-              renderOption={ renderCountry }
               label="Choose your country"
               getOptionLabel={ option => option.name }
+              type="country"
             />
 
             <Autocomplete
@@ -78,9 +55,9 @@ export const ModalNordigenLoggedin: FC<ModalNordigenLoggedinProps> = ({
               options={ banks || [] }
               handleChange={ handleBankChange }
               value={ bank }
-              renderOption={ renderBank }
               label="Choose your bank"
               getOptionLabel={ option => option.name }
+              type="bank"
             />
           </>
         )

@@ -1,5 +1,7 @@
 import { ChangeEvent, ReactNode } from 'react';
 
+import { Bank, Country } from '../../graphql/Nordigen/typedef';
+
 export type Props = {
   className?: string;
   options: any[];
@@ -7,6 +9,7 @@ export type Props = {
   renderOption?: (option: any) => ReactNode;
   label: string;
   value: null | any;
+  type: 'bank' | 'country';
   getOptionLabel: (option: any) => string;
-  handleChange: (event: ChangeEvent<Record<string, unknown>>, value: null | any) => void;
+  handleChange: (item: any) => void;
 };
