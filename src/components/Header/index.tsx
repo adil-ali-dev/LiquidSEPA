@@ -19,29 +19,7 @@ export const Header = memo(() => {
   const history = useHistory();
   const { pathname } = useLocation();
   const { setNext } = useDeliveringFormStatusContext();
-  const { status, destroy } = useSessionContext();
-  const registerData = useAuthEidSignup();
-  const loginData = useAuthEidLogin();
-
-  const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState<'register' | 'login' | null>(null);
-
-  const loading = registerData.loading || loginData.loading;
-  const waiting = registerData.waiting || loginData.waiting;
-  const data = registerData.data || loginData.data;
-  const requestId = registerData.requestId || loginData.requestId;
-  const error = registerData.error || loginData.error;
-
-  useEffect(() => {
-    if (showModal) return;
-
-    registerData.stopPolling?.();
-    loginData.stopPolling?.();
-  }, [showModal]);
-
-  useEffect(() => {
-    (status && showModal) && setShowModal(false);
-  }, [status]);
+  const { status, destroy, modalType, controls, requestId, qrError, qrWaiting, qrLoading } = useSessionContext();
 
   const handleLogoClick = useCallback(() => {
     setNext(false);
@@ -55,22 +33,23 @@ export const Header = memo(() => {
   }, [pathname]);
 
   const handleRegisterClick = () => {
-    setModalType('register');
-    setShowModal(true);
-    registerData.authEidSignup();
+    controls.openRegister();
   };
 
   const handleLoginClick = () => {
-    setModalType('login');
-    setShowModal(true);
-    loginData.authEidLogin();
+    controls.openLogin();
+  };
+
+  const handleCloseClick = () => {
+    controls.closeLogin();
+    controls.closeRegister();
   };
 
   const handleLogoutClick = () => destroy();
 
   const renderQr = () => {
-    if (loading) return <CircularProgress/>;
-    if (error && !loading && !waiting) return <Typography align="center">{error}</Typography>;
+    if (qrLoading) return <CircularProgress/>;
+    if (qrError && !qrLoading && !qrWaiting) return <Typography align="center">{qrError}</Typography>;
     if (requestId) {
       return <QRCode value={ `https://autheid.com/app/requests/?request_id=${ requestId }` } size={ 180 }/>;
     }
@@ -112,7 +91,7 @@ export const Header = memo(() => {
         </Grid>
       </Grid>
 
-      <Modal status={ showModal } handleClose={ () => setShowModal(false) }>
+      <Modal status={ !!modalType } handleClose={ handleCloseClick }>
         <Grid className={ classes.registerModal }>
           <Typography variant="h2" className={ classes.registerHeading }>
             { modalType === 'login' ? 'Authorize' : 'Register' } with Auth eID
@@ -120,7 +99,7 @@ export const Header = memo(() => {
           <Grid
             className={ clsx(
               classes.registerQrWrapper,
-              (error || (!data?.requestId && !loading)) && classes.registerQrEmpty
+              (qrError || (!requestId && !qrLoading)) && classes.registerQrEmpty
             ) }
           >
             { renderQr() }

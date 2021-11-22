@@ -36,7 +36,7 @@ export const ModalNordigenLoggedin: FC<ModalNordigenLoggedinProps> = ({
   }) => (
     <Grid className={ classes.modalInfoOption }>
       <Grid className={ classes.modalFlag }>
-        <Flag style={{ width: 28, height: 28, borderRadius: 8 }} countryCode={ option.code } svg/>
+        <Flag style={ classes.modalFlagItem } countryCode={ option.code } svg/>
       </Grid>
       <Typography className={ classes.modalInfoOptionLabel }>
         { option.name }

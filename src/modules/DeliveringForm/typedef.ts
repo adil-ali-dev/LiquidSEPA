@@ -82,7 +82,6 @@ export type FormProps = {
   loading: boolean;
   fee: number;
   iban: Iban;
-  ibanVerified: null | boolean;
   address: Address;
   textAreaRef: RefObject<HTMLTextAreaElement>;
   deliver: Product;

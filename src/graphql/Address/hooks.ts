@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery, useApolloClient } from '@apollo/client';
 
 import { WhitelistData, WhitelistVariables, WhitelistStatusData, WhitelistStatusVariables } from './typedef';
 import { FETCH_WHITELIST_ADDRESS_STATUS, WHITELIST_ADDRESS } from './queries';
@@ -7,13 +7,13 @@ import { authEidStatusHandler } from '../auth-eid-handler';
 
 const POLL_INTERVAL = 1000;
 
-export const useWhitelistedAddresses = () => {
+export const useWhitelistedAddress = () => {
   const [whitelistReq, whitelistData] = useMutation<WhitelistData, WhitelistVariables>(WHITELIST_ADDRESS, { fetchPolicy: 'no-cache' });
   const [fetchStatus, statusData] = useLazyQuery<WhitelistStatusData, WhitelistStatusVariables>(FETCH_WHITELIST_ADDRESS_STATUS, {
     pollInterval: POLL_INTERVAL
   });
+  // const apolloClient = useApolloClient();
 
-  const [whitelistedAddresses, setWhitelistedAddresses] = useState([]);
   const [waiting, setWaiting] = useState(false);
 
   useEffect(() => {
@@ -36,6 +36,7 @@ export const useWhitelistedAddresses = () => {
     const success = () => {
       statusData.stopPolling?.();
       waiting && setWaiting(false);
+      // apolloClient.cache.modify({ id: '', fields: {  } })
     };
 
     const wait = () => {
@@ -61,7 +62,10 @@ export const useWhitelistedAddresses = () => {
     data: whitelistData.data?.authEidSignAddress,
     requestId: whitelistData.data?.authEidSignAddress.requestId,
     waiting,
-    whitelistedAddresses,
     whitelistAddress
   };
 };
+
+// export const useWhitelistedAddresses = () => {
+//   const {} = useQuery('');
+// };

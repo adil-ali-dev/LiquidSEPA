@@ -68,7 +68,6 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
 
   const [iban, setIban] = useState(initialIban);
   const [address, setAddress] = useState(initialAddress);
-  const [ibanVerified, setIbanVerified] = useState<null | boolean>(null);
 
   const [confirmationDetails, setConfirmationDetails] = useState<null | ConfirmationDetails>(null);
 
@@ -81,42 +80,31 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const { copyToClipBoard } = useClipBoard();
   const eurDeliver = useEurDeliver();
   const eurXDeliver = useEurXDeliver();
-  const ibanActions = useIban();
   const confirmation = useConfirmation();
   const feeEstimation = useFeeEstimation();
   const rfqStatus = useRfqStatus();
   const txStatus = useTxStatus();
-  const { status: isLoggedIn } = useSessionContext();
+  const { status: isLoggedIn, controls: authControls } = useSessionContext();
 
   const sellSide = useMemo(() => {
     return deliver.product === ProductType.EURX;
   }, [deliver.product]);
 
   const loading = useMemo(() => {
-    return eurDeliver.loading || eurXDeliver.loading || confirmation.loading || ibanActions.loading;
-  }, [eurDeliver.loading, eurXDeliver.loading, confirmation.loading, ibanActions.loading]);
+    return eurDeliver.loading || eurXDeliver.loading || confirmation.loading;
+  }, [eurDeliver.loading, eurXDeliver.loading, confirmation.loading]);
 
   const disabledContinue = useMemo(() => {
     return loading || !!deliver.error || !deliver.amount || (sellSide
-      ? !iban.value || !!iban.error || ibanActions.loading
+      ? !iban.value || !!iban.error
       : !address.value || !!address.error);
-  }, [receive.product, iban, address, loading, deliver.error, deliver.amount, ibanActions.loading]);
+  }, [receive.product, iban, address, loading, deliver.error, deliver.amount]);
 
   const confirmations = useMemo(() => {
     const confs = txStatus.data?.confs || 0;
 
     return confs >= MAX_CONFS ? MAX_CONFS : confs;
   }, [txStatus.data?.confs]);
-
-  useEffect(() => {
-    if (iban.error) return;
-
-    ibanActions.check(iban.value.replaceAll(' ', ''));
-  }, [iban.value]);
-
-  useEffect(() => {
-    setIbanVerified(ibanActions.valid);
-  }, [ibanActions.valid]);
 
   useEffect(() => {
     if (nordigenIban && !iban.value) {
@@ -224,7 +212,6 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     if (!next) {
       setIban(initialIban);
       setAddress(initialAddress);
-      setIbanVerified(null);
       setPayment(null);
       setConfirmationDetails(null);
       setPayment(null);
@@ -271,14 +258,6 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     if (disabledContinue) return;
 
     if (sellSide) {
-      const normalFormatIban = iban.value.replaceAll(' ', '');
-
-      if (!ibanVerified) {
-        setNordigenIban(normalFormatIban);
-        modalControls.open();
-        return;
-      }
-
       eurDeliver.deliver({
         address: REFUND_ADDRESS,
         iban: iban.value.replaceAll(' ', ''),
@@ -290,7 +269,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
         amount: deliver.amount
       });
     }
-  }, [disabledContinue, sellSide, address, iban, deliver.amount, ibanVerified]);
+  }, [disabledContinue, sellSide, address, iban, deliver.amount]);
 
   const handleBackClick = useCallback(() => {
     setNext(false);
@@ -329,18 +308,23 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const handleSelectPress = (v: boolean) => setSelectOpened(v);
 
   const handleAddPress = (type: string) => {
+    if (isLoggedIn){
+      setModalType(type);
+      modalControls.open(type);
+    } else {
+      authControls.openLogin();
+    }
+
     setSelectOpened(false);
-    setModalType(type);
-    modalControls.open(type);
   };
 
-  const handleChooseAccount = (xbtAddress: string) => {
+  const handleChooseAccount = (value: string) => {
     setSelectOpened(false)
 
-    if (modalType === 'address') {
-      setIban({ value: xbtAddress.replaceAll(' ', ''), error: '' })
+    if (IbanService.isValid(value)) {
+      setIban({ value: IbanService.format(value), error: '' })
     } else {
-      setAddress({ value: xbtAddress, error: '' })
+      setAddress({ value, error: '' })
     }
   }
 
@@ -382,7 +366,6 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
             disabled={disabledContinue}
             loading={loading}
             iban={iban}
-            ibanVerified={ibanVerified}
             fee={feeEstimation.data.fee}
             address={address}
             deliver={deliver}

@@ -18,7 +18,6 @@
     "@apollo/client": "3.3.19",
     "@material-ui/core": "4.11.4",
     "@material-ui/lab": "4.0.0-alpha.57",
-    "@types/pluralize": "^0.0.29",
     "bitcoin-address-validation": "2.0.1",
     "graphql": "15.5.0",
     "ibantools": "3.3.0",
@@ -32,6 +31,7 @@
     "react-router-dom": "5.2.0"
   },
   "devDependencies": {
+    "@types/pluralize": "0.0.29",
     "@types/qrcode.react": "1.0.1",
     "@types/react": "17.0.5",
     "@types/react-dom": "17.0.3",

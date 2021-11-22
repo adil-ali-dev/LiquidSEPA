@@ -643,7 +643,7 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
 
     selectIconWrap: {
       position: 'absolute',
-      top: 28,
+      top: 34,
       right: 12,
     },
 
@@ -657,10 +657,11 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
     },
 
     selectText: {
-      color: '#92B6CA',
       marginTop: 7,
       wordBreak: 'break-word'
     },
+
+
 
     selectPopup: {
       width: '100%',
@@ -677,6 +678,10 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
       }
     },
 
+    selectChoseLabelText: {
+      color: '#92B6CA'
+    },
+
     selectNoItems: {
       padding: '0 30px',
       display: 'flex',
@@ -688,11 +693,11 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
       color: '#142A36',
       fontWeight: 500,
       fontSize: '16px',
-      lineHeight: '19px',
-      marginTop: 24
+      lineHeight: '19px'
     },
 
     addItemButton: {
+      height: '50px',
       background: '#00B4E9',
       borderRadius: '12px',
       color: '#FFF',
