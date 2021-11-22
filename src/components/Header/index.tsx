@@ -27,7 +27,9 @@ export const Header = memo(() => {
   const [modalType, setModalType] = useState<'register' | 'login' | null>(null);
 
   const loading = registerData.loading || loginData.loading;
+  const waiting = registerData.waiting || loginData.waiting;
   const data = registerData.data || loginData.data;
+  const requestId = registerData.requestId || loginData.requestId;
   const error = registerData.error || loginData.error;
 
   useEffect(() => {
@@ -68,11 +70,9 @@ export const Header = memo(() => {
 
   const renderQr = () => {
     if (loading) return <CircularProgress/>;
-    if (error || !data?.requestId) {
-      return <Typography align="center">There was an error fetching Auth eID request data</Typography>;
-    }
-    if (data?.requestId) {
-      return <QRCode value={ `https://autheid.com/app/requests/?request_id=${ data.requestId }` } size={ 180 }/>;
+    if (error && !loading && !waiting) return <Typography align="center">{error}</Typography>;
+    if (requestId) {
+      return <QRCode value={ `https://autheid.com/app/requests/?request_id=${ requestId }` } size={ 180 }/>;
     }
   };
 
