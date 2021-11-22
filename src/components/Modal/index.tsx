@@ -10,7 +10,7 @@ export const Modal = memo<Props>(({ status, handleClose, children }) => {
 
   return (
     <Dialog
-      classes={{ scrollPaper: styles.scrollPaper }}
+      classes={{ scrollPaper: styles.scrollPaper, paper: styles.dialogPaper }}
       className={ styles.modal }
       open={ status }
       onClose={ handleClose }

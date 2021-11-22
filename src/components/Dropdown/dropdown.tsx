@@ -7,6 +7,7 @@ import { AccountListItem } from './typedef';
 import { DoneIcon, DotsIcon, DropdownArrowIcon } from '../../assets/Icons';
 import { DropdownProps } from './typedef';
 import { DropdownContent } from './dropdown-content';
+import { useSessionContext } from '../../contexts/Session';
 
 export const Dropdown = memo<DropdownProps>(({
   label,
@@ -14,9 +15,12 @@ export const Dropdown = memo<DropdownProps>(({
   selectOpened,
   handleAddPress,
   handleSelectPress,
-  handleChooseAccount
+  handleChooseAccount,
+  handleChange
 }) => {
   const classes = useStyles();
+
+  const { status } = useSessionContext();
 
   const _placeholderFnc = () => (
     label.includes('address')
@@ -47,8 +51,19 @@ export const Dropdown = memo<DropdownProps>(({
           )}
           onClick={() => handleSelectPress(!selectOpened)}
         >
-          <InputLabel className={classes.commonLabel}>{label}</InputLabel>
-          {account
+          <InputLabel className={classes.commonLabel} htmlFor="text-area-input">{label}</InputLabel>
+          <InputBase
+            className={clsx(classes.formGroupInput, classes.selectText)}
+            id="text-area-input"
+            multiline
+            placeholder={`Choose ${listType}`}
+            rows={6}
+            value={account}
+            onChange={handleChange}
+            disabled={!status}
+          />
+
+          {/* {account
             ? (
               <Typography className={classes.selectText }>
                 {account}
@@ -58,7 +73,7 @@ export const Dropdown = memo<DropdownProps>(({
               <Typography className={classes.selectText }>
                 Choose {listType}
               </Typography>
-            )}
+            )} */}
 
           <Grid className={classes.selectIconWrap}>
             <DropdownArrowIcon className={clsx(classes.selectIcon, selectOpened && classes.selectIconRotated)} />

@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Button, Grid, Typography } from '@material-ui/core';
+import { Button, Grid, Link, Typography } from '@material-ui/core';
 import pluralize from 'pluralize';
 import clsx from 'clsx';
 
@@ -9,27 +9,46 @@ import { DotsIcon } from '../../assets/Icons';
 import { IbanService } from '../../services';
 import { useSessionContext } from '../../contexts/Session';
 
-export const DropdownContent: FC<DropdownContentProps> = ({ show, list, listType, handleAddPress, handleItemPress }) => {
-  const classes = useStyles();
+export const DropdownContent: FC<DropdownContentProps> = ({
+  show,
+  list,
+  listType,
+  handleAddPress,
+  handleItemPress,
+  renderList,
+  className
+}) => {
+  if (!show) return null
+
   const { status } = useSessionContext();
+  const classes = useStyles();
 
   if (!show) return null;
 
-  const renderList = (list: any[]) => (
-    list.map(({ label, xbtAddress }) => (
-      <Grid key={xbtAddress} className={classes.listItem} onClick={() => handleItemPress(xbtAddress)}>
-        <Grid className={classes.listItemTextWrap}>
-          <Typography className={classes.listItemHeading}>{label}</Typography>
-          <Typography className={classes.listItemText}>
-            {listType === 'account' ? IbanService.format(xbtAddress) : xbtAddress}
-          </Typography>
-        </Grid>
-        <Button className={classes.listItemMoreButton}>
-          <DotsIcon />
-        </Button>
-      </Grid>
-    ))
-  )
+  const _renderList = () => {
+    if (renderList) {
+      return renderList()
+    } else {
+      //@ts-ignore
+      return list.map(({ label, xbtAddress }) => {
+        const _handleItemPress = () => handleItemPress && handleItemPress(xbtAddress)
+
+        return (
+          <Grid key={xbtAddress} className={classes.listItem} onClick={_handleItemPress}>
+            <Grid className={classes.listItemTextWrap}>
+              <Typography className={classes.listItemHeading}>{label}</Typography>
+              <Typography className={classes.listItemText}>
+                {listType === 'account' ? IbanService.format(xbtAddress) : xbtAddress}
+              </Typography>
+            </Grid>
+            <Button className={classes.listItemMoreButton}>
+              <DotsIcon />
+            </Button>
+          </Grid>
+        )
+      })
+    }
+  }
 
   const _handleAddPress = () => {
     handleAddPress && handleAddPress(listType)
@@ -52,7 +71,7 @@ export const DropdownContent: FC<DropdownContentProps> = ({ show, list, listType
   );
 
   return (
-    <Grid className={classes.selectPopup}>
+    <Grid className={clsx(classes.selectPopup, className)}>
       <Grid className={classes.listHeading}>
         <Typography
           className={clsx(classes.selectText, classes.selectChoseLabelText)}
@@ -70,7 +89,24 @@ export const DropdownContent: FC<DropdownContentProps> = ({ show, list, listType
           </Button>
         )}
       </Grid>
-      { (!list.length || !status) ? renderAlert() : renderList(list) }
+      {list.length
+        ? _renderList()
+        : (
+          <Grid className={classes.selectNoItems}>
+            <Typography className={classes.selectNoItemsNotice}>
+              You do not have any {pluralize(listType)}
+            </Typography>
+            <Button
+              className={classes.addItemButton}
+              variant="contained"
+              color="primary"
+              onClick={_handleAddPress}
+            >
+              + ADD
+            </Button>
+          </Grid>
+        )
+      }
     </Grid>
   )
 }

@@ -27,5 +27,9 @@ export const useStyles = makeStyles(({ palette }) => createStyles({
 
   scrollPaper: {
     alignItems: 'baseline'
+  },
+
+  dialogPaper: {
+    overflowY: 'visible'
   }
 }));
