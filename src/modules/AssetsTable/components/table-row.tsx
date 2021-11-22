@@ -28,6 +28,7 @@ export const TableRow: FC<TableRowProps> = ({ asset }) => {
       <Grid className={ classes.assetsTableBodyCell }>
         <Link className={ classes.assetsTableBodyCellLink } href={ asset.link } target="_blank">Link</Link>
       </Grid>
+      { asset.productName === 'USDt' && <Typography className={ classes.comingSoon }>Coming soon</Typography> }
     </Grid>
   );
 };

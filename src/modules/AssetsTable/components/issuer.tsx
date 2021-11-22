@@ -4,6 +4,7 @@ import clsx from 'clsx';
 
 import { IssuerProps } from '../typedef';
 import { PEGxIcon } from '../../../assets/Icons';
+import TetherIcon from '../../../assets/Icons/tetherto.png'
 import { useStyles } from '../style';
 
 export const Issuer: FC<IssuerProps> = ({ issuer }) => {
@@ -15,7 +16,7 @@ export const Issuer: FC<IssuerProps> = ({ issuer }) => {
       href={ `https://${ issuer }` }
       target="_blank"
     >
-      { issuer === 'pegx.io' ? <PEGxIcon/> : issuer }
+      { issuer === 'pegx.io' ? <PEGxIcon/> : <img src={TetherIcon} /> }
     </Link>
   );
 };

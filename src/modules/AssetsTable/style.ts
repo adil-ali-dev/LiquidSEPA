@@ -30,7 +30,8 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
   },
 
   assetsTableRow: {
-    display: 'flex'
+    display: 'flex',
+    position: 'relative'
   },
 
   assetsTableBodyCell: {
@@ -84,5 +85,19 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
     display: 'flex',
     width: '100%',
     height: '16px'
+  },
+
+  comingSoon: {
+    position: 'absolute',
+    right: 0,
+    top: '50%',
+    transform: 'translateY(-50%)',
+
+    [breakpoints.down('sm')]: {
+      top: 'unset',
+      bottom: 0,
+      right: '50%',
+      transform: 'translateX(50%)'
+    }
   }
 }));
