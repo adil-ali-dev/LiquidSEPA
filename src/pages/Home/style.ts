@@ -16,7 +16,6 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
   page: {
     backgroundImage: 'url(/static/media/home-background.png)',
     backgroundAttachment: 'fixed',
-    backgroundPositionY: '20px',
 
     [breakpoints.down('md')]: {
       backgroundSize: 'cover'
