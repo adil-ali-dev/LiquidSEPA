@@ -8,7 +8,7 @@ import { TableRow } from './components/table-row';
 import { LoadingTableRow } from './components/loading-table-row';
 
 const TABLE_COLUMNS = 6;
-const DEFAULT_PRODUCT_TYPE = 'Deliver';
+const DEFAULT_PRODUCT_TYPE = 'Stablecoin';
 
 export const withAssetsTableDomain = (Component: ComponentType<TableProps>) => () => {
   const [assets, setAssets] = useState<Asset[]>([]);
@@ -29,7 +29,7 @@ export const withAssetsTableDomain = (Component: ComponentType<TableProps>) => (
             firstAssetData.data.chain_stats.issued_amount.toString(),
             firstAssetData.data.precision
           ),
-          burnedAmount: firstAssetData.data.chain_stats.burned_amount,
+          burnedAmount: firstAssetData.data.chain_stats.burned_amount / (10**(firstAssetData.data.precision || 0)),
           link: BLOCKSTREAM_ASSET_URL
         },
         {
@@ -40,7 +40,7 @@ export const withAssetsTableDomain = (Component: ComponentType<TableProps>) => (
             secondAssetData.data.chain_stats.issued_amount.toString(),
             secondAssetData.data.precision
           ),
-          burnedAmount: secondAssetData.data.chain_stats.burned_amount,
+          burnedAmount: secondAssetData.data.chain_stats.burned_amount / (10**(secondAssetData.data.precision || 0)),
           link: SECOND_ASSET_URL
         }
       ]);
