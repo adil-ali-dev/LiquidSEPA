@@ -1,4 +1,4 @@
-import { extractIBAN, isSEPACountry, friendlyFormatIBAN } from 'ibantools';
+import { extractIBAN, isSEPACountry, friendlyFormatIBAN, isValidIBAN } from 'ibantools';
 
 type ValidateIbanCb = (error: null | string, formatted: string) => void;
 
@@ -22,5 +22,9 @@ export class IbanService {
 
   static format(value?: string) {
     return friendlyFormatIBAN(value) || '';
+  }
+
+  static isValid(value: string) {
+    return isValidIBAN(value);
   }
 }

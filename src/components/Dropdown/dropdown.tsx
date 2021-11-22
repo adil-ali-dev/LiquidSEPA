@@ -66,7 +66,7 @@ export const Dropdown = memo<DropdownProps>(({
         </Grid>
         <DropdownContent
           show={selectOpened}
-          list={accountsList}
+          list={[]}
           listType={listType}
           handleAddPress={handleAddPress}
           handleItemPress={handleChooseAccount}

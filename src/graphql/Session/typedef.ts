@@ -21,7 +21,7 @@ export type AuthEidAuthorizeData = {
 };
 
 export type AuthEidAuthorizeStatusData = {
-  authEidSignupStatus: AuthEidStatusData;
+  authEidAuthorizeStatus: AuthEidStatusData;
 };
 
 export type UserSessionData = {

@@ -183,6 +183,12 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
     marginRight: 14
   },
 
+  modalFlagItem: {
+    width: 28,
+    height: 28,
+    borderRadius: 8
+  },
+
   formGroup: {
     padding: '14px',
     border: '1px solid #41748F',

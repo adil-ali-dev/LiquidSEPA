@@ -28,6 +28,7 @@ export const FETCH_AUTH_EID_LOGIN_STATUS = gql`
   query AuthEidAuthorizeStatus ($requestId: String!) {
     authEidAuthorizeStatus (requestId: $requestId) {
       status
+      entityId
     }
   }
 `;
@@ -36,6 +37,14 @@ export const SESSION_STATUS = gql`
   mutation PegXMutations {
     userSession {
       hasSession
+    }
+  }
+`;
+
+export const LOGOUT = gql`
+  mutation Logout {
+    logout {
+      status
     }
   }
 `;

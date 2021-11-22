@@ -1,14 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client';
 
-import { AUTH_EID_SIGNUP, AUTH_EID_LOGIN, FETCH_AUTH_EID_SIGNUP_STATUS, FETCH_AUTH_EID_LOGIN_STATUS, SESSION_STATUS } from './queries';
+import {
+  AUTH_EID_SIGNUP,
+  AUTH_EID_LOGIN,
+  FETCH_AUTH_EID_SIGNUP_STATUS,
+  FETCH_AUTH_EID_LOGIN_STATUS,
+  SESSION_STATUS,
+  LOGOUT
+} from './queries';
 import { AuthEidSignupData, AuthEidAuthorizeData, AuthEidStatusVariables, AuthEidSignupStatusData, UserSessionData, AuthEidAuthorizeStatusData } from './typedef';
 import { useSessionContext } from '../../contexts/Session';
 import { authEidStatusHandler } from '../auth-eid-handler';
 
 const POLL_INTERVAL = 1000;
 
-export const useAuthEidSignup = () => {
+export const useAuthEidSignup = (cb: () => void) => {
   const [requestAuthEidReg, signupData] = useMutation<AuthEidSignupData>(AUTH_EID_SIGNUP);
   const [fetchStatus, statusData] = useLazyQuery<AuthEidSignupStatusData, AuthEidStatusVariables>(FETCH_AUTH_EID_SIGNUP_STATUS, {
     pollInterval: POLL_INTERVAL
@@ -16,8 +23,6 @@ export const useAuthEidSignup = () => {
 
   const [waiting, setWaiting] = useState(false);
   const [error, setError] = useState<null | string>(null);
-
-  const { create } = useSessionContext();
 
   useEffect(() => {
     const requestId = signupData.data?.authEidSignup.requestId;
@@ -47,7 +52,7 @@ export const useAuthEidSignup = () => {
 
     const success = () => {
       waiting && setWaiting(false);
-      create();
+      cb();
     };
 
     const wait = () => {
@@ -78,7 +83,7 @@ export const useAuthEidSignup = () => {
   };
 };
 
-export const useAuthEidLogin = () => {
+export const useAuthEidLogin = (cb: () => void) => {
   const [requestAuthEidAuth, authData] = useMutation<AuthEidAuthorizeData>(AUTH_EID_LOGIN, { fetchPolicy: 'no-cache' });
   const [fetchStatus, statusData] = useLazyQuery<AuthEidAuthorizeStatusData, AuthEidStatusVariables>(FETCH_AUTH_EID_LOGIN_STATUS, {
     pollInterval: POLL_INTERVAL
@@ -110,12 +115,12 @@ export const useAuthEidLogin = () => {
   }, [waiting]);
 
   useEffect(() => {
-    const status = statusData.data?.authEidSignupStatus.status;
+    const status = statusData.data?.authEidAuthorizeStatus.status;
     if (!status) return;
 
     const success = () => {
       waiting && setWaiting(false);
-      create();
+      cb();
     };
 
     const wait = () => {
@@ -128,7 +133,7 @@ export const useAuthEidLogin = () => {
     };
 
     authEidStatusHandler(status, [success, wait, failure]);
-  }, [statusData.data?.authEidSignupStatus.status]);
+  }, [statusData.data?.authEidAuthorizeStatus.status]);
 
   const authEidLogin = () => {
     // eslint-disable-next-line no-console
@@ -148,11 +153,17 @@ export const useAuthEidLogin = () => {
 
 export const useSessionStatus = () => {
   const [requestSessionStatus, { data, error, loading }] = useMutation<UserSessionData>(SESSION_STATUS);
+  const [logoutReq] = useMutation(LOGOUT);
 
   useEffect(() => {
     // eslint-disable-next-line no-console
     requestSessionStatus().catch(e => console.log(e));
   }, []);
 
-  return { status: data?.userSession.hasSession, error: !!error, loading };
+  return {
+    status: data?.userSession.hasSession,
+    error: !!error,
+    loading,
+    logout: logoutReq
+  };
 };

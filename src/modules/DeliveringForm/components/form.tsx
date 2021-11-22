@@ -19,7 +19,6 @@ export const Form = memo<FormProps>(({
   fee,
   receive,
   iban,
-  ibanVerified,
   address,
   selectOpened,
   textAreaRef,
@@ -43,7 +42,6 @@ export const Form = memo<FormProps>(({
         label="Your receiving IBAN account"
         value={iban.value}
         error={iban.value.length >= 14 && !!iban.error}
-        verified={!!iban.value.length && !iban.error && ibanVerified}
         selectOpened={selectOpened}
         withExtraProps
         autoFocus={!isMobile && !!deliver.amount}

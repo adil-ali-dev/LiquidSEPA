@@ -10,20 +10,10 @@ import { IbanService } from '../../services';
 import { useSessionContext } from '../../contexts/Session';
 
 export const DropdownContent: FC<DropdownContentProps> = ({ show, list, listType, handleAddPress, handleItemPress }) => {
-  if (!show) return null
-
-  const { status } = useSessionContext();
   const classes = useStyles();
+  const { status } = useSessionContext();
 
-  if (!status) return (
-    <Grid className={classes.selectPopup}>
-      <Grid className={classes.selectNoItems}>
-        <Typography className={clsx(classes.selectNoItemsNotice, classes.unauthNotice)}>
-          Please Log in or Register first
-        </Typography>
-      </Grid>
-    </Grid>
-  )
+  if (!show) return null;
 
   const renderList = (list: any[]) => (
     list.map(({ label, xbtAddress }) => (
@@ -45,11 +35,27 @@ export const DropdownContent: FC<DropdownContentProps> = ({ show, list, listType
     handleAddPress && handleAddPress(listType)
   }
 
+  const renderAlert = () => (
+    <Grid className={classes.selectNoItems}>
+      <Typography className={classes.selectNoItemsNotice}>
+        {status ? `You do not have any ${pluralize(listType)}` : 'You need to be logged in'}
+      </Typography>
+      <Button
+        className={classes.addItemButton}
+        variant="contained"
+        color="primary"
+        onClick={_handleAddPress}
+      >
+        {status ? '+ ADD' : 'Login'}
+      </Button>
+    </Grid>
+  );
+
   return (
     <Grid className={classes.selectPopup}>
       <Grid className={classes.listHeading}>
         <Typography
-          className={classes.selectText}
+          className={clsx(classes.selectText, classes.selectChoseLabelText)}
         >
           Choose {listType}
         </Typography>
@@ -64,24 +70,7 @@ export const DropdownContent: FC<DropdownContentProps> = ({ show, list, listType
           </Button>
         )}
       </Grid>
-      {list.length
-        ? renderList(list)
-        : (
-          <Grid className={classes.selectNoItems}>
-            <Typography className={classes.selectNoItemsNotice}>
-              You do not have any {pluralize(listType)}
-            </Typography>
-            <Button
-              className={classes.addItemButton}
-              variant="contained"
-              color="primary"
-              onClick={_handleAddPress}
-            >
-              + ADD
-            </Button>
-          </Grid>
-        )
-      }
+      { (!list.length || !status) ? renderAlert() : renderList(list) }
     </Grid>
   )
 }
