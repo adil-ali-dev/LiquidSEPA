@@ -15,15 +15,16 @@ export const useAuthEidSignup = () => {
   });
 
   const [waiting, setWaiting] = useState(false);
+  const [error, setError] = useState<null | string>(null);
 
   const { create } = useSessionContext();
 
   useEffect(() => {
     const requestId = signupData.data?.authEidSignup.requestId;
-    console.log(requestId);
 
     if (!requestId) return;
 
+    error &&  setError(null);
     fetchStatus({ variables: { requestId } });
   }, [signupData.data?.authEidSignup.requestId]);
 
@@ -31,6 +32,7 @@ export const useAuthEidSignup = () => {
     if (!signupData.error) return;
 
     setWaiting(false);
+    setError(signupData.error.message);
   }, [signupData.error]);
 
   useEffect(() => {
@@ -52,9 +54,9 @@ export const useAuthEidSignup = () => {
       setWaiting(true);
     };
 
-    const failure = () => {
+    const failure = (errorMsg?: string) => {
       waiting && setWaiting(false);
-      authEidSignup();
+      errorMsg && setError(errorMsg);
     };
 
     authEidStatusHandler(status, [success, wait, failure]);
@@ -69,8 +71,9 @@ export const useAuthEidSignup = () => {
     ...signupData,
     data: signupData.data?.authEidSignup,
     stopPolling: statusData.stopPolling,
-    requestId: signupData.data?.authEidSignup.requestId,
+    requestId: error ? null : signupData.data?.authEidSignup.requestId,
     waiting,
+    error,
     authEidSignup
   };
 };
@@ -82,6 +85,7 @@ export const useAuthEidLogin = () => {
   });
 
   const [waiting, setWaiting] = useState(false);
+  const [error, setError] = useState<null | string>(null);
 
   const { create } = useSessionContext();
 
@@ -96,6 +100,7 @@ export const useAuthEidLogin = () => {
     if (!authData.error) return;
 
     setWaiting(false);
+    setError(authData.error.message);
   }, [authData.error]);
 
   useEffect(() => {
@@ -117,9 +122,9 @@ export const useAuthEidLogin = () => {
       setWaiting(true);
     };
 
-    const failure = () => {
+    const failure = (errorMsg?: string) => {
       waiting && setWaiting(false);
-      authEidLogin();
+      errorMsg && setError(errorMsg);
     };
 
     authEidStatusHandler(status, [success, wait, failure]);
@@ -134,7 +139,9 @@ export const useAuthEidLogin = () => {
     ...authData,
     stopPolling: statusData.stopPolling,
     data: authData.data?.authEidAuthorize,
+    requestId: error ? null : authData.data?.authEidAuthorize.requestId,
     waiting,
+    error,
     authEidLogin
   };
 };
