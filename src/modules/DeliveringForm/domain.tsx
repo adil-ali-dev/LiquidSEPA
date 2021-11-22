@@ -322,22 +322,25 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     const value = event.target.value.trim();
 
     BitcoinAddressService.validate(value, error => {
-      setAddress({ error: '', value });
+      setAddress({ value, error: '' });
     });
   }, []);
 
   const handleSelectPress = (v: boolean) => setSelectOpened(v);
 
-  const handleAddPress = (type: 'account' | 'address') => {
-    setModalType(type)
+  const handleAddPress = (type: string) => {
+    setSelectOpened(false);
+    setModalType(type);
     modalControls.open(type);
   };
 
   const handleChooseAccount = (xbtAddress: string) => {
+    setSelectOpened(false)
+
     if (modalType === 'address') {
-      setIban({ error: '', value: xbtAddress.replaceAll(' ', '')})
+      setIban({ value: xbtAddress.replaceAll(' ', ''), error: '' })
     } else {
-      setAddress({ error: '', value: xbtAddress })
+      setAddress({ value: xbtAddress, error: '' })
     }
   }
 

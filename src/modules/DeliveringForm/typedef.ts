@@ -95,7 +95,7 @@ export type FormProps = {
   handleContinueClick: (event: FormEvent<HTMLFormElement>) => void;
   handleEnterTextAreaPress: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
   handleSelectPress: (state: boolean) => void
-  handleAddPress: (type: 'account' | 'address') => void
+  handleAddPress: (type: string) => void
   handleChooseAccount: (address: string) => void
 };
 
@@ -135,7 +135,7 @@ export type FormInputLoggedinProps = {
   account: any;
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
   handleEnterTextAreaPress?: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
-  handleAddPress: (type: 'account' | 'address') => void
+  handleAddPress: (type: string) => void
   handleSelectPress: (state: boolean) => void
   handleChooseAccount: (address: string) => void
 };
