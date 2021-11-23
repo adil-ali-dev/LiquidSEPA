@@ -21,11 +21,16 @@ export const useStyles = makeStyles(({ palette }) =>
       position: 'relative',
       padding: '14px 0',
       borderRadius: '12px',
+      border: '1px solid #41748F',
       backgroundColor: '#012438',
       boxShadow: '0px 0px 0px 1px #012438 inset',
 
       '&:focus-within': {
-        boxShadow: `0px 0px 0px 1px ${palette.primary.main} inset`
+        border: `1px solid ${palette.primary.main}`,
+
+        '& .MuiIconButton-root': {
+          color: palette.primary.main
+        }
       },
 
       '& .MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
@@ -35,7 +40,7 @@ export const useStyles = makeStyles(({ palette }) =>
       },
 
       '& .MuiIconButton-root': {
-        color: palette.text.primary
+        color: '#41748F'
       }
     },
 
@@ -93,6 +98,29 @@ export const useStyles = makeStyles(({ palette }) =>
     popup: {
       overflowY: 'scroll',
       maxHeight: 400
-    }
+    },
+
+    selectNoItems: {
+      padding: '24px',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center'
+    },
+
+    selectNoItemsNotice: {
+      color: '#142A36',
+      fontWeight: 500,
+      fontSize: '16px',
+      lineHeight: '19px'
+    },
+
+    addItemButton: {
+      marginTop: '24px',
+      height: '50px',
+      background: '#00B4E9',
+      borderRadius: '12px',
+      color: '#FFF',
+      width: '100%'
+    },
   })
 )

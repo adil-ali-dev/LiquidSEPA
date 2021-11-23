@@ -7,7 +7,6 @@ import { useEurDeliver, useEurXDeliver } from '../../graphql/Deliver/hooks';
 import { useRfqStatus, useTxStatus } from '../../graphql/Transaction/hooks';
 import { useConfirmation } from '../../graphql/Confirmation/hooks';
 import { useFeeEstimation } from '../../graphql/Fee/hooks';
-import { useIban } from '../../graphql/Iban/hooks';
 import { useDeliveringFormStatusContext } from '../../contexts/DeliveringForm';
 import { useNordigenContext } from '../../contexts/Nordigen';
 import { useClipBoard } from '../../hooks/ClipBoard';
@@ -18,6 +17,10 @@ import { RequisitesMain } from './components/requisites-main';
 import { RequisitesFooter } from './components/requisites-footer';
 import { Payment } from './components/payment';
 import { useSessionContext } from '../../contexts/Session';
+import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
+import { useBankAccountContext } from '../../contexts/BankAccount';
+import { useWhitelistedAddress, useWhitelistedAddresses } from '../../graphql/WhitelistAddress/hooks';
+import { useBankAccounts } from '../../graphql/BankAccount/hooks';
 
 const MAX_CONFS = 2;
 const WIDGET_MARGIN_TOP = 72;
@@ -72,11 +75,11 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const [confirmationDetails, setConfirmationDetails] = useState<null | ConfirmationDetails>(null);
 
   const [payment, setPayment] = useState<null | PaymentDetails>(null);
-  const [selectOpened, setSelectOpened] = useState(false);
-  const [modalType, setModalType] = useState<string>('')
 
   const { next, setNext } = useDeliveringFormStatusContext();
   const { setNordigenIban, modalControls, iban: nordigenIban } = useNordigenContext();
+  const whitelistAddress = useWhitelistAddressContext();
+  const bankAccount = useBankAccountContext();
   const { copyToClipBoard } = useClipBoard();
   const eurDeliver = useEurDeliver();
   const eurXDeliver = useEurXDeliver();
@@ -305,22 +308,19 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     });
   }, []);
 
-  const handleSelectPress = (v: boolean) => setSelectOpened(v);
-
-  const handleAddPress = (type: string) => {
-    if (isLoggedIn){
-      setModalType(type);
-      modalControls.open(type);
+  const handleAddPress = () => {
+    if (isLoggedIn) {
+      if (sellSide) {
+        bankAccount.controls.open();
+      } else {
+        whitelistAddress.controls.open();
+      }
     } else {
       authControls.openLogin();
     }
-
-    setSelectOpened(false);
   };
 
   const handleChooseAccount = (value: string) => {
-    setSelectOpened(false)
-
     if (IbanService.isValid(value)) {
       setIban({ value: IbanService.format(value), error: '' })
     } else {
@@ -372,13 +372,11 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
             receive={receive}
             textAreaRef={textAreaRef}
             isLoggedIn={isLoggedIn}
-            selectOpened={selectOpened}
             handleSwapClick={handleSwapClick}
             handleDeliverChange={handleDeliverChange}
             handleInputChange={sellSide ? handleIbanChange : handleAddressChange}
             handleContinueClick={handleContinueClick}
             handleEnterTextAreaPress={handleEnterTextAreaPress}
-            handleSelectPress={handleSelectPress}
             handleAddPress={handleAddPress}
             handleChooseAccount={handleChooseAccount}
           />

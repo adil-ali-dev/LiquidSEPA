@@ -9,6 +9,7 @@ import { FormInput } from './form-input';
 import { FormGroup } from './form-group';
 import { ConverterService } from '../../../services';
 import { Dropdown } from '../../../components/Dropdown';
+import { Autocomplete } from '../../../components/Autocomplete';
 
 export const Form = memo<FormProps>(({
   formRef,
@@ -20,14 +21,12 @@ export const Form = memo<FormProps>(({
   receive,
   iban,
   address,
-  selectOpened,
   textAreaRef,
   isLoggedIn,
   handleSwapClick,
   handleDeliverChange,
   handleInputChange,
   handleContinueClick,
-  handleSelectPress,
   handleAddPress,
   handleEnterTextAreaPress,
   handleChooseAccount
@@ -40,30 +39,34 @@ export const Form = memo<FormProps>(({
     return sellSide ? (
       <Dropdown
         label="Your receiving IBAN account"
+        placeholder="Chose account"
+        emptyText="You do not have any accounts"
         value={iban.value}
         error={iban.value.length >= 14 && !!iban.error}
-        selectOpened={selectOpened}
         withExtraProps
         autoFocus={!isMobile && !!deliver.amount}
         handleChange={handleInputChange}
-        handleSelectPress={handleSelectPress}
-        handleAddPress={handleAddPress}
-        account={account}
-        handleChooseAccount={handleChooseAccount}
+        handleAddClick={handleAddPress}
+        loginRequired
+        rowsMax={5}
+        data={[]}
+        handleSelect={() => null}
       />
     ) : (
       <Dropdown
         label="Your receiving Liquid address"
+        placeholder="Chose address"
+        emptyText="You do not have any addresses"
         value={address.value}
         error={!!address.value && !!address.error}
-        selectOpened={selectOpened}
         withExtraProps
         autoFocus={!isMobile && !!deliver.amount}
         handleChange={handleInputChange}
-        handleSelectPress={handleSelectPress}
-        handleAddPress={handleAddPress}
-        account={account}
-        handleChooseAccount={handleChooseAccount}
+        handleAddClick={handleAddPress}
+        loginRequired
+        rowsMax={5}
+        data={[]}
+        handleSelect={() => null}
       />
     );
   }

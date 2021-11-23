@@ -87,14 +87,12 @@ export type FormProps = {
   deliver: Product;
   receive: Product;
   isLoggedIn: boolean;
-  selectOpened: boolean;
   handleSwapClick: () => void;
   handleDeliverChange: (event: ChangeEvent<HTMLInputElement>) => void;
   handleInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
   handleContinueClick: (event: FormEvent<HTMLFormElement>) => void;
   handleEnterTextAreaPress: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
-  handleSelectPress: (state: boolean) => void
-  handleAddPress: (type: string) => void
+  handleAddPress: () => void
   handleChooseAccount: (address: string) => void
 };
 
@@ -114,6 +112,7 @@ export type FormInputProps = {
   error?: boolean;
   reference?: RefObject<HTMLTextAreaElement>;
   autoFocus?: boolean;
+  placeholder?: string;
   verified?: null | boolean;
   rowsMax?: number;
   withExtraProps?: boolean;

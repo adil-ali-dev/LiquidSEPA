@@ -60,16 +60,16 @@ export const ModalNordigenInfo = memo<ModalInfoProps>(({
       </Grid>
     </Grid>
   ) : (
-    <Autocomplete
-      className={ classes.modalInfoBank }
-      optionsLoading={ optionsLoading }
-      options={ options }
-      handleChange={ handleChange }
-      value={ bank }
-      renderOption={ renderOption }
-      label="Select your bank"
-      getOptionLabel={ option => option.name }
-      type="bank"
-    />
+    null
+    // <Autocomplete
+    //   className={ classes.modalInfoBank }
+    //   optionsLoading={ optionsLoading }
+    //   options={ options }
+    //   handleChange={ handleChange }
+    //   value={ bank }
+    //   renderOption={ renderOption }
+    //   label="Select your bank"
+    //   getOptionLabel={ option => option.name }
+    // />
   );
 });

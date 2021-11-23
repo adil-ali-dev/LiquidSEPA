@@ -7,11 +7,10 @@ import { useNordigen } from '../../graphql/Nordigen/hooks';
 import { Bank, Country } from '../../graphql/Nordigen/typedef';
 import { BitcoinAddressService } from '../../services';
 import { useNordigenContext } from '../../contexts/Nordigen';
-import { ModalNordigenInfo } from './components/modal-nordigen-info';
-import { FormInput } from '../DeliveringForm/components/form-input';
-import { ModalNordigenForm } from './components/modal-nordigen-form';
-import { ModalNordigenLoggedin } from './components/modal-nordigen-loggedin';
 import { useSessionContext } from '../../contexts/Session';
+import { BankAccountModal } from '../../components/BankAccountModal';
+import { useBankAccounts } from '../../graphql/BankAccount/hooks';
+import { useBankAccountContext } from '../../contexts/BankAccount';
 
 const ADDRESS_KEY_NAME = 'address-key';
 
@@ -29,6 +28,7 @@ export const withNordigenDomain = (Component: ComponentType<Props>) => () => {
   const [country, setCountry] = useState<Country | null>(null);
 
   const { modalStatus, iban, modalControls, setNordigenIban, modalType } = useNordigenContext();
+  const bankAccount = useBankAccountContext();
   const nordigen = useNordigen(address);
   const { status: isLoggedIn } = useSessionContext();
 
@@ -83,9 +83,7 @@ export const withNordigenDomain = (Component: ComponentType<Props>) => () => {
       window.localStorage.removeItem(ADDRESS_KEY_NAME);
     }
 
-    setModalStep(1);
-    setFinal(true);
-    modalControls.open();
+    bankAccount.controls.openWithSuccess();
     nordigen.getAccounts(!!params.get('error'));
   }, [window.location.search]);
 
@@ -165,65 +163,25 @@ export const withNordigenDomain = (Component: ComponentType<Props>) => () => {
   };
 
   return (
-    <Component modalStatus={ modalStatus } handleModalCloseClick={ handleModalCloseClick }>
-      { isLoggedIn
-        ? (
-          <ModalNordigenLoggedin
-            modalType={ modalType }
-            final={ final }
-            error={ error }
-            loading={ nordigen.loading || nordigen.banksLoading }
-            banks={ nordigen.banks }
-            address={ address }
-            bank={ bank }
-            handleCountryChange={ handleCountryChange }
-            handleBankChange={ handleBankChange }
-            handleAddressChange={ handleAddressChange }
-            handleModalSubmit={ handleWhitelist }
-          />
-        )
-        : (
-          <ModalNordigenForm
-            iban={ iban || account?.iban }
-            step={ modalStep }
-            error={ final && error }
-            loading={ nordigen.loading }
-            disabled={ disabled }
-            bankSelected={ bankSelected }
-            final={ final }
-            address={ address }
-            handleSubmit={ handleModalSubmit }
-            completed={ !!account }
-          >
-            {
-              modalStep ? (
-                <ModalNordigenInfo
-                  headline="We use nordigen to validate IBAN"
-                  message="You will be redirected to the nordigen website"
-                  error={ final && error }
-                  final={ final }
-                  handleChange={ handleBankChange }
-                  bank={ bank }
-                  options={ nordigen.banks || [] }
-                  bankSelected={ bankSelected }
-                  completed={ !!account }
-                  optionsLoading={ nordigen.banksLoading }
-                />
-              ) : (
-                <FormInput
-                  label="Your receiving Liquid address"
-                  value={ address }
-                  withExtraProps
-                  background
-                  rowsMax={ 3 }
-                  autoFocus={ !isMobile }
-                  handleChange={ handleAddressChange }
-                  handleEnterTextAreaPress={ handleEnterTextAreaPress }
-                />
-              )
-            }
-          </ModalNordigenForm>
-        ) }
-    </Component>
+    <BankAccountModal
+      status={modalStatus}
+      handleClose={handleModalCloseClick}
+      country={''}
+      bank={address}
+      loading={false}
+      handleLabelChange={() => {}}
+      handleAddressChange={handleAddressChange}
+      handleSubmit={() => {}}
+    />
+    // <SuccessAlertModal
+    //   status={modalStatus}
+    //   handleClose={handleModalCloseClick}
+    //   label={''}
+    //   address={address}
+    //   loading={false}
+    //   handleLabelChange={() => {}}
+    //   handleAddressChange={handleAddressChange}
+    //   handleSubmit={() => {}}
+    // />
   );
 };

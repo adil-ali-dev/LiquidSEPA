@@ -25,8 +25,8 @@ export const FETCH_LIST_OF_ACCOUNTS = gql`
 `;
 
 export const CREATE_ACCOUNT = gql`
-  query NordigenSaveBankAccount ($accountRef: String!, $xbtAddress: String!) {
-    nordigenSaveBankAccount(accountRef: $accountRef, xbtAddress: $xbtAddress) {
+  query NordigenSaveBankAccount ($accountRef: String!) {
+    nordigenSaveBankAccount(accountRef: $accountRef) {
       data
     }
   }

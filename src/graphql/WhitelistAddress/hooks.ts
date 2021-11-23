@@ -1,18 +1,23 @@
 import { useEffect, useState } from 'react';
-import { useLazyQuery, useMutation, useQuery, useApolloClient } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 
-import { WhitelistData, WhitelistVariables, WhitelistStatusData, WhitelistStatusVariables } from './typedef';
-import { FETCH_WHITELIST_ADDRESS_STATUS, WHITELIST_ADDRESS } from './queries';
+import {
+  WhitelistData,
+  WhitelistVariables,
+  WhitelistStatusData,
+  WhitelistStatusVariables,
+  WhitelistedAddressesData
+} from './typedef';
+import { FETCH_WHITELIST_ADDRESS_STATUS, FETCH_WHITELISTED_ADDRESSES, WHITELIST_ADDRESS } from './queries';
 import { authEidStatusHandler } from '../auth-eid-handler';
 
 const POLL_INTERVAL = 1000;
 
-export const useWhitelistedAddress = () => {
+export const useWhitelistedAddress = (successCb: () => void) => {
   const [whitelistReq, whitelistData] = useMutation<WhitelistData, WhitelistVariables>(WHITELIST_ADDRESS, { fetchPolicy: 'no-cache' });
   const [fetchStatus, statusData] = useLazyQuery<WhitelistStatusData, WhitelistStatusVariables>(FETCH_WHITELIST_ADDRESS_STATUS, {
     pollInterval: POLL_INTERVAL
   });
-  // const apolloClient = useApolloClient();
 
   const [waiting, setWaiting] = useState(false);
 
@@ -24,19 +29,25 @@ export const useWhitelistedAddress = () => {
   }, [whitelistData.data?.authEidSignAddress.requestId]);
 
   useEffect(() => {
-    if (!whitelistData.error) return;
+    if (!whitelistData.error && !statusData.error) return;
 
     setWaiting(false);
-  }, [whitelistData.error]);
+  }, [whitelistData.error, statusData.error]);
+
+  useEffect(() => {
+    if (waiting) return;
+
+    statusData.stopPolling?.();
+    statusData.stopPolling?.();
+  }, [waiting]);
 
   useEffect(() => {
     const status = statusData.data?.authEidSignAddressStatus.status;
     if (!status) return;
 
     const success = () => {
-      statusData.stopPolling?.();
       waiting && setWaiting(false);
-      // apolloClient.cache.modify({ id: '', fields: {  } })
+      successCb();
     };
 
     const wait = () => {
@@ -44,7 +55,6 @@ export const useWhitelistedAddress = () => {
     };
 
     const failure = () => {
-      statusData.stopPolling?.();
       waiting && setWaiting(false);
       // TODO: add some action on timout
     };
@@ -66,6 +76,8 @@ export const useWhitelistedAddress = () => {
   };
 };
 
-// export const useWhitelistedAddresses = () => {
-//   const {} = useQuery('');
-// };
+export const useWhitelistedAddresses = () => {
+  const [fetch, { data, ...rest }] = useLazyQuery<WhitelistedAddressesData>(FETCH_WHITELISTED_ADDRESSES);
+
+  return { ...rest, fetch, addresses: data?.filterAccounts };
+};

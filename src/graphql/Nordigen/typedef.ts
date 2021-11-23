@@ -48,7 +48,7 @@ export type AccountsData = {
 
 export type SaveBankAccountVariables = {
   accountRef: string;
-  xbtAddress: string;
+  xbtAddress?: string;
 };
 
 export type SaveBankAccountData = {

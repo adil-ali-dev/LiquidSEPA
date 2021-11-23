@@ -6,35 +6,12 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
       padding: '14px',
       border: '1px solid #133E57',
       borderRadius: '12px',
+      borderColor: '#41748F',
 
       '&:focus-within': {
         borderColor: palette.primary.main,
         backgroundColor: '#012438'
       }
-    },
-
-    formGroupPlate: {
-      backgroundColor: '#004765 !important',
-      border: '1px solid #004765 !important',
-      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between'
-    },
-
-    formGroupPlateVerifiedContainer: {
-      display: 'flex',
-      alignItems: 'center'
-    },
-
-    formGroupPlateVerifiedIcon: {
-      marginRight: 7
-    },
-
-    formGroupPlateVerifiedText: {
-      fontSize: '14px',
-      lineHeight: '17px',
-      color: palette.primary.main
     },
 
     formGroupBackground: {
@@ -162,7 +139,7 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
     },
 
     formGroupInputMedium: {
-      // height: 70
+      height: 180
     },
 
     formGroupSuccessMessage: {
@@ -630,12 +607,6 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
       marginTop: 32
     },
 
-    select: {
-      position: 'relative',
-      height: 180,
-      paddingRight: 40
-    },
-
     selectActive: {
       borderColor: palette.primary.main,
       backgroundColor: '#012438'
@@ -683,7 +654,7 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
     },
 
     selectNoItems: {
-      padding: '0 30px',
+      padding: '0 24px',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center'
@@ -697,16 +668,17 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
     },
 
     addItemButton: {
+      marginTop: '24px',
       height: '50px',
       background: '#00B4E9',
       borderRadius: '12px',
       color: '#FFF',
-      width: '100%',
-      marginTop: 24
+      width: '100%'
     },
 
-    pointer: {
-      cursor: 'pointer'
+    addItemHeaderButton: {
+      height: '29px',
+      borderRadius: '12px'
     },
 
     listHeading: {

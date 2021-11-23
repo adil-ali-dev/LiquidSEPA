@@ -38,27 +38,25 @@ export const ModalNordigenLoggedin: FC<ModalNordigenLoggedinProps> = ({
             <Typography className={ classes.modalHeadline }>
               Add bank account
             </Typography>
-            <Autocomplete
-              className={ classes.modalInfoBank }
-              optionsLoading={ loading }
-              options={ nordigenCountries }
-              handleChange={ handleCountryChange }
-              value={ nordigenCountries[0] }
-              label="Choose your country"
-              getOptionLabel={ option => option.name }
-              type="country"
-            />
+            {/*<Autocomplete*/}
+            {/*  className={ classes.modalInfoBank }*/}
+            {/*  optionsLoading={ loading }*/}
+            {/*  options={ nordigenCountries }*/}
+            {/*  handleChange={ handleCountryChange }*/}
+            {/*  value={ nordigenCountries[0] }*/}
+            {/*  label="Choose your country"*/}
+            {/*  getOptionLabel={ option => option.name }*/}
+            {/*/>*/}
 
-            <Autocomplete
-              className={ classes.modalInfoBank }
-              optionsLoading={ loading }
-              options={ banks || [] }
-              handleChange={ handleBankChange }
-              value={ bank }
-              label="Choose your bank"
-              getOptionLabel={ option => option.name }
-              type="bank"
-            />
+            {/*<Autocomplete*/}
+            {/*  className={ classes.modalInfoBank }*/}
+            {/*  optionsLoading={ loading }*/}
+            {/*  options={ banks || [] }*/}
+            {/*  handleChange={ handleBankChange }*/}
+            {/*  value={ bank }*/}
+            {/*  label="Choose your bank"*/}
+            {/*  getOptionLabel={ option => option.name }*/}
+            {/*/>*/}
           </>
         )
 

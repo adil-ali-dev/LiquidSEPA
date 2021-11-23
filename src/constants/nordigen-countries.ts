@@ -1,9 +1,5 @@
 export default [
   {
-    code: 'SE',
-    name: 'Sweden'
-  },
-  {
     code: 'AT',
     name: 'Austria'
   },
@@ -118,6 +114,10 @@ export default [
   {
     code: 'ES',
     name: 'Spain'
+  },
+  {
+    code: 'SE',
+    name: 'Sweden'
   },
   {
     code: 'GB',

@@ -10,13 +10,13 @@ const TYPES = new Set(['p2wpkh', 'p2wsh', 'p2sh']);
 export class BitcoinAddressService {
   static validate(address: string, cb: ValidateCb) {
     if (!validate(address, BITCOIN_NETWORK)) {
-      cb('Address is invalid');
+      cb('WhitelistAddress is invalid');
       return;
     }
 
     const addressInfo = getAddressInfo(address);
     if (!TYPES.has(addressInfo.type)) {
-      cb('Unsupported Address type');
+      cb('Unsupported WhitelistAddress type');
       return;
     }
 

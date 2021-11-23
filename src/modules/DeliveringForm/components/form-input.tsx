@@ -15,7 +15,7 @@ export const FormInput = memo<FormInputProps>(({
   withExtraProps,
   rowsMax,
   background,
-  verified,
+  placeholder,
   handleChange,
   handleEnterTextAreaPress
 }) => {
@@ -24,13 +24,12 @@ export const FormInput = memo<FormInputProps>(({
   const inputId = `input-${ label }`;
   const className = clsx(
     classes.formGroup,
-    classes.formGroupFixedHeight,
+    withExtraProps && classes.formGroupFixedHeight,
     classes.formGroupSpace,
-    withExtraProps && classes.formGroupLong,
     rowsMax && classes.formGroupMedium,
+    withExtraProps && classes.formGroupLong,
     error && classes.formGroupError,
-    background && classes.formGroupBackground,
-    verified && classes.formGroupPlate
+    background && classes.formGroupBackground
   );
 
   return (
@@ -48,27 +47,18 @@ export const FormInput = memo<FormInputProps>(({
             )
           }
           id={ inputId }
+          placeholder={placeholder}
           value={ value }
           inputRef={ reference }
           onChange={ handleChange }
           autoFocus={ autoFocus }
           { ...withExtraProps && {
             multiline: true,
-            rowsMax: rowsMax || verified ? 4 : 5,
+            rowsMax: rowsMax || 5,
             onKeyDown: handleEnterTextAreaPress
           } }
         />
       </Grid>
-      {
-        verified && (
-          <Grid className={ classes.formGroupPlateVerifiedContainer }>
-            <DoneIcon className={ classes.formGroupPlateVerifiedIcon }/>
-            <Typography className={ classes.formGroupPlateVerifiedText }>
-              Verified
-            </Typography>
-          </Grid>
-        )
-      }
     </Grid>
   );
 });

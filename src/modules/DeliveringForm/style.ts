@@ -39,35 +39,12 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
       padding: '14px',
       border: '1px solid #133E57',
       borderRadius: '12px',
+      borderColor: '#41748F',
 
       '&:focus-within': {
         borderColor: palette.primary.main,
         backgroundColor: '#012438'
       }
-    },
-
-    formGroupPlate: {
-      backgroundColor: '#004765 !important',
-      border: '1px solid #004765 !important',
-      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between'
-    },
-
-    formGroupPlateVerifiedContainer: {
-      display: 'flex',
-      alignItems: 'center'
-    },
-
-    formGroupPlateVerifiedIcon: {
-      marginRight: 7
-    },
-
-    formGroupPlateVerifiedText: {
-      fontSize: '14px',
-      lineHeight: '17px',
-      color: palette.primary.main
     },
 
     formGroupBackground: {
@@ -83,7 +60,7 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
     },
 
     formGroupSpace: {
-      marginTop: '32px'
+      marginTop: '20px'
     },
 
     formGroupLong: {

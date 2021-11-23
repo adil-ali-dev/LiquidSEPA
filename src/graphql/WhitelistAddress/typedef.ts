@@ -1,8 +1,8 @@
 import { SignatureStatus, AuthEidStatusData } from '../typedef';
 
 export type WhitelistVariables = {
-  iban: string;
   label: string;
+  address: string;
 };
 
 export type WhitelistData = {
@@ -17,4 +17,8 @@ export type WhitelistStatusVariables = {
 
 export type WhitelistStatusData = {
   authEidSignAddressStatus: AuthEidStatusData;
+};
+
+export type WhitelistedAddressesData = {
+  filterAccounts: any;
 };

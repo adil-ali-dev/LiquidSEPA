@@ -7,9 +7,16 @@ export type Props = {
   options: any[];
   optionsLoading?: boolean;
   renderOption?: (option: any) => ReactNode;
+  emptyText: string;
+  placeholder?: string;
   label: string;
   value: null | any;
-  type: 'bank' | 'country';
   getOptionLabel: (option: any) => string;
-  handleChange: (item: any) => void;
+  handleChange: (event: ChangeEvent<Record<string, unknown>>, item: any) => void;
+};
+
+export type AlertProps = {
+  text: string;
+  buttonText?: string;
+  handleButtonClick?: () => void;
 };
