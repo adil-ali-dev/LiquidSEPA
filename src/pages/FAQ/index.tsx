@@ -167,10 +167,11 @@ export const FAQPage: FC = () => {
 
           <Grid className={ classes.sectionSpace }>
             <Typography className={ classes.sectionHeadline } component="h3">Transaction limits</Typography>
-            <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMain) }/>
-            Users may make as many purchases or sales as they wish without limits. If your transaction volumes
-            trigger our AML controls, you may be asked to provide further information regarding the nature and
-            purpose of your transactions.
+            <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMain) }>
+              Users may make as many purchases or sales as they wish without limits. If your transaction volumes
+              trigger our AML controls, you may be asked to provide further information regarding the nature and
+              purpose of your transactions.
+            </Typography>
           </Grid>
 
           <Grid className={ classes.sectionSpace }>
