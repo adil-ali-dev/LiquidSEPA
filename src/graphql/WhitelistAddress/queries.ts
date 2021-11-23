@@ -15,8 +15,16 @@ export const WHITELIST_ADDRESS = gql`
 `;
 
 export const FETCH_WHITELIST_ADDRESS_STATUS = gql`
-  query AuthEidSignAddress ($requestId: String!) {
-    authEidSignAddress (requestId: $requestId) {
+  query AuthEidSignAddressStatus ($requestId: String!) {
+    authEidSignAddressStatus (requestId: $requestId) {
+      status
+    }
+  }
+`;
+
+export const FETCH_WHITELISTED_ADDRESSES = gql`
+  query FilterAccounts {
+    filterAccounts (accountType: "Wallet") {
       status
     }
   }

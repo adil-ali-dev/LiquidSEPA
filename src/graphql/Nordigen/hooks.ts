@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useLazyQuery, LazyQueryHookOptions } from '@apollo/client';
+import { useEffect, useMemo } from 'react';
+import { useLazyQuery } from '@apollo/client';
 
-import { BanksVariables, BanksData, AgreementVariables, AgreementData, AccountsData, AccountsVariables, SaveBankAccountData, SaveBankAccountVariables } from './typedef';
 import { FETCH_SUPPORTED_BANKS, CREATE_AGREEMENT, FETCH_LIST_OF_ACCOUNTS, CREATE_ACCOUNT } from './queries';
+import { default as countries } from '../../constants/nordigen-countries';
+import { BanksVariables, BanksData, AgreementVariables, AgreementData, AccountsData, AccountsVariables, SaveBankAccountData, SaveBankAccountVariables } from './typedef';
 
 const REQ_ID_KEY = 'req-id-key';
 
@@ -45,9 +46,7 @@ export const useNordigen = (address: string) => {
   };
 
   const createAccount = (accountRef: string) => {
-    if (!address) return;
-
-    postAccount({ variables: { accountRef, xbtAddress: address } });
+    postAccount({ variables: { accountRef } });
   };
 
   useEffect(() => {
@@ -71,6 +70,7 @@ export const useNordigen = (address: string) => {
     loading,
     banksLoading: banks.loading,
     banks: banks.data?.nordigenSupportedBanks?.data || [],
+    countries,
     link: agreement.data?.nordigenCreateAgreement.data.initiate,
     reqId,
     account: account.data?.nordigenSaveBankAccount.data?.iban ? {

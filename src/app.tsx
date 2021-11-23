@@ -9,6 +9,8 @@ import { theme } from './theme';
 import { Routes } from './routes';
 import { NordigenProvider } from './contexts/Nordigen';
 import { SessionProvider } from './contexts/Session';
+import { WhitelistAddressProvider } from './contexts/WhitelistAddress';
+import { BankAccountProvider } from './contexts/BankAccount';
 
 const httpLink = createHttpLink({
   uri: GQL_HTTP_URL,
@@ -30,7 +32,11 @@ export const App: FC = () => (
           <CssBaseline/>
           <SessionProvider>
             <NordigenProvider>
-              <Routes/>
+              <WhitelistAddressProvider>
+                <BankAccountProvider>
+                  <Routes/>
+                </BankAccountProvider>
+              </WhitelistAddressProvider>
             </NordigenProvider>
           </SessionProvider>
         </StylesProvider>

@@ -20,3 +20,4 @@ export { ReactComponent as AuthEidLogoIcon } from './auth-eid-logo.svg';
 export { ReactComponent as UsdTIcon } from './usdt.svg';
 export { ReactComponent as DotsIcon } from './dots.svg';
 export { ReactComponent as DropdownArrowIcon } from './dropdown-arrow.svg';
+export { ReactComponent as CheckLarge } from './check-large.svg';

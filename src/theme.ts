@@ -133,25 +133,26 @@ const createdTheme = createMuiTheme({
         }
       },
       popper: {
-        marginTop: '10px',
-        left: '1px !important'
+        marginTop: '10px'
       },
       paper: {
         backgroundColor: '#FFF',
         borderRadius: 12,
         boxShadow: 'none',
-        border: `1px solid ${ palette.primary.main }`,
+        marginTop: 14,
         // borderTop: 'none',
         // borderTopLeftRadius: 0,
         // borderTopRightRadius: 0
       },
       noOptions: {
         color: palette.text.secondary,
-        fontSize: '0.9rem'
+        fontSize: '0.9rem',
+        padding: 0
       },
       loading: {
         color: palette.text.secondary,
-        fontSize: '0.9rem'
+        fontSize: '0.9rem',
+        padding: 0
       },
       option: {
         color: palette.text.primary,
