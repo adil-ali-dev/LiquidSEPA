@@ -28,7 +28,7 @@ type Props = {
 
 export const SessionProvider: FC<Props> = ({ children }) => {
   const sessionStatus = useSessionStatus();
-  const registerData = useAuthEidSignup(() => create());
+  const registerData = useAuthEidSignup(() => closeRegister());
   const loginData = useAuthEidLogin(() => create());
 
   const [modalType, setModalType] = useState<'register' | 'login' | null>(null);
