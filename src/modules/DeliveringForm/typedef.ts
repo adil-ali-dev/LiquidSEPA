@@ -87,6 +87,7 @@ export type FormProps = {
   loading: boolean;
   fee: number;
   iban: Iban;
+  isLoggedIn: boolean;
   address: Address;
   addresses: WhitelistedAddress[];
   accounts: BankAccount[];
@@ -95,7 +96,6 @@ export type FormProps = {
   receive: Product;
   handleSwapClick: () => void;
   handleDeliverChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  handleInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
   handleContinueClick: (event: FormEvent<HTMLFormElement>) => void;
   handleAddPress: () => void;
   handleAccountSelect: (item: BankAccount) => void;

@@ -133,6 +133,10 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
       }
     },
 
+    formGroupInputNotEditable: {
+      caretColor: 'transparent'
+    },
+
     formGroupInputLong: {
       height: '90px',
       alignItems: 'flex-start !important'

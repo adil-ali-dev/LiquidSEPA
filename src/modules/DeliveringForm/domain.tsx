@@ -112,6 +112,21 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   }, [txStatus.data?.confs]);
 
   useEffect(() => {
+    if (!whitelistAddress.addresses.length || address.value) return;
+    const details = whitelistAddress.addresses[0];
+
+    setAddress({ value: details.acct_num, error: '', details });
+  }, [whitelistAddress.addresses.length])
+
+  useEffect(() => {
+    if (!bankAccount.accounts.length  || iban.value) return;
+    const details = bankAccount.accounts[0];
+
+    setIban({ value: details.name, error: '', details });
+  }, [bankAccount.accounts.length])
+
+
+  useEffect(() => {
     setDeliver({ ...deliver, error: eurDeliver.data?.errorMessage || eurXDeliver.data?.errorMessage });
   }, [eurDeliver.data?.errorMessage, eurXDeliver.data?.errorMessage]);
 
@@ -287,20 +302,6 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     copyToClipBoard(confirmation.data?.trackingCode);
   }, [confirmation.data?.trackingCode]);
 
-  const handleIbanChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    IbanService.validate(event.target.value.trim(), (error, value) => {
-      setIban({ error, value });
-    });
-  }, []);
-
-  const handleAddressChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value.trim();
-
-    BitcoinAddressService.validate(value, error => {
-      setAddress({ value, error: '' });
-    });
-  }, []);
-
   const handleAddPress = () => {
     if (isLoggedIn) {
       if (sellSide) {
@@ -362,13 +363,13 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
             fee={ feeEstimation.data.fee }
             address={ address }
             deliver={ deliver }
+            isLoggedIn={ isLoggedIn }
             receive={ receive }
             textAreaRef={ textAreaRef }
             addresses={ whitelistAddress.addresses }
             accounts={ bankAccount.accounts }
             handleSwapClick={ handleSwapClick }
             handleDeliverChange={ handleDeliverChange }
-            handleInputChange={ sellSide ? handleIbanChange : handleAddressChange }
             handleContinueClick={ handleContinueClick }
             handleAddPress={ handleAddPress }
             handleAddressSelect={ handleAddressSelect }

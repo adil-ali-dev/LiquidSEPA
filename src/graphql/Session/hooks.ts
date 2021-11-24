@@ -1,14 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client';
 
-import {
-  AUTH_EID_SIGNUP,
-  AUTH_EID_LOGIN,
-  FETCH_AUTH_EID_SIGNUP_STATUS,
-  FETCH_AUTH_EID_LOGIN_STATUS,
-  SESSION_STATUS,
-  LOGOUT
-} from './queries';
+import { AUTH_EID_SIGNUP, AUTH_EID_LOGIN, FETCH_AUTH_EID_SIGNUP_STATUS, FETCH_AUTH_EID_LOGIN_STATUS, SESSION_STATUS, LOGOUT } from './queries';
 import { AuthEidSignupData, AuthEidAuthorizeData, AuthEidStatusVariables, AuthEidSignupStatusData, UserSessionData, AuthEidAuthorizeStatusData } from './typedef';
 import { useSessionContext } from '../../contexts/Session';
 import { authEidStatusHandler } from '../auth-eid-handler';
@@ -16,8 +9,9 @@ import { authEidStatusHandler } from '../auth-eid-handler';
 const POLL_INTERVAL = 1000;
 
 export const useAuthEidSignup = (cb: () => void) => {
-  const [requestAuthEidReg, signupData] = useMutation<AuthEidSignupData>(AUTH_EID_SIGNUP);
+  const [requestAuthEidReg, signupData] = useMutation<AuthEidSignupData>(AUTH_EID_SIGNUP, { fetchPolicy: 'no-cache' });
   const [fetchStatus, statusData] = useLazyQuery<AuthEidSignupStatusData, AuthEidStatusVariables>(FETCH_AUTH_EID_SIGNUP_STATUS, {
+    fetchPolicy: 'no-cache',
     pollInterval: POLL_INTERVAL
   });
 
@@ -26,10 +20,9 @@ export const useAuthEidSignup = (cb: () => void) => {
 
   useEffect(() => {
     const requestId = signupData.data?.authEidSignup.requestId;
-
     if (!requestId) return;
 
-    error &&  setError(null);
+    setError(null);
     fetchStatus({ variables: { requestId } });
   }, [signupData.data?.authEidSignup.requestId]);
 
@@ -86,13 +79,12 @@ export const useAuthEidSignup = (cb: () => void) => {
 export const useAuthEidLogin = (cb: () => void) => {
   const [requestAuthEidAuth, authData] = useMutation<AuthEidAuthorizeData>(AUTH_EID_LOGIN, { fetchPolicy: 'no-cache' });
   const [fetchStatus, statusData] = useLazyQuery<AuthEidAuthorizeStatusData, AuthEidStatusVariables>(FETCH_AUTH_EID_LOGIN_STATUS, {
+    fetchPolicy: 'no-cache',
     pollInterval: POLL_INTERVAL
   });
 
   const [waiting, setWaiting] = useState(false);
   const [error, setError] = useState<null | string>(null);
-
-  const { create } = useSessionContext();
 
   useEffect(() => {
     if (!authData.data?.authEidAuthorize.requestId) return;

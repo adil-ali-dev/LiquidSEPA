@@ -21,7 +21,6 @@ export const FormGroup = memo<FormGroupProps>(({
   return (
     <Grid
       className={ clsx(classes.formGroup, className, product.error && classes.formGroupError) }
-      style={{ cursor: 'pointer' }}
       onClick={ handleSwapClick }
     >
       <Typography className={ classes.commonLabel }>
@@ -37,8 +36,8 @@ export const FormGroup = memo<FormGroupProps>(({
         <InputBase
           className={ classes.formGroupText }
           value={ product.placeholder }
-          key={ product.product }
-          autoFocus={ !isMobile && editable }
+          key={ `${product.product}-${editable}` }
+          autoFocus={ !isMobile }
           inputProps={{ className: clsx(classes.formGroupTextInput, !editable && classes.formGroupTextInputDisabled) }}
           disabled={ !editable }
           onClick={ event => editable && event.stopPropagation() }

@@ -14,6 +14,7 @@ export const Dropdown: FC<DropdownProps> = ({
   headerText,
   autoFocus,
   withExtraProps,
+  notEditable,
   placeholder,
   background,
   rowsMax,
@@ -51,7 +52,7 @@ export const Dropdown: FC<DropdownProps> = ({
             { label }
           </InputLabel>
           <InputBase
-            className={ clsx(classes.formGroupInput, classes.selectText) }
+            className={ clsx(classes.formGroupInput, classes.selectText, notEditable && classes.formGroupInputNotEditable) }
             id={ `text-area-input-${label}` }
             multiline
             onFocus={ handleFocus }
