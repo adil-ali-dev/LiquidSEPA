@@ -122,7 +122,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     if (!bankAccount.accounts.length  || iban.value) return;
     const details = bankAccount.accounts[0];
 
-    setIban({ value: details.name, error: '', details });
+    setIban({ value: IbanService.format(details.name), error: '', details });
   }, [bankAccount.accounts.length])
 
 
