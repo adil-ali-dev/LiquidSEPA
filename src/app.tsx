@@ -4,7 +4,7 @@ import { ThemeProvider, StylesProvider } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core';
 import { QueryClientProvider, QueryClient } from 'react-query';
 
-import { GQL_HTTP_URL } from './constants';
+import { GQL_HTTP_URL, LIVE } from './constants';
 import { theme } from './theme';
 import { Routes } from './routes';
 import { NordigenProvider } from './contexts/Nordigen';
@@ -14,7 +14,7 @@ import { BankAccountProvider } from './contexts/BankAccount';
 
 const httpLink = createHttpLink({
   uri: GQL_HTTP_URL,
-  credentials: 'include'
+  credentials: LIVE ? 'same-origin' : 'include'
 });
 
 const client = new ApolloClient({

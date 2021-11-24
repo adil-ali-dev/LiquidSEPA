@@ -1,12 +1,11 @@
 export type EurXDepositVariables = {
   amount: number;
-  address?: string;
-  iban: string
+  iban: string;
 };
 
 export type EurDepositVariables = {
   amount: number;
-  address: string;
+  label: string;
 };
 
 export type DepositData = {

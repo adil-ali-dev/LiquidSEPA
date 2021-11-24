@@ -5,7 +5,6 @@ export type Props = {
   label: string;
   address: string;
   loading: boolean;
-  success: boolean;
   disabled: boolean;
   handleClose: () => void;
   handleLabelChange: (event: ChangeEvent<HTMLInputElement>) => void;

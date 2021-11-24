@@ -16,9 +16,13 @@ export const Modal = memo<Props>(({ status, handleClose, children }) => {
       onClose={ handleClose }
     >
       <>
-        <Button className={ styles.modalCloseButton } onClick={ handleClose }>
-          <CloseIcon className={ styles.modalCloseIcon }/>
-        </Button>
+        {
+          handleClose && (
+            <Button className={ styles.modalCloseButton } onClick={ handleClose }>
+              <CloseIcon className={ styles.modalCloseIcon }/>
+            </Button>
+          )
+        }
         { children }
       </>
     </Dialog>

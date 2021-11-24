@@ -32,6 +32,7 @@ export const Autocomplete = memo<Props>(({
   renderOption,
   optionsLoading,
   handleChange,
+  autoFocus,
   getOptionLabel
 }) => {
   const classes = useStyles();
@@ -55,7 +56,7 @@ export const Autocomplete = memo<Props>(({
           <AutocompleteAlert text={emptyText} />
         }
         loading={ optionsLoading }
-        renderInput={ props => renderInput({ ...props, placeholder }) }
+        renderInput={ props => renderInput({ ...props, placeholder, autoFocus: autoFocus && !value }) }
         disableClearable
         renderOption={ renderOption }
         getOptionLabel={ getOptionLabel }

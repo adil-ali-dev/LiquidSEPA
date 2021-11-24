@@ -53,6 +53,11 @@ export type SaveBankAccountVariables = {
 
 export type SaveBankAccountData = {
   nordigenSaveBankAccount: {
-    data: any;
+    data: {
+      account_operation: boolean;
+      iban: null | string;
+      name: null | string;
+      reason: string;
+    };
   }
 };

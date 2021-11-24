@@ -22,7 +22,7 @@ export const Routes: FC = () => (
   <BrowserRouter>
     <ScrollToTop/>
     <Route path={ HOME_PATH } exact component={ HomePage }/>
-    <Route path={ HOME_PATH } component={ NordigenModule }/>
+    {/*<Route path={ HOME_PATH } component={ NordigenModule }/>*/}
     <Route path={ HOME_PATH } component={ BankAccountModule }/>
     <Route path={ HOME_PATH } component={ WhitelistAddressModule }/>
     <Route path={ FAQ_PATH } component={ FAQPage }/>

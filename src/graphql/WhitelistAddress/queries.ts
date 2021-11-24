@@ -25,7 +25,7 @@ export const FETCH_WHITELIST_ADDRESS_STATUS = gql`
 export const FETCH_WHITELISTED_ADDRESSES = gql`
   query FilterAccounts {
     filterAccounts (accountType: "Wallet") {
-      status
+      items { data }
     }
   }
 `;

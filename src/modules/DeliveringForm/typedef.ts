@@ -1,6 +1,9 @@
 import { ChangeEvent, FormEvent, KeyboardEvent, ReactNode, MouseEvent, RefObject, ReactNodeArray } from 'react';
 
 import { ProductType, SIDESWAP_PREFIX } from '../../constants';
+import { Bank } from '../../graphql/Nordigen/typedef';
+import { BankAccount } from '../../graphql/BankAccount/typedef';
+import { WhitelistedAddress } from '../../graphql/WhitelistAddress/typedef';
 
 export type Product = {
   product: ProductType;
@@ -11,6 +14,7 @@ export type Product = {
 
 export type Iban = {
   value: string;
+  details?: null | BankAccount;
   error: null | string;
 };
 
@@ -21,6 +25,7 @@ export type NameOnAccount = {
 
 export type Address = {
   value: string;
+  details?: null | WhitelistedAddress;
   error: null | string;
 };
 
@@ -83,17 +88,18 @@ export type FormProps = {
   fee: number;
   iban: Iban;
   address: Address;
+  addresses: WhitelistedAddress[];
+  accounts: BankAccount[];
   textAreaRef: RefObject<HTMLTextAreaElement>;
   deliver: Product;
   receive: Product;
-  isLoggedIn: boolean;
   handleSwapClick: () => void;
   handleDeliverChange: (event: ChangeEvent<HTMLInputElement>) => void;
   handleInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
   handleContinueClick: (event: FormEvent<HTMLFormElement>) => void;
-  handleEnterTextAreaPress: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
-  handleAddPress: () => void
-  handleChooseAccount: (address: string) => void
+  handleAddPress: () => void;
+  handleAccountSelect: (item: BankAccount) => void;
+  handleAddressSelect: (item: WhitelistedAddress) => void;
 };
 
 export type FormGroupProps = {

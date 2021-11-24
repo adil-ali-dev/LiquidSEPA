@@ -2,7 +2,7 @@ import React, { ChangeEvent, FC, KeyboardEvent, ReactNode } from 'react'
 
 import { Bank, Country } from '../../graphql/Nordigen/typedef'
 
-export type DropdownProps<T> = {
+export type DropdownProps = {
   background?: boolean;
   label: string;
   value: string;
@@ -14,24 +14,28 @@ export type DropdownProps<T> = {
   emptyText: string;
   loginRequired?: boolean;
   headerText?: string;
-  data: T[];
+  data: any[];
+  checkSelected?: (item: any) => boolean;
+  renderItem: (item: any, idx: number) => ReactNode;
+  handleItemSelect: (item: any) => void;
+  keyExtractor: (item: any) => string;
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  handleEnterTextAreaPress?: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
   handleAddClick: () => void;
-  handleSelect: (item: T) => void;
 };
 
-export type DropdownContentProps<T> = {
+export type DropdownContentProps = {
   open: boolean;
-  data: T[];
+  data: any[];
   className?: string;
   emptyText: string;
   loginRequired?: boolean;
   headerText?: string;
   handleAddClick?: () => void;
-  handleItemClick?: (item: T) => void;
-  handleButtonClick?: () => void;
-  renderItem?: (item: T) => ReactNode;
+  checkSelected?: (item: any) => boolean;
+  close: () => void;
+  renderItem: (item: any, idx: number) => ReactNode;
+  keyExtractor: (item: any) => string;
+  handleItemSelect: (item: any) => void;
   renderHeader?: () => ReactNode;
 };
 
@@ -43,6 +47,7 @@ export type DropdownAlertProps = {
 
 export type DropdownHeaderProps = {
   text: string;
+  close: () => void;
   buttonText?: null | string;
   handleButtonClick?: () => void;
 };

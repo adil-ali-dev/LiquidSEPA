@@ -1,13 +1,8 @@
-import React, { FC, memo } from 'react';
-import { Button, Grid, Link, Typography } from '@material-ui/core';
-import pluralize from 'pluralize';
-import clsx from 'clsx';
+import React, { FC } from 'react';
+import { Button, Grid, Typography } from '@material-ui/core';
 
 import { useStyles } from './styles';
-import { DropdownAlertProps, DropdownContentProps } from './typedef';
-import { DotsIcon } from '../../assets/Icons';
-import { IbanService } from '../../services';
-import { useSessionContext } from '../../contexts/Session';
+import { DropdownAlertProps } from './typedef';
 
 export const DropdownAlert: FC<DropdownAlertProps> = ({
   text,
