@@ -23,6 +23,7 @@ export const Form = memo<FormProps>(({
   receive,
   iban,
   address,
+  isLoggedIn,
   textAreaRef,
   addresses,
   accounts,
@@ -59,7 +60,6 @@ export const Form = memo<FormProps>(({
         value={ iban.value }
         error={ iban.value.length >= 14 && !!iban.error }
         withExtraProps
-        autoFocus={ !isMobile && !!deliver.amount }
         handleAddClick={ handleAddPress }
         loginRequired
         notEditable
@@ -77,7 +77,6 @@ export const Form = memo<FormProps>(({
         value={ address.value }
         error={ !!address.value && !!address.error }
         withExtraProps
-        autoFocus={ !isMobile && !!deliver.amount }
         handleAddClick={ handleAddPress }
         loginRequired
         notEditable
@@ -96,7 +95,7 @@ export const Form = memo<FormProps>(({
         <FormGroup
           label="Deliver"
           product={deliver}
-          editable
+          editable={ isLoggedIn }
           handleDeliverChange={ handleDeliverChange }
           handleSwapClick={ handleSwapClick }
         />

@@ -20,10 +20,9 @@ export const useAuthEidSignup = (cb: () => void) => {
 
   useEffect(() => {
     const requestId = signupData.data?.authEidSignup.requestId;
-
     if (!requestId) return;
 
-    error &&  setError(null);
+    setError(null);
     fetchStatus({ variables: { requestId } });
   }, [signupData.data?.authEidSignup.requestId]);
 

@@ -1,4 +1,4 @@
-import React, { memo, useCallback, MouseEvent, useState, useEffect } from 'react';
+import React, { memo, useCallback, MouseEvent, useMemo } from 'react';
 import { Grid, Button, Typography, Link as MuiLink, CircularProgress } from '@material-ui/core';
 import { Link, useLocation, useHistory } from 'react-router-dom';
 import QRCode from 'react-qr-code';
@@ -6,11 +6,10 @@ import clsx from 'clsx';
 
 import { HOME_PATH, FAQ_PATH } from '../../constants';
 import { useDeliveringFormStatusContext } from '../../contexts/DeliveringForm';
-import { useStyles } from './style';
+import { useSessionContext } from '../../contexts/Session';
 import { Modal } from '../Modal';
 import { AuthEidLogoIcon } from '../../assets/Icons';
-import { useAuthEidLogin, useAuthEidSignup } from '../../graphql/Session/hooks';
-import { useSessionContext } from '../../contexts/Session';
+import { useStyles } from './style';
 
 const faqRegExp = new RegExp(FAQ_PATH);
 
@@ -99,7 +98,7 @@ export const Header = memo(() => {
           <Grid
             className={ clsx(
               classes.registerQrWrapper,
-              (qrError || (!requestId && !qrLoading)) && classes.registerQrEmpty
+              (!requestId && !qrLoading) && classes.registerQrEmpty
             ) }
           >
             { renderQr() }

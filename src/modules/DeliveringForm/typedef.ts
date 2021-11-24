@@ -87,6 +87,7 @@ export type FormProps = {
   loading: boolean;
   fee: number;
   iban: Iban;
+  isLoggedIn: boolean;
   address: Address;
   addresses: WhitelistedAddress[];
   accounts: BankAccount[];

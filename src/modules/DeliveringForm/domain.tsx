@@ -363,6 +363,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
             fee={ feeEstimation.data.fee }
             address={ address }
             deliver={ deliver }
+            isLoggedIn={ isLoggedIn }
             receive={ receive }
             textAreaRef={ textAreaRef }
             addresses={ whitelistAddress.addresses }

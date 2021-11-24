@@ -9,7 +9,7 @@ const SessionContext = createContext({
   error: false,
   qrError: null,
   modalType: null,
-  requestId: null,
+  requestId: null as null | string,
   qrWaiting: false,
   qrData: undefined,
   create: (): void => {},
@@ -33,17 +33,33 @@ export const SessionProvider: FC<Props> = ({ children }) => {
 
   const [modalType, setModalType] = useState<'register' | 'login' | null>(null);
   const [status, setStatus] = useState(false);
+  const [requestId, setRequestId] = useState<null | string>(null);
 
-  const qrLoading = registerData.loading || loginData.loading;
-  const qrWaiting = registerData.waiting || loginData.waiting;
-  const qrData = registerData.data || loginData.data || null;
-  const qrError = registerData.error || loginData.error || null;
+  const isRegister = modalType === 'register';
+  const qrLoading = isRegister ? registerData.loading : loginData.loading;
+  const qrWaiting = isRegister ? registerData.waiting : loginData.waiting;
+  const qrData = (isRegister ? registerData.data : loginData.data) || null;
+  const qrError = (isRegister ? registerData.error : loginData.error) || null;
+
+  useEffect(() => {
+    setRequestId(loginData.data?.requestId || null);
+  }, [loginData.data?.requestId]);
+
+  useEffect(() => {
+    setRequestId(registerData.data?.requestId || null);
+  }, [registerData.data?.requestId]);
 
   useEffect(() => {
     if (sessionStatus.status === status) return;
 
     setStatus(sessionStatus.status || false);
   }, [sessionStatus.status]);
+
+  useEffect(() => {
+    if (!qrError) return;
+
+    setRequestId(null);
+  }, [qrError]);
 
   useEffect(() => {
     if (modalType) return;
@@ -91,7 +107,7 @@ export const SessionProvider: FC<Props> = ({ children }) => {
     qrData,
     qrLoading,
     qrWaiting,
-    requestId: registerData.requestId || loginData.requestId,
+    requestId,
     controls: {
       openLogin,
       closeLogin,
