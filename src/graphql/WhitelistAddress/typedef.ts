@@ -19,6 +19,19 @@ export type WhitelistStatusData = {
   authEidSignAddressStatus: AuthEidStatusData;
 };
 
+export type WhitelistedAddress = {
+  acct_num: string;
+  ref: null | string;
+  type: 'Wallet';
+  name: string;
+}
+
+type Item = {
+  data: WhitelistedAddress;
+}
+
 export type WhitelistedAddressesData = {
-  filterAccounts: any;
+  filterAccounts: {
+    items: Item[];
+  };
 };

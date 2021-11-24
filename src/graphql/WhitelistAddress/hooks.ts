@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 
 import {
@@ -13,7 +13,7 @@ import { authEidStatusHandler } from '../auth-eid-handler';
 
 const POLL_INTERVAL = 1000;
 
-export const useWhitelistedAddress = (successCb: () => void) => {
+export const useWhitelistedAddress = (cb: (error?: string) => void) => {
   const [whitelistReq, whitelistData] = useMutation<WhitelistData, WhitelistVariables>(WHITELIST_ADDRESS, { fetchPolicy: 'no-cache' });
   const [fetchStatus, statusData] = useLazyQuery<WhitelistStatusData, WhitelistStatusVariables>(FETCH_WHITELIST_ADDRESS_STATUS, {
     pollInterval: POLL_INTERVAL
@@ -32,6 +32,7 @@ export const useWhitelistedAddress = (successCb: () => void) => {
     if (!whitelistData.error && !statusData.error) return;
 
     setWaiting(false);
+    cb(whitelistData.error?.message || 'Something went wrong');
   }, [whitelistData.error, statusData.error]);
 
   useEffect(() => {
@@ -47,7 +48,7 @@ export const useWhitelistedAddress = (successCb: () => void) => {
 
     const success = () => {
       waiting && setWaiting(false);
-      successCb();
+      cb();
     };
 
     const wait = () => {
@@ -56,7 +57,7 @@ export const useWhitelistedAddress = (successCb: () => void) => {
 
     const failure = () => {
       waiting && setWaiting(false);
-      // TODO: add some action on timout
+      cb(status);
     };
 
     authEidStatusHandler(status, [success, wait, failure]);
@@ -77,7 +78,15 @@ export const useWhitelistedAddress = (successCb: () => void) => {
 };
 
 export const useWhitelistedAddresses = () => {
-  const [fetch, { data, ...rest }] = useLazyQuery<WhitelistedAddressesData>(FETCH_WHITELISTED_ADDRESSES);
+  const [fetch, { data, ...rest }] = useLazyQuery<WhitelistedAddressesData>(FETCH_WHITELISTED_ADDRESSES, { fetchPolicy: 'no-cache' });
 
-  return { ...rest, fetch, addresses: data?.filterAccounts };
+  const addresses = useMemo(() => {
+    const items = data?.filterAccounts.items;
+
+    if (!items?.length) return [];
+
+    return items.map(i => i.data);
+  }, [rest.loading]);
+
+  return { ...rest, fetch, addresses };
 };

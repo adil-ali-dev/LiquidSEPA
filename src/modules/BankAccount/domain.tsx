@@ -5,16 +5,23 @@ import { Props } from './typedef';
 import { useNordigen } from '../../graphql/Nordigen/hooks';
 import { Bank, Country } from '../../graphql/Nordigen/typedef';
 import { useBankAccountContext } from '../../contexts/BankAccount';
-
-const REQ_ID_KEY = 'req-id-key';
+import { StatusModalType } from '../../components/StatusModal/typedef';
+import { SuccessAlertModal } from '../../components/StatusModal';
 
 export const withBankAccountDomain = (Component: FC<Props>) => () => {
   const history = useHistory();
   const [country, setCountry] = useState<null | Country>(null);
   const [bank, setBank] = useState<null | Bank>(null);
 
-  const { modalStatus, success, controls } = useBankAccountContext();
-  const { banks, banksLoading, countries, link, getBanksByCountry, reqId, loading, createAgreement } = useNordigen('');
+  const { modalStatus, success, error, processing, controls } = useBankAccountContext();
+  const { banks, banksLoading, countries, link, getBanksByCountry, reqId, loading, createAgreement, getAccounts } = useNordigen(controls.openStatus);
+
+  useEffect(() => {
+    if (!modalStatus && country && bank) {
+      setBank(null);
+      setCountry(null);
+    }
+  }, [modalStatus]);
 
   useEffect(() => {
     if (!country) return;
@@ -29,6 +36,16 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
     if (!params.get('ref') || !reqId) return;
 
     history.replace('');
+
+    const error = params.get('error');
+
+    if (error) {
+      controls.openStatus(error);
+    } else {
+      controls.openProcessing();
+    }
+
+    getAccounts(!!error);
   }, [window.location.search]);
 
   useEffect(() => {
@@ -55,20 +72,39 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
   }, [bank, country]);
 
   return (
-    <Component
-      status={ modalStatus }
-      handleClose={ controls.close }
-      country={ country }
-      banksLoading={ banksLoading }
-      bank={ bank }
-      success={ success }
-      banks={ banks }
-      countries={ countries }
-      loading={ loading }
-      handleCountryChange={ handleCountryChange }
-      handleBankChange={ handleBankChange }
-      handleSubmit={ handleSubmit }
-      disabled={ !bank || !country }
-    />
+    <>
+      <Component
+        status={ modalStatus }
+        handleClose={ controls.close }
+        country={ country }
+        banksLoading={ banksLoading }
+        bank={ bank }
+        banks={ banks }
+        countries={ countries }
+        loading={ loading }
+        handleCountryChange={ handleCountryChange }
+        handleBankChange={ handleBankChange }
+        handleSubmit={ handleSubmit }
+        disabled={ !bank || !country }
+      />
+      <SuccessAlertModal
+        type={ StatusModalType.PROCESSING }
+        status={ processing }
+      />
+      <SuccessAlertModal
+        text="Account successfully created"
+        type={ StatusModalType.SUCCESS }
+        status={ success }
+        handleClose={ controls.closeStatus }
+        handleButtonClick={ controls.closeStatus }
+      />
+      <SuccessAlertModal
+        text={ error }
+        type={ StatusModalType.ERROR }
+        status={ !!error }
+        handleClose={ controls.closeStatus }
+        handleButtonClick={ controls.closeStatus }
+      />
+    </>
   );
 };

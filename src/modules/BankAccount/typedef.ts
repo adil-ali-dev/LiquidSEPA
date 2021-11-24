@@ -9,7 +9,6 @@ export type Props = {
   banks: Bank[];
   countries: Country[];
   loading: boolean;
-  success: boolean;
   disabled: boolean;
   handleClose: () => void;
   handleCountryChange: (_: ChangeEvent<Record<string, unknown>>, value: null | Country) => void;

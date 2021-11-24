@@ -2,6 +2,6 @@ import { ReactNode, ReactNodeArray } from 'react';
 
 export type Props = {
   status: boolean;
-  handleClose: () => void;
+  handleClose?: () => void;
   children: ReactNode | ReactNodeArray;
 };

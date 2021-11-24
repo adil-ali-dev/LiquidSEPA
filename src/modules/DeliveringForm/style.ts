@@ -731,28 +731,45 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
     },
 
     listItem: {
-      marginTop: 24,
-      padding: '0 24px',
-      display: 'flex',
+      textAlign: 'left',
+      padding: '5px 24px',
+      width: '100%',
       justifyContent: 'space-between',
+
+      '&:hover': {
+        backgroundColor: 'rgba(0, 0, 0, 0.04)'
+      },
+
+      '&:active': {
+        backgroundColor: 'transparent'
+      },
+
+      '&:focus': {
+        backgroundColor: 'transparent'
+      }
     },
 
     listItemHeading: {
       fontSize: '16px',
       lineHeight: '19px',
       color: '#142A36',
-      marginBottom: 8
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
     },
 
     listItemText: {
+      marginTop: 8,
       fontSize: '16px',
       lineHeight: '19px',
-      color: '#658698'
+      color: '#658698',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
     },
 
     listItemTextWrap: {
-      maxWidth: '80%',
-      wordBreak: 'break-word'
+      width: '100%'
     },
 
     listItemMoreButton: {}

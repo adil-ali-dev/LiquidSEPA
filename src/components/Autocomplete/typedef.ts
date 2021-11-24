@@ -10,6 +10,7 @@ export type Props = {
   emptyText: string;
   placeholder?: string;
   label: string;
+  autoFocus?: boolean;
   value: null | any;
   getOptionLabel: (option: any) => string;
   handleChange: (event: ChangeEvent<Record<string, unknown>>, item: any) => void;

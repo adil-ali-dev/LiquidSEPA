@@ -9,7 +9,6 @@ import clsx from 'clsx';
 import { withBankAccountDomain } from './domain';
 import { Autocomplete } from '../../components/Autocomplete';
 import { Bank, Country } from '../../graphql/Nordigen/typedef';
-import { SuccessAlertModal } from '../../components/SuccessAlertModal';
 
 export const BankAccountModule = withBankAccountDomain(({
   children,
@@ -18,7 +17,6 @@ export const BankAccountModule = withBankAccountDomain(({
   loading,
   banks,
   banksLoading,
-  success,
   disabled,
   countries,
   handleCountryChange,
@@ -60,13 +58,7 @@ export const BankAccountModule = withBankAccountDomain(({
   return (
     <Modal { ...modalProps }>
       <Grid className={ classes.modal }>
-        {
-          success ? (
-            <SuccessAlertModal
-              text="Account successfully created"
-              handleButtonClick={ modalProps.handleClose }
-            />
-          ) : (
+
             <form onSubmit={handleSubmit}>
               <Typography className={ classes.modalHeadline }>
                 Add Account
@@ -78,6 +70,7 @@ export const BankAccountModule = withBankAccountDomain(({
                   label="Country"
                   placeholder="Chose country"
                   options={ countries }
+                  autoFocus
                   value={ country }
                   getOptionLabel={ i => i.name }
                   renderOption={ renderCountry }
@@ -112,8 +105,6 @@ export const BankAccountModule = withBankAccountDomain(({
                 }
               </Button>
             </form>
-          )
-        }
       </Grid>
     </Modal>
   );

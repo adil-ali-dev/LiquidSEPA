@@ -632,14 +632,12 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
       wordBreak: 'break-word'
     },
 
-
-
     selectPopup: {
       width: '100%',
       backgroundColor: '#FFF',
       borderRadius: 12,
       color: '#142A36',
-      padding: '24px 0',
+      padding: '24px 0 0',
       marginTop: 10,
       position: 'absolute',
       zIndex: 999,
@@ -649,12 +647,18 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
       }
     },
 
+    selectList: {
+      paddingBottom: '24px',
+      maxHeight: '250px',
+      overflowY: 'auto'
+    },
+
     selectChoseLabelText: {
       color: '#92B6CA'
     },
 
     selectNoItems: {
-      padding: '0 24px',
+      padding: '0 24px 24px',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center'
@@ -699,34 +703,26 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
     },
 
     listItem: {
-      marginTop: 24,
-      padding: '0 24px',
-      display: 'flex',
+      textAlign: 'left',
+      padding: '5px 24px',
+      width: '100%',
       justifyContent: 'space-between',
-      cursor: 'pointer'
+
+      '&:hover': {
+        backgroundColor: 'rgba(0, 0, 0, 0.04)'
+      },
+
+      '&:active': {
+        backgroundColor: 'transparent'
+      },
+
+      '&:focus': {
+        backgroundColor: 'transparent'
+      }
     },
 
-    listItemHeading: {
-      fontSize: '16px',
-      lineHeight: '19px',
-      color: '#142A36',
-      marginBottom: 8
-    },
-
-    listItemText: {
-      fontSize: '16px',
-      lineHeight: '19px',
-      color: '#658698'
-    },
-
-    listItemTextWrap: {
-      maxWidth: '80%',
-      wordBreak: 'break-word'
-    },
-
-    listItemMoreButton: {},
-    unauthNotice: {
-      marginTop: 0
+    listItemActive: {
+      backgroundColor: 'rgba(0, 0, 0, 0.08)'
     }
   }),
 )

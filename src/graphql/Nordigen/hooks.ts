@@ -7,7 +7,7 @@ import { BanksVariables, BanksData, AgreementVariables, AgreementData, AccountsD
 
 const REQ_ID_KEY = 'req-id-key';
 
-export const useNordigen = (address: string) => {
+export const useNordigen = (cb: (error?: string) => void) => {
   // eslint-disable-next-line max-len
   const [fetchBanks, banks] = useLazyQuery<BanksData, BanksVariables>(FETCH_SUPPORTED_BANKS, { fetchPolicy: 'no-cache' });
   // eslint-disable-next-line max-len
@@ -50,6 +50,13 @@ export const useNordigen = (address: string) => {
   };
 
   useEffect(() => {
+    const error = banks.error || agreement.error || accounts.error || account.error;
+    if (!error) return;
+
+    cb(error.message || 'Something went wrong');
+  }, [banks.error, agreement.error, accounts.error, account.error]);
+
+  useEffect(() => {
     if (!agreement.data?.nordigenCreateAgreement.data.req_id) return;
 
     window.localStorage.setItem(REQ_ID_KEY, agreement.data?.nordigenCreateAgreement.data.req_id);
@@ -61,6 +68,12 @@ export const useNordigen = (address: string) => {
     window.localStorage.removeItem(REQ_ID_KEY);
     createAccount(accounts.data.nordigenListAccounts.data.accounts[0]);
   }, [accounts.data?.nordigenListAccounts.data.accounts]);
+
+  useEffect(() => {
+    if (account.data?.nordigenSaveBankAccount.data.account_operation !== undefined) {
+      cb(account.data?.nordigenSaveBankAccount.data.reason);
+    }
+  }, [account.data?.nordigenSaveBankAccount.data.account_operation]);
 
   const loading = useMemo(() => {
     return agreement.loading || accounts.loading || account.loading;

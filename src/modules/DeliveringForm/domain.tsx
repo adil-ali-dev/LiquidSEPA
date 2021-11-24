@@ -21,6 +21,8 @@ import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
 import { useBankAccountContext } from '../../contexts/BankAccount';
 import { useWhitelistedAddress, useWhitelistedAddresses } from '../../graphql/WhitelistAddress/hooks';
 import { useBankAccounts } from '../../graphql/BankAccount/hooks';
+import { WhitelistedAddress } from '../../graphql/WhitelistAddress/typedef';
+import { BankAccount } from '../../graphql/BankAccount/typedef';
 
 const MAX_CONFS = 2;
 const WIDGET_MARGIN_TOP = 72;
@@ -99,8 +101,8 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
 
   const disabledContinue = useMemo(() => {
     return loading || !!deliver.error || !deliver.amount || (sellSide
-      ? !iban.value || !!iban.error
-      : !address.value || !!address.error);
+      ? !iban.details || !!iban.error
+      : !address.details || !!address.error);
   }, [receive.product, iban, address, loading, deliver.error, deliver.amount]);
 
   const confirmations = useMemo(() => {
@@ -108,14 +110,6 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
 
     return confs >= MAX_CONFS ? MAX_CONFS : confs;
   }, [txStatus.data?.confs]);
-
-  useEffect(() => {
-    if (nordigenIban && !iban.value) {
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      !sellSide && handleSwapClick();
-      setIban({ error: null, value: IbanService.format(nordigenIban.trim()) });
-    }
-  }, [nordigenIban]);
 
   useEffect(() => {
     setDeliver({ ...deliver, error: eurDeliver.data?.errorMessage || eurXDeliver.data?.errorMessage });
@@ -262,13 +256,12 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
 
     if (sellSide) {
       eurDeliver.deliver({
-        address: REFUND_ADDRESS,
         iban: iban.value.replaceAll(' ', ''),
         amount: deliver.amount
       });
     } else {
       eurXDeliver.deliver({
-        address: address.value,
+        label: address.details!.name,
         amount: deliver.amount
       });
     }
@@ -320,13 +313,13 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     }
   };
 
-  const handleChooseAccount = (value: string) => {
-    if (IbanService.isValid(value)) {
-      setIban({ value: IbanService.format(value), error: '' })
-    } else {
-      setAddress({ value, error: '' })
-    }
-  }
+  const handleAddressSelect = useCallback((details: WhitelistedAddress) => {
+    setAddress({ value: details.acct_num.trim(), error: '', details });
+  }, []);
+
+  const handleAccountSelect = useCallback((details: BankAccount) => {
+    setIban({ value: IbanService.format(details.name), error: '', details });
+  }, []);
 
   return (
     <Component next={next} widgetRef={widgetRef}>
@@ -361,24 +354,25 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
           </>
         )) || (
           <Form
-            formRef={formRef}
-            sellSide={sellSide}
-            disabled={disabledContinue}
-            loading={loading}
-            iban={iban}
-            fee={feeEstimation.data.fee}
-            address={address}
-            deliver={deliver}
-            receive={receive}
-            textAreaRef={textAreaRef}
-            isLoggedIn={isLoggedIn}
-            handleSwapClick={handleSwapClick}
-            handleDeliverChange={handleDeliverChange}
-            handleInputChange={sellSide ? handleIbanChange : handleAddressChange}
-            handleContinueClick={handleContinueClick}
-            handleEnterTextAreaPress={handleEnterTextAreaPress}
-            handleAddPress={handleAddPress}
-            handleChooseAccount={handleChooseAccount}
+            formRef={ formRef }
+            sellSide={ sellSide }
+            disabled={ disabledContinue }
+            loading={ loading }
+            iban={ iban }
+            fee={ feeEstimation.data.fee }
+            address={ address }
+            deliver={ deliver }
+            receive={ receive }
+            textAreaRef={ textAreaRef }
+            addresses={ whitelistAddress.addresses }
+            accounts={ bankAccount.accounts }
+            handleSwapClick={ handleSwapClick }
+            handleDeliverChange={ handleDeliverChange }
+            handleInputChange={ sellSide ? handleIbanChange : handleAddressChange }
+            handleContinueClick={ handleContinueClick }
+            handleAddPress={ handleAddPress }
+            handleAddressSelect={ handleAddressSelect }
+            handleAccountSelect={ handleAccountSelect }
           />
         )
       }

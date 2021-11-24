@@ -1,5 +1,5 @@
 import React, { FC, memo, useCallback, useMemo } from 'react';
-import { Button, Grid, Link, Typography } from '@material-ui/core';
+import { Button, ButtonBase, Grid, Link, Typography } from '@material-ui/core';
 import pluralize from 'pluralize';
 import clsx from 'clsx';
 
@@ -10,20 +10,24 @@ import { IbanService } from '../../services';
 import { useSessionContext } from '../../contexts/Session';
 import { DropdownAlert } from './dropdown-alert';
 import { DropdownHeader } from './dropdown-header';
+import { WhitelistedAddress } from '../../graphql/WhitelistAddress/typedef';
+import { BankAccount } from '../../graphql/BankAccount/typedef';
 
-export const DropdownContent = <T extends AccountListItem>({
+export const DropdownContent: FC<DropdownContentProps> = ({
   open,
   className,
   renderHeader,
   data,
   renderItem,
   loginRequired,
-  handleButtonClick,
+  close,
   headerText,
   emptyText,
   handleAddClick,
-  handleItemClick,
-}: DropdownContentProps<T>) => {
+  keyExtractor,
+  checkSelected,
+  handleItemSelect
+}) => {
   const classes = useStyles();
   const { status, controls } = useSessionContext();
 
@@ -42,45 +46,51 @@ export const DropdownContent = <T extends AccountListItem>({
       handleAddClick?.();
     }
 
-    handleButtonClick?.();
+    close();
   }, [status, handleAddClick]);
 
-  const _renderList = () => {
-    return data.map(item => {
-      return (
-        <Grid key={item.value} className={classes.listItem} onClick={() => handleItemClick?.(item)}>
-          <Grid className={classes.listItemTextWrap}>
-            <Typography className={classes.listItemHeading}>
-              {item.label}
-            </Typography>
-            <Typography className={classes.listItemText}>
-              {item.value}
-            </Typography>
-          </Grid>
-          <Button className={classes.listItemMoreButton}>
-            <DotsIcon />
-          </Button>
-        </Grid>
-      )
-    });
-  }
+  const renderDropdownItem = useCallback((item: any, idx: number) => {
+    const handleDropdownItemClick = () => {
+      handleItemSelect(item);
+      close();
+    };
+
+    const isSelected = checkSelected?.(item);
+
+    return (
+      <ButtonBase
+        className={ clsx(classes.listItem, isSelected && classes.listItemActive) }
+        key={ keyExtractor(item) }
+        disableRipple
+        disableTouchRipple
+        onClick={ handleDropdownItemClick }
+      >
+        { renderItem(item,idx) }
+      </ButtonBase>
+    )
+  }, [handleItemSelect]);
 
   return open ? (
-    <Grid className={clsx(classes.selectPopup, className)}>
+    <Grid className={ clsx(classes.selectPopup, className) }>
       {headerText && (
         <DropdownHeader
-          text={headerText}
+          text={ headerText }
+          close={ close }
           buttonText={ (status && !!data.length) ? '+ ADD' : null }
-          handleButtonClick={handleAddClick}
+          handleButtonClick={ handleAddClick }
         />
       )}
       {data.length
-        ? _renderList()
+        ? (
+          <Grid className={ classes.selectList }>
+            { data.map(renderDropdownItem) }
+          </Grid>
+        )
         : (
           <DropdownAlert
-            text={alertText}
-            buttonText={alertButtonText}
-            handleButtonClick={handleAlertButtonClick}
+            text={ alertText }
+            buttonText={ alertButtonText }
+            handleButtonClick={ handleAlertButtonClick }
           />
         )
       }

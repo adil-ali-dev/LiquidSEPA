@@ -1,38 +1,42 @@
-import React, { FC, memo } from 'react';
+import React, { FC } from 'react';
 import { Button, Grid, Link, Typography } from '@material-ui/core';
-import pluralize from 'pluralize';
 import clsx from 'clsx';
 
 import { useStyles } from './styles';
-import { DropdownAlertProps, DropdownContentProps, DropdownHeaderProps } from './typedef';
-import { DotsIcon } from '../../assets/Icons';
-import { IbanService } from '../../services';
-import { useSessionContext } from '../../contexts/Session';
+import { DropdownHeaderProps } from './typedef';
 
 export const DropdownHeader: FC<DropdownHeaderProps> = ({
   text,
   buttonText,
+  close,
   handleButtonClick,
 }) => {
   const classes = useStyles();
 
+  const handleClick = () => {
+    handleButtonClick?.();
+    close();
+  };
+
   return (
-    <Grid className={classes.listHeading}>
+    <Grid className={ classes.listHeading }>
       <Typography
-        className={clsx(classes.selectText, classes.selectChoseLabelText)}
+        className={ clsx(classes.selectText, classes.selectChoseLabelText) }
       >
-        {text}
+        { text }
       </Typography>
-      {buttonText && (
-        <Button
-          className={clsx(classes.addItemButton, classes.addItemHeaderButton)}
-          variant="contained"
-          color="primary"
-          onClick={handleButtonClick}
-        >
-          {buttonText}
-        </Button>
-      )}
+      {
+        buttonText && (
+          <Button
+            className={ clsx(classes.addItemButton, classes.addItemHeaderButton) }
+            variant="contained"
+            color="primary"
+            onClick={ handleClick }
+          >
+            { buttonText }
+          </Button>
+        )
+      }
     </Grid>
   )
 }
