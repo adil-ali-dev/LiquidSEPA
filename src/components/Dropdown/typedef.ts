@@ -13,13 +13,14 @@ export type DropdownProps = {
   placeholder: string;
   emptyText: string;
   loginRequired?: boolean;
+  notEditable?: boolean;
   headerText?: string;
   data: any[];
   checkSelected?: (item: any) => boolean;
   renderItem: (item: any, idx: number) => ReactNode;
   handleItemSelect: (item: any) => void;
   keyExtractor: (item: any) => string;
-  handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  handleChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   handleAddClick: () => void;
 };
 

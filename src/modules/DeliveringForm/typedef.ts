@@ -95,7 +95,6 @@ export type FormProps = {
   receive: Product;
   handleSwapClick: () => void;
   handleDeliverChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  handleInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
   handleContinueClick: (event: FormEvent<HTMLFormElement>) => void;
   handleAddPress: () => void;
   handleAccountSelect: (item: BankAccount) => void;

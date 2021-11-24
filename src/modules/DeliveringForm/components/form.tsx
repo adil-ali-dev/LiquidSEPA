@@ -28,7 +28,6 @@ export const Form = memo<FormProps>(({
   accounts,
   handleSwapClick,
   handleDeliverChange,
-  handleInputChange,
   handleContinueClick,
   handleAddPress,
   handleAddressSelect,
@@ -61,9 +60,9 @@ export const Form = memo<FormProps>(({
         error={ iban.value.length >= 14 && !!iban.error }
         withExtraProps
         autoFocus={ !isMobile && !!deliver.amount }
-        handleChange={ handleInputChange }
         handleAddClick={ handleAddPress }
         loginRequired
+        notEditable
         handleItemSelect={ handleAccountSelect }
         keyExtractor={ keyExtractor }
         renderItem={ renderDropDownItem }
@@ -79,9 +78,9 @@ export const Form = memo<FormProps>(({
         error={ !!address.value && !!address.error }
         withExtraProps
         autoFocus={ !isMobile && !!deliver.amount }
-        handleChange={ handleInputChange }
         handleAddClick={ handleAddPress }
         loginRequired
+        notEditable
         handleItemSelect={ handleAddressSelect }
         keyExtractor={ keyExtractor }
         renderItem={ renderDropDownItem }
