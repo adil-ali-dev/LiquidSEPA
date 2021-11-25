@@ -35,6 +35,7 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
     },
 
     formGroupInput: {
+      paddingRight: '24px',
       flex: 1,
       marginTop: '6px',
       color: palette.text.primary,
