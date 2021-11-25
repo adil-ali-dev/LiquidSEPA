@@ -267,6 +267,11 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const handleContinueClick = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    if (!isLoggedIn) {
+      authControls.openLogin();
+      return;
+    }
+
     if (disabledContinue) return;
 
     if (sellSide) {
@@ -280,7 +285,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
         amount: deliver.amount
       });
     }
-  }, [disabledContinue, sellSide, address, iban, deliver.amount]);
+  }, [disabledContinue, sellSide, address, iban, deliver.amount, isLoggedIn]);
 
   const handleBackClick = useCallback(() => {
     setNext(false);
