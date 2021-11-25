@@ -220,8 +220,6 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     }
 
     if (!next) {
-      setIban(initialIban);
-      setAddress(initialAddress);
       setPayment(null);
       setConfirmationDetails(null);
       setPayment(null);
