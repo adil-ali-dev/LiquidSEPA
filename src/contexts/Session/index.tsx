@@ -29,6 +29,10 @@ export const SessionProvider: FC<Props> = ({ children }) => {
   const [statusLoginModal, setStatusLoginModal] = useState(false);
   const [statusRegisterModal, setStatusRegisterModal] = useState(false);
 
+  useEffect(() => {
+    setStatus(sessionStatus.status || false);
+  }, [sessionStatus.status])
+
   const create = () => {
     setStatus(true);
     setStatusLoginModal(false);
