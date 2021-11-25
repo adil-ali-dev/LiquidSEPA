@@ -5,13 +5,9 @@ import { useAuthEidLogin, useAuthEidSignup, useSessionStatus } from '../../graph
 const SessionContext = createContext({
   status: false,
   loading: false,
-  qrLoading: false,
   error: false,
-  qrError: null,
-  modalType: null,
-  requestId: null as null | string,
-  qrWaiting: false,
-  qrData: undefined,
+  statusLoginModal: false,
+  statusRegisterModal: false,
   create: (): void => {},
   destroy: (): void => {},
   controls: {
@@ -28,49 +24,15 @@ type Props = {
 
 export const SessionProvider: FC<Props> = ({ children }) => {
   const sessionStatus = useSessionStatus();
-  const registerData = useAuthEidSignup(() => closeRegister());
-  const loginData = useAuthEidLogin(() => create());
 
-  const [modalType, setModalType] = useState<'register' | 'login' | null>(null);
   const [status, setStatus] = useState(false);
-  const [requestId, setRequestId] = useState<null | string>(null);
-
-  const isRegister = modalType === 'register';
-  const qrLoading = isRegister ? registerData.loading : loginData.loading;
-  const qrWaiting = isRegister ? registerData.waiting : loginData.waiting;
-  const qrData = (isRegister ? registerData.data : loginData.data) || null;
-  const qrError = (isRegister ? registerData.error : loginData.error) || null;
-
-  useEffect(() => {
-    setRequestId(loginData.data?.requestId || null);
-  }, [loginData.data?.requestId]);
-
-  useEffect(() => {
-    setRequestId(registerData.data?.requestId || null);
-  }, [registerData.data?.requestId]);
-
-  useEffect(() => {
-    if (sessionStatus.status === status) return;
-
-    setStatus(sessionStatus.status || false);
-  }, [sessionStatus.status]);
-
-  useEffect(() => {
-    if (!qrError) return;
-
-    setRequestId(null);
-  }, [qrError]);
-
-  useEffect(() => {
-    if (modalType) return;
-
-    loginData.stopPolling?.();
-    registerData.stopPolling?.();
-  }, [modalType]);
+  const [statusLoginModal, setStatusLoginModal] = useState(false);
+  const [statusRegisterModal, setStatusRegisterModal] = useState(false);
 
   const create = () => {
     setStatus(true);
-    setModalType(null);
+    setStatusLoginModal(false);
+    setStatusRegisterModal(false);
   };
 
   const destroy = () => {
@@ -79,35 +41,29 @@ export const SessionProvider: FC<Props> = ({ children }) => {
   };
 
   const openLogin = () => {
-    setModalType('login');
-    loginData.authEidLogin();
+    setStatusLoginModal(true);
   };
 
   const closeLogin = () => {
-    setModalType(null);
+    setStatusLoginModal(false);
   };
 
   const openRegister = () => {
-    setModalType('register');
-    registerData.authEidSignup();
+    setStatusRegisterModal(true);
   };
 
   const closeRegister = () => {
-    setModalType(null);
+    setStatusRegisterModal(false);
   };
 
   const value = {
     status,
-    modalType,
+    statusLoginModal,
+    statusRegisterModal,
     loading: sessionStatus.loading,
     error: sessionStatus.error,
     create,
     destroy,
-    qrError,
-    qrData,
-    qrLoading,
-    qrWaiting,
-    requestId,
     controls: {
       openLogin,
       closeLogin,

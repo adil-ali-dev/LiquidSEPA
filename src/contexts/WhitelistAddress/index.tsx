@@ -1,6 +1,7 @@
 import React, { useContext, useState, createContext, FC, ReactNode, useCallback, useEffect } from 'react';
 import { useWhitelistedAddresses } from '../../graphql/WhitelistAddress/hooks';
 import { WhitelistedAddress } from '../../graphql/WhitelistAddress/typedef';
+import { useSessionContext } from '../Session';
 
 type Props = {
   children: ReactNode;
@@ -26,11 +27,13 @@ export const WhitelistAddressProvider: FC<Props> = ({ children }) => {
 
   const { fetch, addresses } = useWhitelistedAddresses();
 
+  const { status } = useSessionContext();
+
   useEffect(() => {
-    if (modalStatus) return;
+    if (modalStatus || !status) return;
 
     fetch();
-  }, [modalStatus]);
+  }, [modalStatus, status]);
 
   const open = useCallback(() => {
     setModalStatus(true);

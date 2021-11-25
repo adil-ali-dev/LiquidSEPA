@@ -89,7 +89,6 @@ export const useAuthEidLogin = (cb: () => void) => {
   useEffect(() => {
     if (!authData.data?.authEidAuthorize.requestId) return;
 
-    setWaiting(true);
     fetchStatus({ variables: { requestId: authData.data?.authEidAuthorize.requestId } });
   }, [authData.data?.authEidAuthorize.requestId]);
 
@@ -123,6 +122,8 @@ export const useAuthEidLogin = (cb: () => void) => {
       waiting && setWaiting(false);
       errorMsg && setError(errorMsg);
     };
+
+    console.log(status);
 
     authEidStatusHandler(status, [success, wait, failure]);
   }, [statusData.data?.authEidAuthorizeStatus.status]);

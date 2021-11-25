@@ -79,7 +79,6 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const [payment, setPayment] = useState<null | PaymentDetails>(null);
 
   const { next, setNext } = useDeliveringFormStatusContext();
-  const { setNordigenIban, modalControls, iban: nordigenIban } = useNordigenContext();
   const whitelistAddress = useWhitelistAddressContext();
   const bankAccount = useBankAccountContext();
   const { copyToClipBoard } = useClipBoard();

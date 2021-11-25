@@ -15,6 +15,9 @@ export const SIDESWAP_PREFIX = process.env.REACT_APP_SIDESWAP_PREFIX as string;
 export const LOGIN = process.env.REACT_APP_LOGIN as string;
 export const PASSWORD = process.env.REACT_APP_PASSWORD as string;
 
+export const AUTH_EID_URL = process.env.REACT_APP_AUTH_EID_URL as string;
+export const AUTH_EID_URL_REQ_PREFIX = process.env.REACT_APP_AUTH_EID_URL_REQ_PREFIX as string;
+
 export const GQL_HTTP_URL = LIVE
   ? process.env.REACT_APP_GQL_HTTP_LIVE_URL
   : process.env.REACT_APP_GQL_HTTP_URL as string;
