@@ -10,12 +10,12 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
       padding: '14px',
       border: '1px solid #133E57',
       borderRadius: '12px',
-      borderColor: '#41748F',
+      borderColor: '#41748F'
+    },
 
-      '&:focus-within': {
-        borderColor: palette.primary.main,
-        backgroundColor: '#012438'
-      }
+    formGroupFocused: {
+      borderColor: palette.primary.main,
+      backgroundColor: '#012438'
     },
 
     formGroupBackground: {

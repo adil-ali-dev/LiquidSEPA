@@ -23,19 +23,19 @@ export const Dropdown: FC<DropdownProps> = ({
 }) => {
   const classes = useStyles();
 
-  const [focused, setFocused] = useState(autoFocus ?? false);
+  const [open, setOpen] = useState(autoFocus ?? false);
 
-  const handleFocus = useCallback(() => {
-    setFocused(true);
+  const handleContainerClick = useCallback(() => {
+    setOpen(prevOpen => !prevOpen);
   }, []);
 
-  const handleBlur = useCallback(() => {
-    setFocused(false);
+  const handleClose = useCallback(() => {
+    setOpen(false);
   }, []);
 
   return (
-    <ClickAwayListener onClickAway={handleBlur}>
-      <Grid className={ classes.container } >
+    <ClickAwayListener onClickAway={ handleClose }>
+      <Grid className={ classes.container }>
         <Grid
           className={
             clsx(
@@ -44,9 +44,11 @@ export const Dropdown: FC<DropdownProps> = ({
               background && classes.formGroupBackground,
               withExtraProps && classes.formGroupFixedHeight,
               rowsMax && classes.formGroupLong,
-              focused && classes.selectActive
+              open && classes.selectActive,
+              open && classes.formGroupFocused
             )
           }
+          onClick={ handleContainerClick }
         >
           <InputLabel className={ classes.label } htmlFor={ `text-area-input-${label}` }>
             { label }
@@ -62,20 +64,19 @@ export const Dropdown: FC<DropdownProps> = ({
             }
             id={ `text-area-input-${label}` }
             multiline
-            onFocus={ handleFocus }
             placeholder={ placeholder }
             value={ value }
             onChange={ handleChange }
             { ...(withExtraProps && { rowsMax }) }
           />
           <Grid className={ classes.selectIconWrap }>
-            <DropdownArrowIcon className={ clsx(classes.selectIcon, focused && classes.selectIconRotated) } />
+            <DropdownArrowIcon className={ clsx(classes.selectIcon, open && classes.selectIconRotated) } />
           </Grid>
         </Grid>
         <DropdownContent
           headerText={ placeholder }
-          close={ handleBlur }
-          open={ focused }
+          close={ handleClose }
+          open={ open }
           { ...dropdownContentProps }
         />
       </Grid>
