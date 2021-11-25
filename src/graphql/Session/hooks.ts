@@ -3,7 +3,6 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 
 import { AUTH_EID_SIGNUP, AUTH_EID_LOGIN, FETCH_AUTH_EID_SIGNUP_STATUS, FETCH_AUTH_EID_LOGIN_STATUS, SESSION_STATUS, LOGOUT } from './queries';
 import { AuthEidSignupData, AuthEidAuthorizeData, AuthEidStatusVariables, AuthEidSignupStatusData, UserSessionData, AuthEidAuthorizeStatusData } from './typedef';
-import { useSessionContext } from '../../contexts/Session';
 import { authEidStatusHandler } from '../auth-eid-handler';
 
 const POLL_INTERVAL = 1000;
@@ -122,8 +121,6 @@ export const useAuthEidLogin = (cb: () => void) => {
       waiting && setWaiting(false);
       errorMsg && setError(errorMsg);
     };
-
-    console.log(status);
 
     authEidStatusHandler(status, [success, wait, failure]);
   }, [statusData.data?.authEidAuthorizeStatus.status]);

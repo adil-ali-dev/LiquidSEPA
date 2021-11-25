@@ -7,7 +7,7 @@ export const authEidStatusHandler = (status: SignatureStatus, callbacks: ((error
       break;
 
     case SignatureStatus.WAITING:
-      callbacks[1](status);
+      callbacks[1]();
       break;
 
     case SignatureStatus.TIMEOUT:
@@ -26,7 +26,7 @@ export const authEidStatusHandler = (status: SignatureStatus, callbacks: ((error
       callbacks[2]('Login eID account is not verified');
       break;
 
-    case SignatureStatus.PENDING:
+    default:
       break;
   }
 }
