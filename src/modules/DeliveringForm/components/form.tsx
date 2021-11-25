@@ -132,7 +132,7 @@ export const Form = memo<FormProps>(({
       </Grid>
       <Button
         className={ classes.button }
-        disabled={ disabled || loading }
+        disabled={ isLoggedIn && (disabled || loading) }
         type="submit"
         variant="contained"
         color="primary"
@@ -140,7 +140,7 @@ export const Form = memo<FormProps>(({
         {
           loading
             ? <CircularProgress className={classes.buttonIndicator} color="inherit" size={21} />
-            : 'Continue'
+            : isLoggedIn ? 'Continue' : 'Login'
         }
       </Button>
     </form>

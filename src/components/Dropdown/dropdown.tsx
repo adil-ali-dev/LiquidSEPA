@@ -35,7 +35,7 @@ export const Dropdown: FC<DropdownProps> = ({
 
   return (
     <ClickAwayListener onClickAway={handleBlur}>
-      <Grid style={{ position: 'relative' }}>
+      <Grid className={ classes.container } >
         <Grid
           className={
             clsx(
@@ -43,16 +43,23 @@ export const Dropdown: FC<DropdownProps> = ({
               classes.formGroupSpace,
               background && classes.formGroupBackground,
               withExtraProps && classes.formGroupFixedHeight,
-              rowsMax && classes.formGroupInputMedium,
+              rowsMax && classes.formGroupLong,
               focused && classes.selectActive
             )
           }
         >
-          <InputLabel className={ classes.commonLabel } htmlFor={ `text-area-input-${label}` }>
+          <InputLabel className={ classes.label } htmlFor={ `text-area-input-${label}` }>
             { label }
           </InputLabel>
           <InputBase
-            className={ clsx(classes.formGroupInput, classes.selectText, notEditable && classes.formGroupInputNotEditable) }
+            className={
+              clsx(
+                classes.formGroupInput,
+                classes.selectText,
+                notEditable && classes.formGroupInputNotEditable,
+                rowsMax && classes.formGroupInputLong
+              )
+            }
             id={ `text-area-input-${label}` }
             multiline
             onFocus={ handleFocus }

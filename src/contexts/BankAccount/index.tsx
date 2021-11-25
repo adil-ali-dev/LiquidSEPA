@@ -2,6 +2,7 @@ import React, { useContext, useState, createContext, FC, ReactNode, useCallback,
 
 import { BankAccount } from '../../graphql/BankAccount/typedef';
 import { useBankAccounts } from '../../graphql/BankAccount/hooks';
+import { useSessionContext } from '../Session';
 
 type Props = {
   children: ReactNode;
@@ -30,11 +31,13 @@ export const BankAccountProvider: FC<Props> = ({ children }) => {
 
   const { fetch, accounts } = useBankAccounts();
 
+  const { status } = useSessionContext();
+
   useEffect(() => {
-    if (modalStatus) return;
+    if (modalStatus || !status) return;
 
     fetch();
-  }, [modalStatus]);
+  }, [modalStatus, status]);
 
   useEffect(() => {
     if (!error || !success) return;

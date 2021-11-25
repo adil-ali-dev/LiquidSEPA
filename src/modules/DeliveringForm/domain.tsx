@@ -58,7 +58,7 @@ const initialAddress: Address = {
 
 const getInputData = (value: number, fixed: number) => {
   const amount = Number((value).toFixed(fixed));
-  const placeholder = ConverterService.separate(amount, ',');
+  const placeholder = amount ? ConverterService.separate(amount, ',') : '';
 
   return { amount, placeholder };
 };
@@ -79,7 +79,6 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const [payment, setPayment] = useState<null | PaymentDetails>(null);
 
   const { next, setNext } = useDeliveringFormStatusContext();
-  const { setNordigenIban, modalControls, iban: nordigenIban } = useNordigenContext();
   const whitelistAddress = useWhitelistAddressContext();
   const bankAccount = useBankAccountContext();
   const { copyToClipBoard } = useClipBoard();
@@ -133,8 +132,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   useEffect(() => {
     setReceive(prevReceive => ({
       ...prevReceive, ...getInputData(feeEstimation.data.receive, sellSide ? 2 : 8)
-    }
-    ));
+    }));
   }, [feeEstimation.data.receive]);
 
   useEffect(() => {
@@ -267,6 +265,11 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const handleContinueClick = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    if (!isLoggedIn) {
+      authControls.openLogin();
+      return;
+    }
+
     if (disabledContinue) return;
 
     if (sellSide) {
@@ -280,7 +283,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
         amount: deliver.amount
       });
     }
-  }, [disabledContinue, sellSide, address, iban, deliver.amount]);
+  }, [disabledContinue, sellSide, address, iban, deliver.amount, isLoggedIn]);
 
   const handleBackClick = useCallback(() => {
     setNext(false);

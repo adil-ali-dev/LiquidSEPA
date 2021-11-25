@@ -71,7 +71,10 @@ export const DropdownContent: FC<DropdownContentProps> = ({
   }, [handleItemSelect]);
 
   return open ? (
-    <Grid className={ clsx(classes.selectPopup, className) }>
+    <Grid
+      className={ clsx(classes.selectPopup, !data.length && classes.selectPopupPointer, className) }
+      onClick={ !data.length ? handleAlertButtonClick : undefined }
+    >
       {headerText && (
         <DropdownHeader
           text={ headerText }
