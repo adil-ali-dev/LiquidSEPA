@@ -651,6 +651,10 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
       }
     },
 
+    selectPopupPointer: {
+      cursor: 'pointer'
+    },
+
     selectList: {
       paddingBottom: '24px',
       maxHeight: '250px',

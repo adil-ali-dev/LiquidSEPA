@@ -35,7 +35,7 @@ export const Dropdown: FC<DropdownProps> = ({
 
   return (
     <ClickAwayListener onClickAway={handleBlur}>
-      <Grid style={{ position: 'relative' }}>
+      <Grid>
         <Grid
           className={
             clsx(
