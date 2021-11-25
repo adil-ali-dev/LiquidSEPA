@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
-import { useQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 
 import { FeeData, FeeVariables } from './typedef';
 import { ESTIMATE_FEE } from './queries';
 
 export const useFeeEstimation = () => {
-  const { data, refetch, ...result } = useQuery<FeeData, FeeVariables>(ESTIMATE_FEE);
+  const [fetch, { data, ...result }] = useLazyQuery<FeeData, FeeVariables>(ESTIMATE_FEE);
 
   const estimatedFee = useMemo(() => {
     if (!data?.estimate.charge) return 0;
@@ -25,7 +25,7 @@ export const useFeeEstimation = () => {
   }, [data?.estimate.payout]);
 
   const estimate = (amount: number) => {
-    refetch({ amount });
+    fetch({ variables: { amount } });
   };
 
   return { ...result, data: { ...data?.estimate, fee: estimatedFee, receive }, estimate };

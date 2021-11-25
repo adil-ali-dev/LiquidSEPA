@@ -58,7 +58,7 @@ const initialAddress: Address = {
 
 const getInputData = (value: number, fixed: number) => {
   const amount = Number((value).toFixed(fixed));
-  const placeholder = ConverterService.separate(amount, ',');
+  const placeholder = amount ? ConverterService.separate(amount, ',') : '';
 
   return { amount, placeholder };
 };
@@ -133,8 +133,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   useEffect(() => {
     setReceive(prevReceive => ({
       ...prevReceive, ...getInputData(feeEstimation.data.receive, sellSide ? 2 : 8)
-    }
-    ));
+    }));
   }, [feeEstimation.data.receive]);
 
   useEffect(() => {
