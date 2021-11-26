@@ -16,17 +16,9 @@ export const CREATE_AGREEMENT = gql`
   }
 `;
 
-export const FETCH_LIST_OF_ACCOUNTS = gql`
-  query NordigenListAccounts ($reqId: String!) {
-    nordigenListAccounts(reqId: $reqId) {
-      data
-    }
-  }
-`;
-
 export const CREATE_ACCOUNT = gql`
-  query NordigenSaveBankAccount ($accountRef: String!) {
-    nordigenSaveBankAccount(accountRef: $accountRef) {
+  query NordigenSaveAllAccounts ($reqId: String!) {
+    nordigenSaveAllAccounts(reqId: $reqId) {
       data
     }
   }
