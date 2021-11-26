@@ -1,3 +1,5 @@
+import { BankAccount } from '../BankAccount/typedef';
+
 export type Bank = {
   bic: string;
   countries: string[];
@@ -34,29 +36,15 @@ export type AgreementData = {
   }
 };
 
-export type AccountsVariables = {
+export type SaveBankAccountVariables = {
   reqId: string;
 };
 
-export type AccountsData = {
-  nordigenListAccounts: {
-    data: {
-      accounts: string[]
-    };
-  }
-};
-
-export type SaveBankAccountVariables = {
-  accountRef: string;
-  xbtAddress?: string;
-};
-
 export type SaveBankAccountData = {
-  nordigenSaveBankAccount: {
+  nordigenSaveAllAccounts: {
     data: {
-      account_operation: boolean;
-      iban: null | string;
-      name: null | string;
+      success: boolean;
+      accounts: BankAccount[];
       reason: string;
     };
   }

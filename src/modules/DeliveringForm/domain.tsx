@@ -8,7 +8,6 @@ import { useRfqStatus, useTxStatus } from '../../graphql/Transaction/hooks';
 import { useConfirmation } from '../../graphql/Confirmation/hooks';
 import { useFeeEstimation } from '../../graphql/Fee/hooks';
 import { useDeliveringFormStatusContext } from '../../contexts/DeliveringForm';
-import { useNordigenContext } from '../../contexts/Nordigen';
 import { useClipBoard } from '../../hooks/ClipBoard';
 import { IbanService, BitcoinAddressService, ConverterService } from '../../services';
 import { Form } from './components/form';
@@ -19,8 +18,6 @@ import { Payment } from './components/payment';
 import { useSessionContext } from '../../contexts/Session';
 import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
 import { useBankAccountContext } from '../../contexts/BankAccount';
-import { useWhitelistedAddress, useWhitelistedAddresses } from '../../graphql/WhitelistAddress/hooks';
-import { useBankAccounts } from '../../graphql/BankAccount/hooks';
 import { WhitelistedAddress } from '../../graphql/WhitelistAddress/typedef';
 import { BankAccount } from '../../graphql/BankAccount/typedef';
 
@@ -111,6 +108,15 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   }, [txStatus.data?.confs]);
 
   useEffect(() => {
+    if (isLoggedIn) return;
+
+    setDeliver(initialDeliver);
+    setReceive(initialReceive);
+    setIban(initialIban);
+    setAddress(initialAddress);
+  }, [isLoggedIn]);
+
+  useEffect(() => {
     if (!whitelistAddress.addresses.length || address.value) return;
     const details = whitelistAddress.addresses[0];
 
@@ -123,7 +129,6 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
 
     setIban({ value: IbanService.format(details.name), error: '', details });
   }, [bankAccount.accounts.length])
-
 
   useEffect(() => {
     setDeliver({ ...deliver, error: eurDeliver.data?.errorMessage || eurXDeliver.data?.errorMessage });
