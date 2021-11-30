@@ -6,7 +6,7 @@ import { useStyles } from './style';
 import { Header } from '../../components/Header';
 import { Footer } from '../../components/Footer';
 
-export const FAQPage: FC = () => {
+const FAQPage: FC = () => {
   const classes = useStyles();
 
   return (
@@ -226,3 +226,5 @@ export const FAQPage: FC = () => {
     </Grid>
   );
 };
+
+export default FAQPage;

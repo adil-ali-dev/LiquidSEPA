@@ -26,7 +26,6 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
     justifyContent: 'space-between',
     alignItems: 'center',
     maxWidth: '480px',
-    width: '100%',
 
     [breakpoints.down('md')]: {
       flexDirection: 'column',
@@ -57,6 +56,19 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
     fontSize: '14px',
     lineHeight: '24px',
     textDecoration: 'none'
+  },
+
+  links: {
+    display: 'flex',
+
+    [breakpoints.down('md')]: {
+      marginTop: '16px',
+      flexDirection: 'column'
+    }
+  },
+
+  linkSpace: {
+    marginRight: '24px'
   },
 
   copyText: {
