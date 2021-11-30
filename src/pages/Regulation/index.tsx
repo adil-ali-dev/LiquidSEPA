@@ -29,7 +29,7 @@ const RegulationPage: FC = () => {
               regulator Finansinspektionen since September 2019.
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMedium) }>
-              LiquidSEPA is committed to upholding the highest of standards with regards to knowing our customers,
+              Liquid SEPA is committed to upholding the highest of standards with regards to knowing our customers,
               anti-money laundering and compliance.
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMedium) }>
