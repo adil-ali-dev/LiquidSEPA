@@ -11,19 +11,31 @@ export const authEidStatusHandler = (status: SignatureStatus, callbacks: ((error
       break;
 
     case SignatureStatus.TIMEOUT:
-      callbacks[2]('Login eID signature timeout');
+      callbacks[2]('Auth eID signature timeout');
       break;
 
     case SignatureStatus.USER_CANCELLED:
-      callbacks[2]('Login eID signature cancelled');
+      callbacks[2]('Auth eID signature cancelled');
       break;
 
     case SignatureStatus.RP_CANCELLED:
-      callbacks[2]('Login eID signature RP cancelled');
+      callbacks[2]('Auth eID signature RP cancelled');
       break;
 
     case SignatureStatus.ACCOUNT_NOT_VERIFIED:
-      callbacks[2]('Login eID account is not verified');
+      callbacks[2]('Auth eID account is not verified');
+      break;
+
+    case SignatureStatus.ACCOUNT_FOUND:
+      callbacks[2]('You already have an account');
+      break;
+
+    case SignatureStatus.ACCOUNT_NOT_FOUND:
+      callbacks[2]('You are not registered');
+      break;
+
+    case SignatureStatus.INVALID_EID_RESPONSE:
+      callbacks[2]('Auth eID internal error');
       break;
 
     default:
