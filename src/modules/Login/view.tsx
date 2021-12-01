@@ -21,7 +21,7 @@ export const LoginModule = withLoginDomain(({
     <Modal { ...modalProps }>
       <Grid className={ classes.modal }>
         <Typography variant="h2" className={ classes.headline }>
-          Authorize with Auth eID
+          Login with Auth eID
         </Typography>
         <QRCode loading={ loading } value={ qrValue } />
         <AuthEidGuide className={ classes.guide } />
