@@ -3,16 +3,16 @@ import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Props } from './typedef';
 import { AUTH_EID_URL_REQ_PREFIX } from '../../constants';
 import { useSessionContext } from '../../contexts/Session';
-import { useAuthEidLogin, useAuthEidSignup } from '../../graphql/Session/hooks';
+import { useAuthEidSignup } from '../../graphql/Session/hooks';
 import { SuccessAlertModal } from '../../components/StatusModal';
 import { StatusModalType } from '../../components/StatusModal/typedef';
 
 
-export const withLoginDomain = (Component: FC<Props>) => () => {
+export const withRegisterDomain = (Component: FC<Props>) => () => {
   const [error, setError] = useState<null | string>(null);
+  const [loginNext, setLoginNext] = useState(false);
 
-  // TODO: add create() call on success
-  const authEid = useAuthEidSignup(() => {});
+  const authEid = useAuthEidSignup((error?: string, login?: boolean) => authEidCallback(error, login));
 
   const { status, create, statusRegisterModal, controls } = useSessionContext();
 
@@ -24,12 +24,6 @@ export const withLoginDomain = (Component: FC<Props>) => () => {
       authEid.stopPolling?.();
     }
   }, [statusRegisterModal]);
-
-  useEffect(() => {
-    if (!authEid.error) return;
-
-    setError(authEid.error);
-  }, [authEid.error]);
 
   useEffect(() => {
     if (!error) return;
@@ -45,6 +39,21 @@ export const withLoginDomain = (Component: FC<Props>) => () => {
 
   const handleErrorClose = useCallback(() => {
     setError(null);
+    setLoginNext(false);
+  }, []);
+
+  const handleButtonClick = useCallback(() => {
+    loginNext && controls.openLogin();
+    handleErrorClose();
+  }, [loginNext]); 
+
+  const authEidCallback = useCallback((error?: string, login?: boolean) => {
+    if (!error) {
+      create();
+    } else {
+      setError(error);
+      login && setLoginNext(true);
+    }
   }, []);
 
   return (
@@ -59,8 +68,9 @@ export const withLoginDomain = (Component: FC<Props>) => () => {
         text={ error }
         type={ StatusModalType.ERROR }
         status={ !!error }
+        btnText={ loginNext ? 'Login' : 'OK' }
         handleClose={ handleErrorClose }
-        handleButtonClick={ handleErrorClose }
+        handleButtonClick={ handleButtonClick }
       />
     </>
 
