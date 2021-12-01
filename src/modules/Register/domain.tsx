@@ -48,9 +48,7 @@ export const withRegisterDomain = (Component: FC<Props>) => () => {
   }, [loginNext]); 
 
   const authEidCallback = useCallback((error?: string, login?: boolean) => {
-    if (!error) {
-      create();
-    } else {
+    if (error) {
       setError(error);
       login && setLoginNext(true);
     }
