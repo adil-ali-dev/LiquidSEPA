@@ -2,14 +2,14 @@ import React from 'react';
 import { Grid, Link, Typography } from '@material-ui/core';
 
 import { AUTH_EID_URL } from '../../constants';
-import { withLoginDomain } from './domain';
+import { withRegisterDomain } from './domain';
 import { Modal } from '../../components/Modal';
 import { QRCode } from '../../components/QRCode';
 import { AuthEidGuide } from '../../components/AuthEidGuide';
 import { useStyles } from './style';
 
 
-export const RegisterModule = withLoginDomain(({
+export const RegisterModule = withRegisterDomain(({
   children,
   loading,
   qrValue,

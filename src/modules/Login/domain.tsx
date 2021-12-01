@@ -1,18 +1,18 @@
-import React, { ChangeEvent, FC, FormEvent, useCallback, useDebugValue, useEffect, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+
+import { AUTH_EID_URL_REQ_PREFIX } from '../../constants';
 import { Props } from './typedef';
-import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
-import { useWhitelistedAddress } from '../../graphql/WhitelistAddress/hooks';
 import { SuccessAlertModal } from '../../components/StatusModal';
 import { StatusModalType } from '../../components/StatusModal/typedef';
 import { useAuthEidLogin } from '../../graphql/Session/hooks';
 import { useSessionContext } from '../../contexts/Session';
-import { AUTH_EID_URL_REQ_PREFIX } from '../../constants';
 
 
 export const withLoginDomain = (Component: FC<Props>) => () => {
   const [error, setError] = useState<null | string>(null);
+  const [registerNext, setRegisterNext] = useState(false);
 
-  const authEid = useAuthEidLogin(() => create());
+  const authEid = useAuthEidLogin((error?: string, register?: boolean) => authEidCallback(error, register));
 
   const { status, create, statusLoginModal, controls } = useSessionContext();
 
@@ -23,12 +23,6 @@ export const withLoginDomain = (Component: FC<Props>) => () => {
       authEid.stopPolling?.();
     }
   }, [statusLoginModal]);
-
-  useEffect(() => {
-    if (!authEid.error) return;
-
-    setError(authEid.error);
-  }, [authEid.error]);
 
   useEffect(() => {
     if (!error) return;
@@ -44,6 +38,21 @@ export const withLoginDomain = (Component: FC<Props>) => () => {
 
   const handleErrorClose = useCallback(() => {
     setError(null);
+    setRegisterNext(false);
+  }, []);
+
+  const handleButtonClick = useCallback(() => {
+    registerNext && controls.openRegister();
+    handleErrorClose();
+  }, [registerNext]); 
+
+  const authEidCallback = useCallback((error?: string, register?: boolean) => {
+    if (!error) {
+      create();
+    } else {
+      setError(error);
+      register && setRegisterNext(true);
+    }
   }, []);
 
   return (
@@ -58,8 +67,9 @@ export const withLoginDomain = (Component: FC<Props>) => () => {
         text={ error }
         type={ StatusModalType.ERROR }
         status={ !!error }
+        btnText={ registerNext ? 'Register' : 'OK' }
         handleClose={ handleErrorClose }
-        handleButtonClick={ handleErrorClose }
+        handleButtonClick={ handleButtonClick }
       />
     </>
 

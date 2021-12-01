@@ -8,6 +8,7 @@ export type Props = {
   status: boolean;
   text?: null | string;
   onlyBody?: boolean;
+  btnText?: string;
   type?: StatusModalType;
   handleClose?: () => void;
   handleButtonClick?: () => void;

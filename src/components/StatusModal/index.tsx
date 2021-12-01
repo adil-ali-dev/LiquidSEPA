@@ -9,8 +9,9 @@ import { Modal } from '../Modal';
 export const SuccessAlertModal = memo<Props>(({
   text,
   type,
-  handleButtonClick,
+  btnText,
   onlyBody,
+  handleButtonClick,
   ...modalProps
 }) => {
   const classes = useStyles();
@@ -52,7 +53,7 @@ export const SuccessAlertModal = memo<Props>(({
         {
           processing
             ? <CircularProgress className={ classes.buttonIndicator } color="inherit" size={ 21 }/>
-            : 'OK'
+            : btnText || 'OK'
         }
       </Button>
     </Grid>
