@@ -10,6 +10,7 @@ import { ConverterService, IbanService } from '../../../services';
 import { Dropdown } from '../../../components/Dropdown';
 import { BankAccount } from '../../../graphql/BankAccount/typedef';
 import { WhitelistedAddress } from '../../../graphql/WhitelistAddress/typedef';
+import { AccountType } from '../../../graphql/typedef';
 
 const keyExtractor = (item: WhitelistedAddress | BankAccount) => item.acct_num;
 
@@ -37,15 +38,29 @@ export const Form = memo<FormProps>(({
   const classes = useStyles();
 
   const renderDropDownItem = (item: BankAccount | WhitelistedAddress, idx: number) => {
-    const isBank = item.type === 'Bank';
+    const isBank = item.type === AccountType.BANK;
 
-    return (
+    return isBank ? (
+      <Grid className={ classes.listItemContainer }>
+        {/* @ts-ignore */}
+        <img className={ classes.listItemLogo } src={ item.logo } alt={ item.account_details?.bank_name } />
+        <Grid className={ classes.listItemTextWrap }>
+          <Typography className={ classes.listItemHeading }>
+            {/* @ts-ignore */}
+            { item.account_details?.bank_name || `Account ${ idx + 1 }` }
+          </Typography>
+          <Typography className={ classes.listItemText }>
+            { IbanService.format(item.name) }
+          </Typography>
+        </Grid>
+      </Grid>
+    ) : (
       <Grid className={ classes.listItemTextWrap }>
         <Typography className={ classes.listItemHeading }>
-          { isBank ? `Account ${ idx + 1 }` : item.name }
+          { item.name }
         </Typography>
         <Typography className={ classes.listItemText }>
-          { isBank ? IbanService.format(item.name) : item.acct_num }
+          { item.acct_num }
         </Typography>
       </Grid>
     );

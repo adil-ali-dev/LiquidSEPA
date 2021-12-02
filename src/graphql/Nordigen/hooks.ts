@@ -5,7 +5,7 @@ import { FETCH_SUPPORTED_BANKS, CREATE_AGREEMENT, CREATE_ACCOUNT } from './queri
 import { default as countries } from '../../constants/nordigen-countries';
 import { BanksVariables, BanksData, AgreementVariables, AgreementData, SaveBankAccountData, SaveBankAccountVariables } from './typedef';
 
-const REQ_ID_KEY = 'req-id-key';
+const WAITING_FOR_CONTINUE_KEY = 'waiting-for-continue';
 
 export const useNordigen = (cb: (error?: string) => void) => {
   // eslint-disable-next-line max-len
@@ -15,15 +15,7 @@ export const useNordigen = (cb: (error?: string) => void) => {
   // eslint-disable-next-line max-len
   const [postAccount, account] = useLazyQuery<SaveBankAccountData, SaveBankAccountVariables>(CREATE_ACCOUNT, { fetchPolicy: 'no-cache' });
 
-  const reqId = window.localStorage.getItem(REQ_ID_KEY);
-
-  const getBanks = (iban: string) => {
-    if (!iban) return;
-
-    const countryCode = iban.slice(0, 2).toLowerCase();
-
-    fetchBanks({ variables: { countryCode } });
-  };
+  const waitingForContinue = window.localStorage.getItem(WAITING_FOR_CONTINUE_KEY);
 
   const getBanksByCountry = (countryCode: string) => {
     fetchBanks({ variables: { countryCode } });
@@ -33,11 +25,11 @@ export const useNordigen = (cb: (error?: string) => void) => {
     postAgreement({ variables: { bankId } });
   };
 
-  const saveAccount = (error: boolean) => {
-    if (!reqId) return;
+  const saveAccount = (error: boolean, reqId: string) => {
+    if (!waitingForContinue) return;
 
     if (error) {
-      window.localStorage.removeItem(REQ_ID_KEY);
+      window.localStorage.removeItem(WAITING_FOR_CONTINUE_KEY);
       return;
     }
 
@@ -51,15 +43,15 @@ export const useNordigen = (cb: (error?: string) => void) => {
     cb(error.message || 'Something went wrong');
   }, [banks.error, agreement.error, account.error]);
 
-  useEffect(() => {
-    if (!agreement.data?.nordigenCreateAgreement.data.req_id) return;
+  useEffect(() => {    
+    if (!agreement.data?.nordigenCreateAgreement.data.initiate) return;
 
-    window.localStorage.setItem(REQ_ID_KEY, agreement.data?.nordigenCreateAgreement.data.req_id);
-  }, [agreement.data?.nordigenCreateAgreement.data.req_id]);
+    window.localStorage.setItem(WAITING_FOR_CONTINUE_KEY, '*');
+  }, [agreement.data?.nordigenCreateAgreement.data.initiate]);
 
   useEffect(() => {
     if (account.data?.nordigenSaveAllAccounts.data.success !== undefined) {
-      window.localStorage.removeItem(REQ_ID_KEY);
+      window.localStorage.removeItem(WAITING_FOR_CONTINUE_KEY);
       cb(account.data?.nordigenSaveAllAccounts.data.reason);
     }
   }, [account.data?.nordigenSaveAllAccounts.data.success]);
@@ -74,9 +66,8 @@ export const useNordigen = (cb: (error?: string) => void) => {
     banks: banks.data?.nordigenSupportedBanks?.data || [],
     countries,
     link: agreement.data?.nordigenCreateAgreement.data.initiate,
-    reqId,
+    waitingForContinue,
     error: account.data?.nordigenSaveAllAccounts.data.reason,
-    getBanks,
     getBanksByCountry,
     saveAccount,
     createAgreement

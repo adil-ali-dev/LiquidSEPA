@@ -14,7 +14,7 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
   const [bank, setBank] = useState<null | Bank>(null);
 
   const { modalStatus, success, error, processing, controls } = useBankAccountContext();
-  const { banks, banksLoading, countries, link, getBanksByCountry, reqId, loading, createAgreement, saveAccount } = useNordigen(controls.openStatus);
+  const { banks, banksLoading, countries, link, getBanksByCountry, waitingForContinue, loading, createAgreement, saveAccount } = useNordigen(controls.openStatus);
 
   useEffect(() => {
     if (!modalStatus && country && bank) {
@@ -32,12 +32,13 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
   useEffect(() => {
     if (!window.location.search) return;
 
+    
     const params = new URL(window.location.href).searchParams;
-    if (!params.get('ref') || !reqId) return;
+    const ref = params.get('ref');
+    const error = params.get('error');
+    if (!ref || !waitingForContinue) return;
 
     history.replace('');
-
-    const error = params.get('error');
 
     if (error) {
       controls.openStatus(error);
@@ -45,8 +46,8 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
       controls.openProcessing();
     }
 
-    saveAccount(!!error);
-  }, [window.location.search]);
+    saveAccount(!!error, ref);
+  }, [window.location.search]); 
 
   useEffect(() => {
     if (!link) return;

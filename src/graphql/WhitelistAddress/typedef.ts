@@ -1,4 +1,5 @@
-import { SignatureStatus, AuthEidStatusData } from '../typedef';
+import { AuthEidStatusData, AccountType } from '../typedef';
+
 
 export type WhitelistVariables = {
   label: string;
@@ -22,7 +23,7 @@ export type WhitelistStatusData = {
 export type WhitelistedAddress = {
   acct_num: string;
   ref: null | string;
-  type: 'Wallet';
+  type: AccountType.WALLET;
   name: string;
 }
 

@@ -18,6 +18,8 @@ export const PASSWORD = process.env.REACT_APP_PASSWORD as string;
 export const AUTH_EID_URL = process.env.REACT_APP_AUTH_EID_URL as string;
 export const AUTH_EID_URL_REQ_PREFIX = process.env.REACT_APP_AUTH_EID_URL_REQ_PREFIX as string;
 
+export const NORDIGEN_BANK_LOGO_PREFIX = process.env.REACT_APP_NORDIGEN_BANK_LOGO_PREFIX as string;
+
 export const GQL_HTTP_URL = LIVE
   ? process.env.REACT_APP_GQL_HTTP_LIVE_URL
   : process.env.REACT_APP_GQL_HTTP_URL as string;
