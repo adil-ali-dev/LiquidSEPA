@@ -16,7 +16,7 @@ const BankAccountContext = createContext({
   processing: false,
   controls: {
     open: () => {},
-    openStatus: (_?: string) => {},
+    openStatus: (_?: null | string) => {},
     openProcessing: () => {},
     closeStatus: () => {},
     close: () => {}
@@ -57,7 +57,7 @@ export const BankAccountProvider: FC<Props> = ({ children }) => {
     setProcessing(true);
   }, []);
 
-  const openStatus = useCallback((errorMsg?: string) => {
+  const openStatus = useCallback((errorMsg?: null | string) => {
     setProcessing(false);
 
     if (errorMsg) {

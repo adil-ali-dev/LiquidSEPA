@@ -7,7 +7,7 @@ import { BanksVariables, BanksData, AgreementVariables, AgreementData, SaveBankA
 
 const WAITING_FOR_CONTINUE_KEY = 'waiting-for-continue';
 
-export const useNordigen = (cb: (error?: string) => void) => {
+export const useNordigen = (cb: (error?: null | string) => void) => {
   // eslint-disable-next-line max-len
   const [fetchBanks, banks] = useLazyQuery<BanksData, BanksVariables>(FETCH_SUPPORTED_BANKS, { fetchPolicy: 'no-cache' });
   // eslint-disable-next-line max-len
@@ -50,9 +50,11 @@ export const useNordigen = (cb: (error?: string) => void) => {
   }, [agreement.data?.nordigenCreateAgreement.data.initiate]);
 
   useEffect(() => {
-    if (account.data?.nordigenSaveAllAccounts.data.success !== undefined) {
+    const data = account.data?.nordigenSaveAllAccounts.data;
+
+    if (data?.success !== undefined) {
+      cb(data?.success ? null : data?.reason || 'Something went wrong');
       window.localStorage.removeItem(WAITING_FOR_CONTINUE_KEY);
-      cb(account.data?.nordigenSaveAllAccounts.data.reason);
     }
   }, [account.data?.nordigenSaveAllAccounts.data.success]);
 
