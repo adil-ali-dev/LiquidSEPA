@@ -1,8 +1,10 @@
+import { useMemo } from 'react';
 import { useLazyQuery } from '@apollo/client';
 
-import { FETCH_BANK_ACCOUNTS } from './queries';
+import { NORDIGEN_BANK_LOGO_PREFIX } from '../../constants';
 import { BankAccountsData } from './typedef';
-import { useMemo } from 'react';
+import { FETCH_BANK_ACCOUNTS } from './queries';
+
 
 export const useBankAccounts = () => {
   const [fetch, { data, ...result }] = useLazyQuery<BankAccountsData>(FETCH_BANK_ACCOUNTS, { fetchPolicy: 'no-cache' });
@@ -11,7 +13,10 @@ export const useBankAccounts = () => {
     const items = data?.filterAccounts.items;
     if (!items?.length) return [];
 
-    return items.map(i => i.data);
+    return items.map(({ data }) => ({
+      ...data,
+      logo: `${NORDIGEN_BANK_LOGO_PREFIX}${data.account_details?.bank_id}.png`
+    }));
   }, [data?.filterAccounts.items]);
 
   return { ...result, accounts, fetch };

@@ -14,3 +14,8 @@ export enum SignatureStatus {
 export type AuthEidStatusData = {
   status: SignatureStatus;
 };
+
+export enum AccountType {
+  BANK = 'Bank',
+  WALLET = 'Wallet'
+}

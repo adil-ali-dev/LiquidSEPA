@@ -759,13 +759,27 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
     },
 
     listItemText: {
-      marginTop: 8,
       fontSize: '16px',
       lineHeight: '19px',
       color: '#658698',
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       textOverflow: 'ellipsis'
+    },
+
+    listItemContainer: {
+      display: 'flex',
+      width: 'calc(100% - 60px)', // 24px + 24px + 12px
+      alignItems: 'center'
+    },
+
+    listItemLogo: {
+      marginRight: 12,
+      minWidth: 48,
+      height: 48,
+      borderRadius: 24,
+      overflow: 'hidden',
+      backgroundColor: '#FFF'
     },
 
     listItemTextWrap: {
