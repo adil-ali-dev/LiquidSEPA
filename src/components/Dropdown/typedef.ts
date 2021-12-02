@@ -1,11 +1,9 @@
 import React, { ChangeEvent, FC, KeyboardEvent, ReactNode } from 'react'
 
-import { Bank, Country } from '../../graphql/Nordigen/typedef'
-
 export type DropdownProps = {
   background?: boolean;
   label: string;
-  value: string;
+  value: any;
   error?: boolean;
   autoFocus?: boolean;
   rowsMax?: number;
@@ -17,7 +15,7 @@ export type DropdownProps = {
   headerText?: string;
   data: any[];
   checkSelected?: (item: any) => boolean;
-  renderItem: (item: any, idx: number) => ReactNode;
+  renderItem: (item: any, idx: number, active?: boolean) => ReactNode;
   handleItemSelect: (item: any) => void;
   keyExtractor: (item: any) => string;
   handleChange?: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -34,7 +32,7 @@ export type DropdownContentProps = {
   handleAddClick?: () => void;
   checkSelected?: (item: any) => boolean;
   close: () => void;
-  renderItem: (item: any, idx: number) => ReactNode;
+  renderItem: (item: any, idx: number, active?: boolean) => ReactNode;
   keyExtractor: (item: any) => string;
   handleItemSelect: (item: any) => void;
   renderHeader?: () => ReactNode;

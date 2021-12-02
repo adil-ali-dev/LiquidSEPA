@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useState } from 'react';
-import { ClickAwayListener, Grid, InputBase, InputLabel } from '@material-ui/core';
+import { ClickAwayListener, Grid, InputBase, InputLabel, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 
 import { useStyles } from './styles';
@@ -50,25 +50,18 @@ export const Dropdown: FC<DropdownProps> = ({
           }
           onClick={ handleContainerClick }
         >
-          <InputLabel className={ classes.label } htmlFor={ `text-area-input-${label}` }>
+          <Typography className={ classes.label }>
             { label }
-          </InputLabel>
-          <InputBase
-            className={
-              clsx(
-                classes.formGroupInput,
-                classes.selectText,
-                notEditable && classes.formGroupInputNotEditable,
-                rowsMax && classes.formGroupInputLong
-              )
-            }
-            id={ `text-area-input-${label}` }
-            multiline
-            placeholder={ placeholder }
-            value={ value }
-            onChange={ handleChange }
-            { ...(withExtraProps && { rowsMax }) }
-          />
+          </Typography>
+          <Grid className={ classes.selectedContainer }>
+          {
+            !value ? (
+              <Typography className={ classes.formGroupPlaceholder }>
+                { placeholder }
+                </Typography>
+            ) : dropdownContentProps.renderItem(value, dropdownContentProps.data.indexOf(value), true)
+          }
+          </Grid>
           <Grid className={ classes.selectIconWrap }>
             <DropdownArrowIcon className={ clsx(classes.selectIcon, open && classes.selectIconRotated) } />
           </Grid>
