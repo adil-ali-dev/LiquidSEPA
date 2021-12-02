@@ -2,7 +2,7 @@ import React, { ChangeEvent, ComponentType, FormEvent, KeyboardEvent, useCallbac
 import { isMobile } from 'react-device-detect';
 
 import { ProductType, BLOCKSTREAM_ASSET_ID, SIDESWAP_PREFIX, REFUND_ADDRESS } from '../../constants';
-import { Address, Iban, Props, PaymentDetails, NameOnAccount, Product, ConfirmationDetails } from './typedef';
+import { Address, Props, PaymentDetails, NameOnAccount, Product, ConfirmationDetails } from './typedef';
 import { useEurDeliver, useEurXDeliver } from '../../graphql/Deliver/hooks';
 import { useRfqStatus, useTxStatus } from '../../graphql/Transaction/hooks';
 import { useConfirmation } from '../../graphql/Confirmation/hooks';
@@ -40,17 +40,7 @@ const initialDeliver: Product = {
 const initialReceive: Product = {
   product: ProductType.EURX,
   amount: 0,
-  placeholder: '0'
-};
-
-const initialIban: Iban = {
-  value: '',
-  error: null
-};
-
-const initialAddress: Address = {
-  value: '',
-  error: null
+  placeholder: ''
 };
 
 const getInputData = (value: number, fixed: number) => {
@@ -64,12 +54,13 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const widgetRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const deliverInputRef = useRef<HTMLInputElement>(null);
 
   const [deliver, setDeliver] = useState(initialDeliver);
   const [receive, setReceive] = useState(initialReceive);
 
-  const [iban, setIban] = useState(initialIban);
-  const [address, setAddress] = useState(initialAddress);
+  const [account, setAccount] = useState<null | BankAccount>(null);
+  const [address, setAddress] = useState<null | WhitelistedAddress>(null);
 
   const [confirmationDetails, setConfirmationDetails] = useState<null | ConfirmationDetails>(null);
 
@@ -97,9 +88,9 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
 
   const disabledContinue = useMemo(() => {
     return loading || !!deliver.error || !deliver.amount || (sellSide
-      ? !iban.details || !!iban.error
-      : !address.details || !!address.error);
-  }, [receive.product, iban, address, loading, deliver.error, deliver.amount]);
+      ? !account
+      : !address);
+  }, [receive.product, account, address, loading, deliver.error, deliver.amount]);
 
   const confirmations = useMemo(() => {
     const confs = txStatus.data?.confs || 0;
@@ -108,26 +99,27 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   }, [txStatus.data?.confs]);
 
   useEffect(() => {
-    if (isLoggedIn) return;
+    if (isLoggedIn) {
+      deliverInputRef.current?.focus();
+      return;
+    };
 
     setDeliver(initialDeliver);
     setReceive(initialReceive);
-    setIban(initialIban);
-    setAddress(initialAddress);
+    setAccount(null);
+    setAddress(null);
   }, [isLoggedIn]);
 
   useEffect(() => {
-    if (!whitelistAddress.addresses.length || address.value) return;
-    const details = whitelistAddress.addresses[0];
+    if (!whitelistAddress.addresses.length || address) return;
 
-    setAddress({ value: details.acct_num, error: '', details });
+    setAddress(whitelistAddress.addresses[0]);
   }, [whitelistAddress.addresses.length])
 
   useEffect(() => {
-    if (!bankAccount.accounts.length  || iban.value) return;
-    const details = bankAccount.accounts[0];
+    if (!bankAccount.accounts.length || account) return;
 
-    setIban({ value: IbanService.format(details.name), error: '', details });
+    setAccount(bankAccount.accounts[0]);
   }, [bankAccount.accounts.length])
 
   useEffect(() => {
@@ -277,16 +269,16 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
 
     if (sellSide) {
       eurDeliver.deliver({
-        iban: iban.value.replaceAll(' ', ''),
+        iban: account!.name,
         amount: deliver.amount
       });
     } else {
       eurXDeliver.deliver({
-        label: address.details!.name,
+        label: address!.name,
         amount: deliver.amount
       });
     }
-  }, [disabledContinue, sellSide, address, iban, deliver.amount, isLoggedIn]);
+  }, [disabledContinue, sellSide, address, account?.name, deliver.amount, isLoggedIn]);
 
   const handleBackClick = useCallback(() => {
     setNext(false);
@@ -320,12 +312,12 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     }
   };
 
-  const handleAddressSelect = useCallback((details: WhitelistedAddress) => {
-    setAddress({ value: details.acct_num.trim(), error: '', details });
+  const handleAddressSelect = useCallback((value: WhitelistedAddress) => {
+    setAddress(value);
   }, []);
 
-  const handleAccountSelect = useCallback((details: BankAccount) => {
-    setIban({ value: IbanService.format(details.name), error: '', details });
+  const handleAccountSelect = useCallback((value: BankAccount) => {
+    setAccount(value);
   }, []);
 
   return (
@@ -355,17 +347,18 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
               handleRefCopyClick={handleRefCopyClick}
             />
             <RequisitesFooter
-              sellSide={sellSide}
-              value={sellSide ? iban.value : address.value}
+              sellSide={ sellSide }
+              value={ sellSide ? account! : address! }
             />
           </>
         )) || (
           <Form
+            deliverInputRef={ deliverInputRef }
             formRef={ formRef }
             sellSide={ sellSide }
             disabled={ disabledContinue }
             loading={ loading }
-            iban={ iban }
+            account={ account }
             fee={ feeEstimation.data.fee }
             address={ address }
             deliver={ deliver }

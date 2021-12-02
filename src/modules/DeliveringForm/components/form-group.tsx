@@ -13,6 +13,7 @@ export const FormGroup = memo<FormGroupProps>(({
   product,
   className,
   editable,
+  reference,
   handleSwapClick,
   handleDeliverChange
 }) => {
@@ -31,14 +32,16 @@ export const FormGroup = memo<FormGroupProps>(({
           <Grid className={ classes.formGroupCurrencyIconContainer }>
             <ProductIcon name={ product.product }/>
           </Grid>
-          <Typography className={ classes.formGroupCurrencyText }>{ product.product }</Typography>
+          <Typography className={ classes.formGroupCurrencyText }>
+            { product.product }
+            </Typography>
         </Grid>
         <InputBase
           className={ classes.formGroupText }
           value={ product.placeholder }
           key={ `${product.product}-${editable}` }
           autoFocus={ !isMobile }
-          inputProps={{ className: clsx(classes.formGroupTextInput, !editable && classes.formGroupTextInputDisabled) }}
+          inputProps={{ className: clsx(classes.formGroupTextInput, !editable && classes.formGroupTextInputDisabled), ref: reference }}
           disabled={ !editable }
           onClick={ event => editable && event.stopPropagation() }
           onChange={ handleDeliverChange }

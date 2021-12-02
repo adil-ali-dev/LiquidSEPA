@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
-import { Button, Grid, Typography, CircularProgress, ButtonBase } from '@material-ui/core';
-import { isMobile } from 'react-device-detect';
+import { Button, Grid, Typography, CircularProgress } from '@material-ui/core';
+import clsx from 'clsx';
 
 import { FormProps } from '../typedef';
 import { useStyles } from '../style';
@@ -11,10 +11,12 @@ import { Dropdown } from '../../../components/Dropdown';
 import { BankAccount } from '../../../graphql/BankAccount/typedef';
 import { WhitelistedAddress } from '../../../graphql/WhitelistAddress/typedef';
 import { AccountType } from '../../../graphql/typedef';
+import { Account } from '../../../components/Account';
 
 const keyExtractor = (item: WhitelistedAddress | BankAccount) => item.acct_num;
 
 export const Form = memo<FormProps>(({
+  deliverInputRef,
   formRef,
   sellSide,
   disabled,
@@ -22,7 +24,7 @@ export const Form = memo<FormProps>(({
   deliver,
   fee,
   receive,
-  iban,
+  account,
   address,
   isLoggedIn,
   textAreaRef,
@@ -37,34 +39,9 @@ export const Form = memo<FormProps>(({
 }) => {
   const classes = useStyles();
 
-  const renderDropDownItem = (item: BankAccount | WhitelistedAddress, idx: number) => {
-    const isBank = item.type === AccountType.BANK;
-
-    return isBank ? (
-      <Grid className={ classes.listItemContainer }>
-        {/* @ts-ignore */}
-        <img className={ classes.listItemLogo } src={ item.logo } alt={ item.account_details?.bank_name } />
-        <Grid className={ classes.listItemTextWrap }>
-          <Typography className={ classes.listItemHeading }>
-            {/* @ts-ignore */}
-            { item.account_details?.bank_name || `Account ${ idx + 1 }` }
-          </Typography>
-          <Typography className={ classes.listItemText }>
-            { IbanService.format(item.name) }
-          </Typography>
-        </Grid>
-      </Grid>
-    ) : (
-      <Grid className={ classes.listItemTextWrap }>
-        <Typography className={ classes.listItemHeading }>
-          { item.name }
-        </Typography>
-        <Typography className={ classes.listItemText }>
-          { item.acct_num }
-        </Typography>
-      </Grid>
-    );
-  }
+  const renderDropDownItem = (item: BankAccount | WhitelistedAddress, idx: number, active = false) => (
+    <Account value={ item } idx={ idx } active={ active } />
+  );
 
   const renderContent = () => {
     return sellSide ? (
@@ -72,8 +49,7 @@ export const Form = memo<FormProps>(({
         label="Your receiving IBAN account"
         placeholder="Chose account"
         emptyText="You do not have any accounts"
-        value={ iban.value }
-        error={ iban.value.length >= 14 && !!iban.error }
+        value={ account }
         withExtraProps
         handleAddClick={ handleAddPress }
         loginRequired
@@ -89,8 +65,7 @@ export const Form = memo<FormProps>(({
         label="Your receiving Liquid address"
         placeholder="Chose address"
         emptyText="You do not have any addresses"
-        value={ address.value }
-        error={ !!address.value && !!address.error }
+        value={ address }
         withExtraProps
         handleAddClick={ handleAddPress }
         loginRequired
@@ -109,7 +84,8 @@ export const Form = memo<FormProps>(({
       <Grid>
         <FormGroup
           label="Deliver"
-          product={deliver}
+          product={ deliver }
+          reference={ deliverInputRef }
           editable={ isLoggedIn }
           handleDeliverChange={ handleDeliverChange }
           handleSwapClick={ handleSwapClick }
@@ -124,26 +100,17 @@ export const Form = memo<FormProps>(({
             <SwapArrowsIcon className={ classes.swapButtonIcon } />
           </Button>
           <Typography className={ classes.swapText }>
-            Fee: {ConverterService.separate(fee.toFixed(2), ',')} EUR
+            Fee: { ConverterService.separate(fee.toFixed(2), ',') } EUR
           </Typography>
         </Grid>
         <FormGroup
           className={ classes.formGroupSpace }
           label="Receive"
+          editable={ false }
           product={ receive }
           handleSwapClick={ handleSwapClick }
         />
         { renderContent() }
-        <Grid className={ classes.formErrorContainer }>
-          <Typography className={ classes.formErrorText }>
-            {
-              (sellSide
-                ? iban.value.length >= 14 && iban.error
-                : address.value && address.error
-              ) || deliver.error
-            }
-          </Typography>
-        </Grid>
       </Grid>
       <Button
         className={ classes.button }

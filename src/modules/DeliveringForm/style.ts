@@ -89,15 +89,6 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
       marginTop: '17px'
     },
 
-    formGroupTextValue: {
-      marginTop: '8px',
-      color: palette.text.primary,
-      fontSize: '16px',
-      lineHeight: '20px',
-      width: '100%',
-      overflowWrap: 'break-word'
-    },
-
     formGroupRow: {
       display: 'flex',
       justifyContent: 'space-between',
@@ -218,17 +209,6 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
       lineHeight: '16px'
     },
 
-    formErrorContainer: {
-      paddingTop: '10px',
-      height: '29px'
-    },
-
-    formErrorText: {
-      color: palette.error.main,
-      fontSize: '14px',
-      lineHeight: '17px'
-    },
-
     button: {
       padding: '17px 0 16px !important',
       fontSize: '18px !important',
@@ -298,7 +278,7 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
     },
 
     detailsAddress: {
-      padding: '32px 32px 24px',
+      padding: '24px 32px',
 
       [breakpoints.down('md')]: {
         padding: '20px'
@@ -451,16 +431,24 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
     },
 
     footer: {
-      padding: '32px',
+      padding: '24px 32px',
       minHeight: '273px',
 
       [breakpoints.down('md')]: {
-        padding: '32px 20px'
+        padding: '24px 20px 20px'
       }
+    },
+
+    footerFormGroup: {
+      marginTop: 16
     },
 
     footerAddress: {
       minHeight: '239px'
+    },
+
+    footerAccountContainer: {
+      marginTop: 8
     },
 
     footerText: {
@@ -758,13 +746,25 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
       textOverflow: 'ellipsis'
     },
 
+    listItemHeadingActive: {
+      color: palette.text.primary
+    },
+
     listItemText: {
+      marginTop: 3,
       fontSize: '16px',
       lineHeight: '19px',
       color: '#658698',
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       textOverflow: 'ellipsis'
+    },
+
+    listItemTextActive: {
+      textOverflow: 'unset',
+      whiteSpace: 'unset',
+      overflow: 'unset',
+      overflowWrap: 'break-word'
     },
 
     listItemContainer: {

@@ -3,7 +3,8 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
   createStyles({
     container: {
-      position: 'relative'
+      position: 'relative',
+      cursor: 'pointer'
     },
 
     formGroup: {
@@ -46,6 +47,10 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
       '& div': {
         border: 'none'
       }
+    },
+
+    formGroupPlaceholder: {
+      color: 'rgba(255, 255, 255, 0.42)',
     },
 
     formGroupInputNotEditable: {
@@ -94,8 +99,14 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
       fill: '#41738F'
     },
 
-    selectText: {
+    selectedContainer: {
       marginTop: 7,
+      paddingRight: 24,
+      display: 'flex',
+      alignItems: 'center'
+    },
+
+    selectText: {
       wordBreak: 'break-word'
     },
 

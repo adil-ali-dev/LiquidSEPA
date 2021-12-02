@@ -83,18 +83,16 @@ export const DropdownContent: FC<DropdownContentProps> = ({
           handleButtonClick={ handleAddClick }
         />
       )}
-      {data.length
-        ? (
-          <Grid className={ classes.selectList }>
-            { data.map(renderDropdownItem) }
-          </Grid>
-        )
-        : (
+      {(!data.length || !status) ? (
           <DropdownAlert
             text={ alertText }
             buttonText={ alertButtonText }
             handleButtonClick={ handleAlertButtonClick }
           />
+        ) : (
+          <Grid className={ classes.selectList }>
+            { data.map(renderDropdownItem) }
+          </Grid>
         )
       }
     </Grid>

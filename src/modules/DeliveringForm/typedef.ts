@@ -1,7 +1,6 @@
 import { ChangeEvent, FormEvent, KeyboardEvent, ReactNode, MouseEvent, RefObject, ReactNodeArray } from 'react';
 
-import { ProductType, SIDESWAP_PREFIX } from '../../constants';
-import { Bank } from '../../graphql/Nordigen/typedef';
+import { ProductType } from '../../constants';
 import { BankAccount } from '../../graphql/BankAccount/typedef';
 import { WhitelistedAddress } from '../../graphql/WhitelistAddress/typedef';
 
@@ -81,14 +80,15 @@ export type ProductIconProps = {
 };
 
 export type FormProps = {
+  deliverInputRef: RefObject<HTMLInputElement>;
   formRef: RefObject<HTMLFormElement>;
   sellSide: boolean;
   disabled: boolean;
   loading: boolean;
   fee: number;
-  iban: Iban;
+  account: null | BankAccount;
   isLoggedIn: boolean;
-  address: Address;
+  address: null | WhitelistedAddress;
   addresses: WhitelistedAddress[];
   accounts: BankAccount[];
   textAreaRef: RefObject<HTMLTextAreaElement>;
@@ -106,6 +106,7 @@ export type FormGroupProps = {
   label: string;
   product: Product;
   className?: string;
+  reference?: RefObject<HTMLInputElement>;
   editable?: boolean;
   handleSwapClick: () => void;
   handleDeliverChange?: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -161,7 +162,7 @@ export type RequisitesMainProps = {
 
 export type RequisitesFooterProps = {
   sellSide: boolean;
-  value: string;
+  value: BankAccount | WhitelistedAddress;
 };
 
 export type RowProps = {
