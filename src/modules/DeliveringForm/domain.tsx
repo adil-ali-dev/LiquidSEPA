@@ -219,7 +219,8 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     if (!next) {
       setPayment(null);
       setConfirmationDetails(null);
-      setPayment(null);
+      rfqStatus.stopPolling?.();
+      txStatus.stopPolling?.();
     }
   }, [next]);
 
