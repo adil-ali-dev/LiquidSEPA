@@ -1,9 +1,10 @@
 import { ChangeEvent, FormEvent } from 'react';
 
-export type Props = {
+export type WrappedProps = {
   status: boolean;
   label: string;
   address: string;
+  addressValid: boolean;
   loading: boolean;
   disabled: boolean;
   handleClose: () => void;

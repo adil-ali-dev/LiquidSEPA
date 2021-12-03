@@ -36,3 +36,15 @@ export type WhitelistedAddressesData = {
     items: Item[];
   };
 };
+
+export type ValidateAddressesVariables = {
+  address: string;
+};
+
+export type ValidateAddressesData = {
+  validateAddress: {
+    data: {
+      status: boolean;
+    };
+  };
+};

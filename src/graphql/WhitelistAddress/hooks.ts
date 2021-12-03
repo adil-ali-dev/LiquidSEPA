@@ -6,9 +6,11 @@ import {
   WhitelistVariables,
   WhitelistStatusData,
   WhitelistStatusVariables,
-  WhitelistedAddressesData
+  WhitelistedAddressesData,
+  ValidateAddressesVariables,
+  ValidateAddressesData
 } from './typedef';
-import { FETCH_WHITELIST_ADDRESS_STATUS, FETCH_WHITELISTED_ADDRESSES, WHITELIST_ADDRESS } from './queries';
+import { FETCH_WHITELIST_ADDRESS_STATUS, FETCH_WHITELISTED_ADDRESSES, WHITELIST_ADDRESS, FETCH_ADDRESS_CHECK } from './queries';
 import { authEidStatusHandler } from '../auth-eid-handler';
 
 const POLL_INTERVAL = 1000;
@@ -89,4 +91,14 @@ export const useWhitelistedAddresses = () => {
   }, [rest.loading]);
 
   return { ...rest, fetch, addresses };
+};
+
+export const useAddressesValidation = () => {
+  const [fetch, { data, ...rest }] = useLazyQuery<ValidateAddressesData, ValidateAddressesVariables>(FETCH_ADDRESS_CHECK, { fetchPolicy: 'no-cache' });
+
+  const validate = (address: string) => {
+    fetch({ variables: { address } });
+  };
+
+  return { ...rest, validate, valid: data?.validateAddress.data.status || false };
 };
