@@ -1,15 +1,19 @@
-import React, { ChangeEvent, FC, FormEvent, useCallback, useDebugValue, useEffect, useState } from 'react';
-import { Props } from './typedef';
+import React, { ChangeEvent, FC, FormEvent, useCallback, useEffect, useState } from 'react';
+
+import { WrappedProps } from './typedef';
 import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
-import { useWhitelistedAddress } from '../../graphql/WhitelistAddress/hooks';
+import { useAddressesValidation, useWhitelistedAddress } from '../../graphql/WhitelistAddress/hooks';
 import { SuccessAlertModal } from '../../components/StatusModal';
 import { StatusModalType } from '../../components/StatusModal/typedef';
+import { useDebounce } from '../../hooks/Debounce';
 
 
-export const withWhitelistAddressDomain = (Component: FC<Props>) => () => {
+export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () => {
   const [label, setLabel] = useState('');
   const [address, setAddress] = useState('');
+  const debouncedAddress = useDebounce(address);
 
+  const { validate, valid } = useAddressesValidation();
   const { modalStatus, success, error, controls } = useWhitelistAddressContext();
   const { loading, waiting, whitelistAddress } = useWhitelistedAddress(controls.openStatus);
 
@@ -19,6 +23,10 @@ export const withWhitelistAddressDomain = (Component: FC<Props>) => () => {
     setLabel('');
     setAddress('');
   }, [modalStatus]);
+
+  useEffect(() => {
+    validate(debouncedAddress);
+  }, [debouncedAddress]);
 
   const handleLabelChange = useCallback(({ currentTarget }: ChangeEvent<HTMLInputElement>) => {
     setLabel(currentTarget.value);
@@ -40,7 +48,8 @@ export const withWhitelistAddressDomain = (Component: FC<Props>) => () => {
         status={ modalStatus }
         handleClose={ controls.close }
         label={ label }
-        disabled={ !label || !address }
+        disabled={ !label || !address || !valid }
+        addressValid={ valid }
         address={ address }
         loading={ loading || waiting }
         handleLabelChange={ handleLabelChange }

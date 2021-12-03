@@ -29,3 +29,11 @@ export const FETCH_WHITELISTED_ADDRESSES = gql`
     }
   }
 `;
+
+export const FETCH_ADDRESS_CHECK = gql`
+  query ValidateAddress ($address: String!) {
+    validateAddress (address: $address) {
+      data
+    }
+  }
+`;

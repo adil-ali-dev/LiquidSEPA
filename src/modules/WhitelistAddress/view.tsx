@@ -12,6 +12,7 @@ export const WhitelistAddressModule = withWhitelistAddressDomain(({
   children,
   label,
   address,
+  addressValid,
   loading,
   handleLabelChange,
   handleAddressChange,
@@ -24,7 +25,7 @@ export const WhitelistAddressModule = withWhitelistAddressDomain(({
   return (
     <Modal { ...modalProps }>
       <Grid className={ classes.modal }>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={ handleSubmit }>
           <Typography className={ classes.modalHeadline }>
             Whitelist Address
           </Typography>
@@ -32,19 +33,20 @@ export const WhitelistAddressModule = withWhitelistAddressDomain(({
           <Grid className={ classes.modalContent }>
             <FormInput
               label="Label"
-              value={label}
+              value={ label }
               placeholder="Address Label"
               background
-              handleChange={handleLabelChange}
+              handleChange={ handleLabelChange }
             />
 
             <FormInput
               label="Address"
               placeholder="Address"
-              value={address}
+              value={ address }
               background
+              error={ !!address.length && !addressValid }
               withExtraProps
-              handleChange={handleAddressChange}
+              handleChange={ handleAddressChange }
             />
           </Grid>
 
