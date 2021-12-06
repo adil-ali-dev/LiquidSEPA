@@ -2,10 +2,11 @@ import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { AUTH_EID_URL_REQ_PREFIX } from '../../constants';
 import { Props } from './typedef';
+import { useAuthEidLogin } from '../../graphql/Session/hooks';
+import { useAuthEidCancel } from '../../graphql/AuthEidCancel/hooks';
+import { useSessionContext } from '../../contexts/Session';
 import { SuccessAlertModal } from '../../components/StatusModal';
 import { StatusModalType } from '../../components/StatusModal/typedef';
-import { useAuthEidLogin } from '../../graphql/Session/hooks';
-import { useSessionContext } from '../../contexts/Session';
 
 
 export const withLoginDomain = (Component: FC<Props>) => () => {
@@ -13,6 +14,7 @@ export const withLoginDomain = (Component: FC<Props>) => () => {
   const [registerNext, setRegisterNext] = useState(false);
 
   const authEid = useAuthEidLogin((error?: string, register?: boolean) => authEidCallback(error, register));
+  const authEidCancel = useAuthEidCancel();
 
   const { status, create, statusLoginModal, controls } = useSessionContext();
 
@@ -20,6 +22,7 @@ export const withLoginDomain = (Component: FC<Props>) => () => {
     if (statusLoginModal) {
       authEid.authEidLogin();
     } else {
+      authEidCancel.cancel(authEid.requestId);
       authEid.stopPolling?.();
     }
   }, [statusLoginModal]);
