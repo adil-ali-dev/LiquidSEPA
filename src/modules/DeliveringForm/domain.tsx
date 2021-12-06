@@ -178,10 +178,17 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     const txId = rfqStatus.data?.tx_id;
 
     if (txId) {
-      rfqStatus.stopPolling?.();
       txStatus.fetch({ txId });
     }
   }, [rfqStatus.data?.tx_id]);
+
+  useEffect(() => {
+    const amount = Number(rfqStatus.data?.payout_amount);
+    if (!rfqStatus.data?.payout_amount || !payment) return;
+
+    rfqStatus.stopPolling?.();
+    setPayment({ ...payment, sending: { ...payment?.sending, amount } });
+  }, [rfqStatus.data?.payout_amount]);
 
   useEffect(() => {
     if (txStatus.data?.unblinded_link && rfqStatus.data?.tx_id) {
@@ -196,7 +203,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
           nameOnAccount: data.depositor_name
         },
         sending: {
-          amount: deliver.amount,
+          amount: Number(data.payout_amount),
           iban: data.payout_iban,
           nameOnAccount: data.payout_account_owner
         }
