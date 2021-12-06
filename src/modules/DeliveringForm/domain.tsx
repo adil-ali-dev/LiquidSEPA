@@ -202,7 +202,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
         }
       });
     }
-  }, [txStatus.data?.unblinded_link, txStatus.data?.confs]);
+  }, [txStatus.data?.unblinded_link]);
 
   useEffect(() => {
     if (confirmations === MAX_CONFS && widgetRef.current) {
