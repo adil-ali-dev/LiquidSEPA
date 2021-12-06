@@ -1,15 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 
-import {
-  WhitelistData,
-  WhitelistVariables,
-  WhitelistStatusData,
-  WhitelistStatusVariables,
-  WhitelistedAddressesData,
-  ValidateAddressesVariables,
-  ValidateAddressesData
-} from './typedef';
+import { WhitelistData, WhitelistVariables, WhitelistStatusData, WhitelistStatusVariables, WhitelistedAddressesData, ValidateAddressesVariables, ValidateAddressesData } from './typedef';
 import { FETCH_WHITELIST_ADDRESS_STATUS, FETCH_WHITELISTED_ADDRESSES, WHITELIST_ADDRESS, FETCH_ADDRESS_CHECK } from './queries';
 import { authEidStatusHandler } from '../auth-eid-handler';
 

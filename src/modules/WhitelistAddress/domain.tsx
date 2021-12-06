@@ -3,6 +3,7 @@ import React, { ChangeEvent, FC, FormEvent, useCallback, useEffect, useState } f
 import { WrappedProps } from './typedef';
 import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
 import { useAddressesValidation, useWhitelistedAddress } from '../../graphql/WhitelistAddress/hooks';
+import { useAuthEidCancel } from '../../graphql/AuthEidCancel/hooks';
 import { SuccessAlertModal } from '../../components/StatusModal';
 import { StatusModalType } from '../../components/StatusModal/typedef';
 import { useDebounce } from '../../hooks/Debounce';
@@ -14,12 +15,14 @@ export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () =>
   const debouncedAddress = useDebounce(address);
 
   const { validate, valid } = useAddressesValidation();
+  const { cancel } = useAuthEidCancel();
   const { modalStatus, success, error, controls } = useWhitelistAddressContext();
-  const { loading, waiting, whitelistAddress } = useWhitelistedAddress(controls.openStatus);
+  const { loading, waiting, whitelistAddress, requestId } = useWhitelistedAddress(controls.openStatus);
 
   useEffect(() => {
     if (modalStatus) return;
 
+    cancel(requestId);
     setLabel('');
     setAddress('');
   }, [modalStatus]);

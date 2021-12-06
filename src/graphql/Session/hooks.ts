@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client';
 
+import { SignatureStatus } from '../typedef';
 import { AUTH_EID_SIGNUP, AUTH_EID_LOGIN, FETCH_AUTH_EID_SIGNUP_STATUS, FETCH_AUTH_EID_LOGIN_STATUS, SESSION_STATUS, LOGOUT } from './queries';
 import { AuthEidSignupData, AuthEidAuthorizeData, AuthEidStatusVariables, AuthEidSignupStatusData, UserSessionData, AuthEidAuthorizeStatusData } from './typedef';
 import { authEidStatusHandler } from '../auth-eid-handler';
-import { SignatureStatus } from '../typedef';
 
 const POLL_INTERVAL = 1000;
 
@@ -34,7 +34,7 @@ export const useAuthEidSignup = (cb: (error?: string, login?: boolean) => void) 
   useEffect(() => {
     if (waiting) return;
 
-    statusData.stopPolling?.();
+    stopPolling();
   }, [waiting]);
 
   useEffect(() => {
@@ -64,10 +64,15 @@ export const useAuthEidSignup = (cb: (error?: string, login?: boolean) => void) 
     requestAuthEidReg().catch(e => console.log(e));
   };
 
+  const stopPolling = () => {
+    setWaiting(false);
+    statusData.stopPolling?.();
+  };
+
   return {
     ...signupData,
     data: signupData.data?.authEidSignup,
-    stopPolling: statusData.stopPolling,
+    stopPolling,
     requestId: signupData.data?.authEidSignup.requestId,
     waiting,
     authEidSignup
@@ -100,7 +105,7 @@ export const useAuthEidLogin = (cb: (error?: string, register?: boolean) => void
   useEffect(() => {
     if (waiting) return;
 
-    statusData.stopPolling?.();
+    stopPolling();
   }, [waiting]);
 
   useEffect(() => {
@@ -129,9 +134,14 @@ export const useAuthEidLogin = (cb: (error?: string, register?: boolean) => void
     requestAuthEidAuth().catch(e => console.log(e));
   };
 
+  const stopPolling = () => {
+    setWaiting(false);
+    statusData.stopPolling?.();
+  };
+
   return {
     ...authData,
-    stopPolling: statusData.stopPolling,
+    stopPolling,
     data: authData.data?.authEidAuthorize,
     requestId: authData.data?.authEidAuthorize.requestId,
     waiting,
