@@ -1,3 +1,7 @@
+export enum TxStatus {
+  LIMIT_REACHED = 'Limit_REACHED'
+}
+
 export type RfqStatusVariables = {
   rfqId: string;
 };
@@ -19,7 +23,7 @@ export type RfqStatusData = {
       payout_amount: string;
       payout_account_owner: string;
       rfq_id: string;
-      status: string;
+      status: TxStatus;
       account_id: null | string;
       refund_address: null | string;
       deposit_amount: string;
