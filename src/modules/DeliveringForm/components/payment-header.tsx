@@ -15,10 +15,10 @@ export const PaymentHeader = memo<PaymentHeaderProps>(({ confirmed, children }) 
     <Grid className={ classes.paymentHeader }>
       <Grid className={ classes.paymentHeaderRow }>
         <Grid className={ clsx(classes.paymentHeaderIconContainer, className) }>
-          <CheckIcon className={ clsx(classes.paymentHeaderIcon, confirmed && classes.paymentHeaderIconBlue) }/>
+          <CheckIcon className={ clsx(classes.paymentHeaderIcon, !confirmed && classes.paymentHeaderIconBlue) }/>
         </Grid>
         <Typography className={ classes.headerText } variant="h6">
-          Payment { status ? 'sent' : 'received' }
+          Payment { confirmed ? 'sent' : 'received' }
         </Typography>
       </Grid>
       { children }

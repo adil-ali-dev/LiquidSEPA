@@ -60,6 +60,7 @@ export type PaymentProps = {
 
 export type PaymentHeaderProps = {
   confirmed: boolean;
+  sent: boolean;
   children: ReactNode | ReactNode[];
 };
 

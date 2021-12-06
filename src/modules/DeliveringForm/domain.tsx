@@ -196,13 +196,13 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
           nameOnAccount: data.depositor_name
         },
         sending: {
-          amount: Number(data.payout_amount),
+          amount: deliver.amount,
           iban: data.payout_iban,
           nameOnAccount: data.payout_account_owner
         }
       });
     }
-  }, [txStatus.data?.unblinded_link]);
+  }, [txStatus.data?.unblinded_link, txStatus.data?.confs]);
 
   useEffect(() => {
     if (confirmations === MAX_CONFS && widgetRef.current) {
