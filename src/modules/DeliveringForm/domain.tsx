@@ -20,6 +20,9 @@ import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
 import { useBankAccountContext } from '../../contexts/BankAccount';
 import { WhitelistedAddress } from '../../graphql/WhitelistAddress/typedef';
 import { BankAccount } from '../../graphql/BankAccount/typedef';
+import { StatusModalType } from '../../components/StatusModal/typedef';
+import { SuccessAlertModal } from '../../components/StatusModal';
+import { TxStatus } from '../../graphql/Transaction/typedef';
 
 const MAX_CONFS = 2;
 const WIDGET_MARGIN_TOP = 72;
@@ -61,6 +64,8 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
 
   const [account, setAccount] = useState<null | BankAccount>(null);
   const [address, setAddress] = useState<null | WhitelistedAddress>(null);
+  
+  const [error, setError] = useState<null | string>(null);
 
   const [confirmationDetails, setConfirmationDetails] = useState<null | ConfirmationDetails>(null);
 
@@ -191,6 +196,12 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   }, [rfqStatus.data?.payout_amount]);
 
   useEffect(() => {
+    if (rfqStatus.data?.status !== TxStatus.LIMIT_REACHED) return;
+
+    setError('Limit reached');
+  }, [rfqStatus.data?.status]);
+
+  useEffect(() => {
     if (txStatus.data?.unblinded_link && rfqStatus.data?.tx_id) {
       const { data } = rfqStatus;
 
@@ -225,6 +236,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
 
     if (!next) {
       setPayment(null);
+      setError(null);
       setConfirmationDetails(null);
       rfqStatus.stopPolling?.();
       txStatus.stopPolling?.();
@@ -328,62 +340,76 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     setAccount(value);
   }, []);
 
+  const handleErrorClose = useCallback(() => {
+    setError(null);
+  }, []);
+
   return (
-    <Component next={next} widgetRef={widgetRef}>
-      {
-        next && (payment ? (
-          <Payment
-            paymentDetails={payment}
-            confirmed={confirmations === MAX_CONFS}
-            sellSide={sellSide}
-            confs={confirmations}
-            handleTxCopyClick={handleTxCopyClick}
-          />
-        ) : (
-          <>
-            <RequisitesHeader
+    <>
+      <Component next={next} widgetRef={widgetRef}>
+        {
+          next && (payment ? (
+            <Payment
+              paymentDetails={payment}
+              confirmed={confirmations === MAX_CONFS}
               sellSide={sellSide}
-              productName={deliver.product}
-              amount={deliver.amount}
-              handleBackClick={handleBackClick}
+              confs={confirmations}
+              handleTxCopyClick={handleTxCopyClick}
             />
-            <RequisitesMain
-              sellSide={sellSide}
-              details={confirmationDetails}
-              handleAddressCopyClick={handleCopyClick}
-              handleIbanCopyClick={handleIbanCopyClick}
-              handleRefCopyClick={handleRefCopyClick}
-            />
-            <RequisitesFooter
+          ) : (
+            <>
+              <RequisitesHeader
+                sellSide={sellSide}
+                productName={deliver.product}
+                amount={deliver.amount}
+                handleBackClick={handleBackClick}
+              />
+              <RequisitesMain
+                sellSide={sellSide}
+                details={confirmationDetails}
+                handleAddressCopyClick={handleCopyClick}
+                handleIbanCopyClick={handleIbanCopyClick}
+                handleRefCopyClick={handleRefCopyClick}
+              />
+              <RequisitesFooter
+                sellSide={ sellSide }
+                value={ sellSide ? account! : address! }
+              />
+            </>
+          )) || (
+            <Form
+              deliverInputRef={ deliverInputRef }
+              formRef={ formRef }
               sellSide={ sellSide }
-              value={ sellSide ? account! : address! }
+              disabled={ disabledContinue }
+              loading={ loading }
+              account={ account }
+              fee={ feeEstimation.data.fee }
+              address={ address }
+              deliver={ deliver }
+              isLoggedIn={ isLoggedIn }
+              receive={ receive }
+              textAreaRef={ textAreaRef }
+              addresses={ whitelistAddress.addresses }
+              accounts={ bankAccount.accounts }
+              handleSwapClick={ handleSwapClick }
+              handleDeliverChange={ handleDeliverChange }
+              handleContinueClick={ handleContinueClick }
+              handleAddPress={ handleAddPress }
+              handleAddressSelect={ handleAddressSelect }
+              handleAccountSelect={ handleAccountSelect }
             />
-          </>
-        )) || (
-          <Form
-            deliverInputRef={ deliverInputRef }
-            formRef={ formRef }
-            sellSide={ sellSide }
-            disabled={ disabledContinue }
-            loading={ loading }
-            account={ account }
-            fee={ feeEstimation.data.fee }
-            address={ address }
-            deliver={ deliver }
-            isLoggedIn={ isLoggedIn }
-            receive={ receive }
-            textAreaRef={ textAreaRef }
-            addresses={ whitelistAddress.addresses }
-            accounts={ bankAccount.accounts }
-            handleSwapClick={ handleSwapClick }
-            handleDeliverChange={ handleDeliverChange }
-            handleContinueClick={ handleContinueClick }
-            handleAddPress={ handleAddPress }
-            handleAddressSelect={ handleAddressSelect }
-            handleAccountSelect={ handleAccountSelect }
-          />
-        )
-      }
-    </Component>
+          )
+        }
+      </Component>
+      <SuccessAlertModal
+        text={ error }
+        type={ StatusModalType.ERROR }
+        status={ !!error }
+        btnText={ 'OK' }
+        handleClose={ handleErrorClose }
+        handleButtonClick={ handleErrorClose }
+      />
+    </>
   );
 };
