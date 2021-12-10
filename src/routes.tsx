@@ -7,6 +7,7 @@ import { WhitelistAddressModule } from './modules/WhitelistAddress';
 import { BankAccountModule } from './modules/BankAccount';
 import { LoginModule } from './modules/Login';
 import { RegisterModule } from './modules/Register';
+import { AlertModule } from './modules/Alert';
 
 const FAQPage = lazy(() => import(
   /* webpackChunkName: "faq" */
@@ -44,17 +45,18 @@ const ScrollToTop = withRouter(({ history }) => {
 
 export const Routes: FC = () => (
   <BrowserRouter>
-    <ScrollToTop/>
-    <Route path={ HOME_PATH } exact component={ HomePage }/>
-    <Route path={ HOME_PATH } component={ LoginModule }/>
-    <Route path={ HOME_PATH } component={ RegisterModule }/>
-    <Route path={ HOME_PATH } component={ BankAccountModule }/>
-    <Route path={ HOME_PATH } component={ WhitelistAddressModule }/>
+    <ScrollToTop />
+    <Route path={HOME_PATH} exact component={HomePage} />
+    <Route path={HOME_PATH} component={LoginModule} />
+    <Route path={HOME_PATH} component={RegisterModule} />
+    <Route path={HOME_PATH} component={BankAccountModule} />
+    <Route path={HOME_PATH} component={WhitelistAddressModule} />
+    <Route path={HOME_PATH} component={AlertModule} />
     <Suspense fallback={<div />}>
-      <Route path={ FAQ_PATH } component={ FAQPage }/>
-      <Route path={ PRIVACY_POLICY_PATH } component={ PrivacyPolicyPage }/>
-      <Route path={ REGULATION_PATH } component={ RegulationPage }/>
-      <Route path={ TERMS_OF_USE_PATH } component={ TermsOfUsePage }/>
+      <Route path={FAQ_PATH} component={FAQPage} />
+      <Route path={PRIVACY_POLICY_PATH} component={PrivacyPolicyPage} />
+      <Route path={REGULATION_PATH} component={RegulationPage} />
+      <Route path={TERMS_OF_USE_PATH} component={TermsOfUsePage} />
     </Suspense>
   </BrowserRouter>
 );

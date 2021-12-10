@@ -5,8 +5,9 @@ import { createLogger } from 'redux-logger';
 import storage from 'redux-persist/lib/storage';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 
-import { APP_DEV } from '../constants';
+import { WS_AUTH_API_URL, APP_DEV } from '../constants';
 import { AppState } from './typedef';
+import { createAuthSocketMiddleware } from './AuthSocket';
 import { rootReducer } from './reducer';
 import { rootSaga } from './saga';
 
@@ -22,8 +23,9 @@ const persistConfig: PersistConfig<AppState | Record<string, unknown>> = {
 
 
 const initStore = () => {
+  const authSocketMiddleware = createAuthSocketMiddleware(WS_AUTH_API_URL);
   const sagaMiddleware = createSagaMiddleware();
-  const middleware: Middleware[] = [sagaMiddleware];
+  const middleware: Middleware[] = [authSocketMiddleware, sagaMiddleware];
 
   if (APP_DEV) {
     middleware.push(createLogger());

@@ -9,7 +9,7 @@
     "node": ">=14 <15"
   },
   "scripts": {
-    "start:dev": "cross-env PORT=9001 react-scripts start",
+    "start:dev": "cross-env PORT=8080 react-scripts start",
     "build:staging": "cross-env REACT_APP_MODE=staging react-scripts build",
     "build:live": "cross-env REACT_APP_MODE=live react-scripts build",
     "lint": "eslint ."

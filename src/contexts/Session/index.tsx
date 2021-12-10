@@ -1,14 +1,14 @@
 import React, { createContext, FC, ReactNode, useState, useContext, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { useAuthEidLogin, useAuthEidSignup, useSessionStatus } from '../../graphql/Session/hooks';
+import { sessionActions, sessionStatusSelector } from '../../store/Session';
+
 
 const SessionContext = createContext({
   status: false,
   loading: false,
-  error: false,
   statusLoginModal: false,
   statusRegisterModal: false,
-  create: (): void => {},
   destroy: (): void => {},
   controls: {
     openLogin: (): void => {},
@@ -22,26 +22,16 @@ type Props = {
   children: ReactNode;
 };
 
-export const SessionProvider: FC<Props> = ({ children }) => {
-  const sessionStatus = useSessionStatus();
 
-  const [status, setStatus] = useState(false);
+export const SessionProvider: FC<Props> = ({ children }) => {
+  const dispatch = useDispatch();
+
+  const status = useSelector(sessionStatusSelector);
   const [statusLoginModal, setStatusLoginModal] = useState(false);
   const [statusRegisterModal, setStatusRegisterModal] = useState(false);
 
-  useEffect(() => {
-    setStatus(sessionStatus.status || false);
-  }, [sessionStatus.status])
-
-  const create = () => {
-    setStatus(true);
-    setStatusLoginModal(false);
-    setStatusRegisterModal(false);
-  };
-
   const destroy = () => {
-    setStatus(false);
-    sessionStatus.logout();
+    dispatch(sessionActions.destroy());
   };
 
   const openLogin = () => {
@@ -61,12 +51,10 @@ export const SessionProvider: FC<Props> = ({ children }) => {
   };
 
   const value = {
-    status,
+    status: !!status,
     statusLoginModal,
     statusRegisterModal,
-    loading: sessionStatus.loading,
-    error: sessionStatus.error,
-    create,
+    loading: status === null,
     destroy,
     controls: {
       openLogin,
@@ -77,7 +65,6 @@ export const SessionProvider: FC<Props> = ({ children }) => {
   };
 
   return (
-    // @ts-ignore
     <SessionContext.Provider value={ value }>
       { children }
     </SessionContext.Provider>

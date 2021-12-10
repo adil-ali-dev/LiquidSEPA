@@ -4,7 +4,7 @@ import { WrappedProps } from './typedef';
 import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
 import { useAddressesValidation, useWhitelistedAddress } from '../../graphql/WhitelistAddress/hooks';
 import { useAuthEidCancel } from '../../graphql/AuthEidCancel/hooks';
-import { SuccessAlertModal } from '../../components/StatusModal';
+import { StatusModal } from '../../components/StatusModal';
 import { StatusModalType } from '../../components/StatusModal/typedef';
 import { useDebounce } from '../../hooks/Debounce';
 
@@ -59,14 +59,14 @@ export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () =>
         handleAddressChange={ handleAddressChange }
         handleSubmit={ handleSubmit }
       />
-      <SuccessAlertModal
+      <StatusModal
         text="Address successfully whitelisted"
         type={ StatusModalType.SUCCESS }
         status={ success }
         handleClose={ controls.closeStatus }
         handleButtonClick={ controls.closeStatus }
       />
-      <SuccessAlertModal
+      <StatusModal
         text={ error }
         type={ StatusModalType.ERROR }
         status={ !!error }

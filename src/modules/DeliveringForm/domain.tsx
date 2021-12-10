@@ -1,15 +1,15 @@
 import React, { ChangeEvent, ComponentType, FormEvent, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState, MouseEvent } from 'react';
 import { isMobile } from 'react-device-detect';
 
-import { ProductType, BLOCKSTREAM_ASSET_ID, SIDESWAP_PREFIX, REFUND_ADDRESS } from '../../constants';
-import { Address, Props, PaymentDetails, NameOnAccount, Product, ConfirmationDetails } from './typedef';
+import { ProductType, BLOCKSTREAM_ASSET_ID, SIDESWAP_PREFIX } from '../../constants';
+import { Props, PaymentDetails, Product, ConfirmationDetails } from './typedef';
 import { useEurDeliver, useEurXDeliver } from '../../graphql/Deliver/hooks';
 import { useRfqStatus, useTxStatus } from '../../graphql/Transaction/hooks';
 import { useConfirmation } from '../../graphql/Confirmation/hooks';
 import { useFeeEstimation } from '../../graphql/Fee/hooks';
 import { useDeliveringFormStatusContext } from '../../contexts/DeliveringForm';
 import { useClipBoard } from '../../hooks/ClipBoard';
-import { IbanService, BitcoinAddressService, ConverterService } from '../../services';
+import { IbanService, ConverterService } from '../../services';
 import { Form } from './components/form';
 import { RequisitesHeader } from './components/requisites-header';
 import { RequisitesMain } from './components/requisites-main';
@@ -21,7 +21,7 @@ import { useBankAccountContext } from '../../contexts/BankAccount';
 import { WhitelistedAddress } from '../../graphql/WhitelistAddress/typedef';
 import { BankAccount } from '../../graphql/BankAccount/typedef';
 import { StatusModalType } from '../../components/StatusModal/typedef';
-import { SuccessAlertModal } from '../../components/StatusModal';
+import { StatusModal } from '../../components/StatusModal';
 import { TxStatus } from '../../graphql/Transaction/typedef';
 
 const MAX_CONFS = 2;
@@ -402,7 +402,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
           )
         }
       </Component>
-      <SuccessAlertModal
+      <StatusModal
         text={ error }
         type={ StatusModalType.ERROR }
         status={ !!error }

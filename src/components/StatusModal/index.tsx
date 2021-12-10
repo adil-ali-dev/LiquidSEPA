@@ -6,7 +6,7 @@ import { StatusError, StatusSuccess, StatusWaiting } from '../../assets/Icons';
 import { useStyles } from './style';
 import { Modal } from '../Modal';
 
-export const SuccessAlertModal = memo<Props>(({
+export const StatusModal = memo<Props>(({
   text,
   type,
   btnText,

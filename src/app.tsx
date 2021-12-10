@@ -32,24 +32,24 @@ const queryClient = new QueryClient();
 export const App: FC = () => (
   <Provider store={store}>
     <PersistGate persistor={persistor}>
-      <QueryClientProvider client={ queryClient }>
-        <ApolloProvider client={ client }>
-          <ThemeProvider theme={ theme }>
+      <QueryClientProvider client={queryClient}>
+        <ApolloProvider client={client}>
+          <ThemeProvider theme={theme}>
             <StylesProvider injectFirst>
-              <CssBaseline/>
+              <CssBaseline />
               <SessionProvider>
-              <NordigenProvider>
-                <WhitelistAddressProvider>
-                  <BankAccountProvider>
-                    <Routes/>
-                  </BankAccountProvider>
-                </WhitelistAddressProvider>
-              </NordigenProvider>
-            </SessionProvider>
-          </StylesProvider>
-        </ThemeProvider>
-      </ApolloProvider>
-    </QueryClientProvider>
-  </PersistGate>
-</Provider>
+                <NordigenProvider>
+                  <WhitelistAddressProvider>
+                    <BankAccountProvider>
+                      <Routes />
+                    </BankAccountProvider>
+                  </WhitelistAddressProvider>
+                </NordigenProvider>
+              </SessionProvider>
+            </StylesProvider>
+          </ThemeProvider>
+        </ApolloProvider>
+      </QueryClientProvider>
+    </PersistGate>
+  </Provider>
 );
