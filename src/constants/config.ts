@@ -1,3 +1,5 @@
+export const APP_DEV = process.env.NODE_ENV === 'development';
+
 export const ENV = process.env.NODE_ENV;
 export const PRODUCTION = ENV === 'production';
 
@@ -12,13 +14,14 @@ export const SECOND_ASSET_URL = process.env.REACT_APP_SECOND_ASSET_URL as string
 
 export const SIDESWAP_PREFIX = process.env.REACT_APP_SIDESWAP_PREFIX as string;
 
-export const LOGIN = process.env.REACT_APP_LOGIN as string;
-export const PASSWORD = process.env.REACT_APP_PASSWORD as string;
-
 export const AUTH_EID_URL = process.env.REACT_APP_AUTH_EID_URL as string;
 export const AUTH_EID_URL_REQ_PREFIX = process.env.REACT_APP_AUTH_EID_URL_REQ_PREFIX as string;
 
 export const NORDIGEN_BANK_LOGO_PREFIX = process.env.REACT_APP_NORDIGEN_BANK_LOGO_PREFIX as string;
+
+export const WS_AUTH_API_URL = LIVE
+  ? process.env.REACT_APP_WS_AUTH_API_URL
+  : process.env.REACT_APP_GQL_HTTP_URL as string;
 
 export const GQL_HTTP_URL = LIVE
   ? process.env.REACT_APP_GQL_HTTP_LIVE_URL
