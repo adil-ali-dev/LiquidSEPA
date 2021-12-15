@@ -19,9 +19,13 @@ export const AUTH_EID_URL_REQ_PREFIX = process.env.REACT_APP_AUTH_EID_URL_REQ_PR
 
 export const NORDIGEN_BANK_LOGO_PREFIX = process.env.REACT_APP_NORDIGEN_BANK_LOGO_PREFIX as string;
 
-export const WS_AUTH_API_URL = LIVE
+export const WS_AUTH_URL = (LIVE
   ? process.env.REACT_APP_WS_AUTH_API_URL_LIVE
-  : process.env.REACT_APP_WS_AUTH_API_URL_DEV as string;
+  : process.env.REACT_APP_WS_AUTH_API_URL_DEV) as string;
+
+export const WS_MAIN_URL = (LIVE
+  ? process.env.REACT_APP_WS_MAIN_API_URL_LIVE
+  : process.env.REACT_APP_WS_MAIN_API_URL_DEV) as string;
 
 export const GQL_HTTP_URL = LIVE
   ? process.env.REACT_APP_GQL_HTTP_LIVE_URL

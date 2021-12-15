@@ -1,6 +1,7 @@
 import { AnyAction } from 'redux';
 
-import { AuthSocketReq, AuthSocketEndpoint, Action, EmptyAction, FailureAction, AuthEidStatus } from '../../typedef';
+import { AuthSocketEndpoint, Action, EmptyAction, FailureAction, AuthSocketRes } from '../../typedef';
+import { SessionApiAuthReqs } from '../Session';
 
 
 export enum AuthSocketConstants {
@@ -10,6 +11,18 @@ export enum AuthSocketConstants {
   SEND = '@auth-socket/SEND',
   ERROR = '@auth-socket/ERROR'
 }
+
+/*
+ * Api Requests
+ */
+
+type SendReq = SessionApiAuthReqs;
+
+/*
+ * API Responses
+ */
+
+export type SendRes = AuthSocketRes<SendReq['method']>;
 
 
 /*
@@ -23,13 +36,6 @@ type ErrorHandler = (error: string) => AnyAction;
 export type AuthSocketHandler = {
   [K in AuthSocketEndpoint]: [null | SuccessHandler, null | ErrorHandler];
 };
-
-
-/*
- * Api Requests
- */
-
-type SendReq = AuthSocketReq<any>;
 
 
 /*

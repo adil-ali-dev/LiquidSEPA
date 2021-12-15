@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AUTH_EID_URL_REQ_PREFIX } from '../../constants';
 import { Props } from './typedef';
 import { useAuthEidCancel } from '../../graphql/AuthEidCancel/hooks';
-import { sessionActions, sessionCreateLoadingSelector, sessionRequestIdSelector, sessionWaitingForSignatureSelector } from '../../store/Session';
+import { sessionActions, sessionCreateErrorSelector, sessionCreateLoadingSelector, sessionRequestIdSelector, sessionWaitingForSignatureSelector } from '../../store/Session';
 import { useSessionContext } from '../../contexts/Session';
 
 
@@ -16,6 +16,7 @@ export const withLoginDomain = (Component: FC<Props>) => () => {
   const requestId = useSelector(sessionRequestIdSelector);
   const loadingCreateSession = useSelector(sessionCreateLoadingSelector);
   const waitingForSignature = useSelector(sessionWaitingForSignatureSelector);
+  const error = useSelector(sessionCreateErrorSelector);
 
   const authEidCancel = useAuthEidCancel();
 
@@ -24,6 +25,18 @@ export const withLoginDomain = (Component: FC<Props>) => () => {
 
     dispatch(sessionActions.createSession());
   }, [statusLoginModal]);
+
+  useEffect(() => {
+    if (!error) return;
+
+    controls.closeLogin();
+  }, [error]);
+
+  useEffect(() => {
+    if (!status) return;
+
+    controls.closeLogin();
+  }, [status]);
 
   const handleClose = useCallback(() => {
     controls.closeLogin();

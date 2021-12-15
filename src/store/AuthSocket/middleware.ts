@@ -2,20 +2,10 @@ import { MiddlewareAPI, AnyAction } from 'redux';
 import camelcaseKeys from 'camelcase-keys';
 import snakecaseKeys from 'snakecase-keys';
 
-import { APP_DEV } from '../../constants';
-import { AuthSocketRes, StatusModalType } from '../../typedef';
+import { AuthSocketRes } from '../../typedef';
 import { AuthSocketAction, AuthSocketConstants } from './typedef';
-import { alertActions } from '../Alert';
 import { authSocketActions } from './actions';
 import { authSocketExternalHandlers } from './handlers';
-
-
-const logger = (url?: string, message?: string, meta?: Event | Record<string, any>): void => {
-  if (APP_DEV) {
-    // eslint-disable-next-line no-console
-    console.log(`[${url}] ${message}.`, meta || '');
-  }
-};
 
 
 export const createAuthSocketMiddleware = (url?: string) => {
@@ -29,17 +19,13 @@ export const createAuthSocketMiddleware = (url?: string) => {
 
       socket.onopen = () => {
         store.dispatch(authSocketActions.connect());
-
-        logger(url, 'Connected');
       };
 
       socket.onerror = event => {
-        logger(url, 'Error', event);
+        console.error(event);
       };
 
       socket.onmessage = event => {
-        logger(url, 'Received', JSON.parse(event.data));
-
         const response: AuthSocketRes = camelcaseKeys(JSON.parse(event.data), { deep: true });
         const { error, data, method } = response;
         if (!authSocketExternalHandlers[method]) return;
@@ -59,11 +45,7 @@ export const createAuthSocketMiddleware = (url?: string) => {
         store.dispatch(authSocketActions.close());
 
         if (event.code !== 1005) {
-          logger(url, 'Unexpectedly closed (Reconnect will be attempted in 1 second)', event);
-
           setTimeout(createSocket, 1000);
-        } else {
-          logger(url, 'Expectedly closed');
         }
       };
     };
@@ -75,14 +57,6 @@ export const createAuthSocketMiddleware = (url?: string) => {
         const snakeCasedPayload = snakecaseKeys(action.payload, { deep: true });
 
         socket.send(JSON.stringify(snakeCasedPayload));
-        logger(url, 'Sent', snakeCasedPayload);
-      }
-
-      if (action.type.endsWith('FAILURE') && (action as AnyAction).error) {
-        store.dispatch(alertActions.show({
-          type: StatusModalType.ERROR,
-          message: (action as AnyAction).error
-        }))
       }
 
       return next(action);

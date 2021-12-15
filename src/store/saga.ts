@@ -1,9 +1,13 @@
 import { all, take } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist';
 
-import { alertSaga } from './Alert/saga';
+import { alertSaga } from './Alert';
 import { authSocketSaga, AuthSocketConstants } from './AuthSocket';
+import { socketSaga } from './Socket';
 import { sessionSaga } from './Session';
+import { addressesSaga } from './Addresses';
+import { bankAccountsSaga } from './BankAccounts';
+import { rfqSaga } from './Rfq';
 
 
 export function *rootSaga() {
@@ -19,6 +23,10 @@ export function *rootSaga() {
 
     // Main:
     authSocketSaga(),
-    sessionSaga()
+    socketSaga(),
+    sessionSaga(),
+    addressesSaga(),
+    bankAccountsSaga(),
+    rfqSaga()
   ]);
 }

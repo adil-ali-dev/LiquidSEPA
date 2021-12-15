@@ -1,7 +1,9 @@
 import React, { ChangeEvent, ComponentType, FormEvent, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState, MouseEvent } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 
-import { ProductType, BLOCKSTREAM_ASSET_ID, SIDESWAP_PREFIX } from '../../constants';
+import { BLOCKSTREAM_ASSET_ID, SIDESWAP_PREFIX } from '../../constants';
+import { Currency } from '../../typedef';
 import { Props, PaymentDetails, Product, ConfirmationDetails } from './typedef';
 import { useEurDeliver, useEurXDeliver } from '../../graphql/Deliver/hooks';
 import { useRfqStatus, useTxStatus } from '../../graphql/Transaction/hooks';
@@ -9,7 +11,7 @@ import { useConfirmation } from '../../graphql/Confirmation/hooks';
 import { useFeeEstimation } from '../../graphql/Fee/hooks';
 import { useDeliveringFormStatusContext } from '../../contexts/DeliveringForm';
 import { useClipBoard } from '../../hooks/ClipBoard';
-import { IbanService, ConverterService } from '../../services';
+import { ConverterService } from '../../services';
 import { Form } from './components/form';
 import { RequisitesHeader } from './components/requisites-header';
 import { RequisitesMain } from './components/requisites-main';
@@ -23,6 +25,7 @@ import { BankAccount } from '../../graphql/BankAccount/typedef';
 import { StatusModalType } from '../../components/StatusModal/typedef';
 import { StatusModal } from '../../components/StatusModal';
 import { TxStatus } from '../../graphql/Transaction/typedef';
+import { rfqAnyActionLoading } from '../../store/Rfq';
 
 const MAX_CONFS = 2;
 const WIDGET_MARGIN_TOP = 72;
@@ -34,14 +37,14 @@ const MAX_DELIVER_SEPARATED = ConverterService.separateWith(MAX_DELIVER, ',');
 const amountRegExp = new RegExp(/^(|\d)(|,)(|\d{0,3})(|(\.(\d{0,2})))$/);
 
 const initialDeliver: Product = {
-  product: ProductType.EUR,
+  product: Currency.EUR,
   amount: 0,
   placeholder: '',
   error: null
 };
 
 const initialReceive: Product = {
-  product: ProductType.EURX,
+  product: Currency.EURX,
   amount: 0,
   placeholder: ''
 };
@@ -54,6 +57,7 @@ const getInputData = (value: number, fixed: number) => {
 };
 
 export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () => {
+  const dispatch = useDispatch();
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const widgetRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -83,13 +87,11 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const txStatus = useTxStatus();
   const { status: isLoggedIn, controls: authControls } = useSessionContext();
 
-  const sellSide = useMemo(() => {
-    return deliver.product === ProductType.EURX;
-  }, [deliver.product]);
+  const loading = useSelector(rfqAnyActionLoading)
 
-  const loading = useMemo(() => {
-    return eurDeliver.loading || eurXDeliver.loading || confirmation.loading;
-  }, [eurDeliver.loading, eurXDeliver.loading, confirmation.loading]);
+  const sellSide = useMemo(() => {
+    return deliver.product === Currency.EURX;
+  }, [deliver.product]);
 
   const disabledContinue = useMemo(() => {
     return loading || !!deliver.error || !deliver.amount || (sellSide

@@ -1,11 +1,14 @@
+import { SocketEndpoint } from './../../typedef';
 import { delay, select, takeLatest, put } from 'redux-saga/effects';
 
+import { WS_MAIN_URL } from '../../constants';
 import { AuthEidStatus, AuthSocketEndpoint, StatusModalType } from '../../typedef';
-import { CreateSessionSuccess, Refresh, SessionConstants, UpdateCreateSessionStatus, UpdateCreateAccountStatus } from './typedef';
+import { CreateSessionSuccess, Refresh, SessionConstants, UpdateCreateSessionStatus, UpdateCreateAccountStatus, Authorize, AuthorizeSuccess, RefreshSuccess } from './typedef';
 import { authSocketActions } from '../AuthSocket';
-import { sessionTokenValueSelector } from './selectors';
+import { sessionTokenExpiresInSelector, sessionTokenValueSelector } from './selectors';
 import { alertActions } from '../Alert';
 import { sessionActions } from './actions';
+import { socketActions } from '../Socket';
 
 
 const authEidErrors = {
@@ -31,7 +34,9 @@ function *createSession() {
     method: AuthSocketEndpoint.LOG_IN,
     api: 'login',
     messageId: `${Date.now()}`,
-    args: { serviceUrl: '' }
+    // TODO: Uncomment the line below when BE is ready.
+    // args: { serviceUrl: WS_MAIN_URL }
+    args: { serviceUrl: 'https://liquidsepa.com' }
   }));
 }
 
@@ -67,6 +72,15 @@ function *updateCreateSessionStatus({ payload }: UpdateCreateSessionStatus) {
   yield put(sessionActions.createSessionFailure(authEidLoginErrors[payload.status]));
 }
 
+function *authorize({ payload }: Authorize) {
+  yield put(socketActions.send({
+    method: SocketEndpoint.AUTHORIZE,
+    api: 'session',
+    messageId: `${Date.now()}`,
+    args: payload
+  }));
+}
+
 function *refresh({ payload }: Refresh) {
   yield put(authSocketActions.send({
     method: AuthSocketEndpoint.REFRESH_SESSION,
@@ -84,17 +98,19 @@ function *createAccountSuccess() {
 }
 
 function *createSessionSuccess({ payload }: CreateSessionSuccess) {
-  yield put(alertActions.show({
-    type: StatusModalType.SUCCESS,
-    message: 'Session has been created'
-  }));
+  yield put(sessionActions.authorize({ accessToken: payload.accessToken }));
+}
 
-  yield delay((payload.expiresIn - 60) * 1000);
-  // yield delay(10000);
+function *refreshSessionSuccess({ payload }: RefreshSuccess) {
+  yield put(sessionActions.authorize({ accessToken: payload.accessToken }));
+}
 
-  const accessToken: string = yield select(sessionTokenValueSelector);
-  if (!accessToken) return;
+function *authorizeSuccess() {
+  const expiresIn: undefined | number = yield select(sessionTokenExpiresInSelector);
+  const accessToken: undefined | string = yield select(sessionTokenValueSelector);
+  if (!expiresIn || !accessToken) return;
 
+  yield delay((expiresIn - 60) * 1000);
   yield put(sessionActions.refresh({ accessToken }));
 }
 
@@ -102,11 +118,14 @@ function *createSessionSuccess({ payload }: CreateSessionSuccess) {
 export function *sessionSaga() {
   yield takeLatest(SessionConstants.CREATE_ACCOUNT_REQUEST, createAccount);
   yield takeLatest(SessionConstants.CREATE_SESSION_REQUEST, createSession);
+  yield takeLatest(SessionConstants.AUTHORIZE_SESSION_REQUEST, authorize);
   yield takeLatest(SessionConstants.REFRESH_SESSION_REQUEST, refresh);
 
   yield takeLatest(SessionConstants.UPDATE_CREATE_ACCOUNT_STATUS, updateCreateAccountStatus);
   yield takeLatest(SessionConstants.UPDATE_CREATE_SESSION_STATUS, updateCreateSessionStatus);
 
   yield takeLatest(SessionConstants.CREATE_ACCOUNT_SUCCESS, createAccountSuccess);
+  yield takeLatest(SessionConstants.REFRESH_SESSION_SUCCESS, refreshSessionSuccess);
   yield takeLatest(SessionConstants.CREATE_SESSION_SUCCESS, createSessionSuccess);
+  yield takeLatest(SessionConstants.AUTHORIZE_SESSION_SUCCESS, authorizeSuccess);
 }

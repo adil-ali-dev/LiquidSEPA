@@ -1,4 +1,4 @@
-import { Action, FailureAction, EmptyAction, AuthEidStatus } from '../../typedef';
+import { Action, FailureAction, EmptyAction, AuthEidStatus, SocketReq, AuthSocketEndpoint, SocketEndpoint, AuthSocketReq } from '../../typedef';
 
 
 export enum SessionConstants {
@@ -37,6 +37,12 @@ export enum SessionConstants {
  * Request
  */
 
+export type CreateSessionReq = {
+  serviceUrl: string;
+};
+
+export type CreateAccountReq = Record<string, unknown>;
+
 export type AuthEidReq = {
   requestId: null | string;
 };
@@ -50,7 +56,7 @@ export type RefreshReq = {
 };
 
 export type AuthorizeReq = {
-  token: string;
+  accessToken: string;
 };
 
 
@@ -58,29 +64,14 @@ export type AuthorizeReq = {
  * API Request
  */
 
-export type CreateSessionApiReq = {
-  serviceUrl: string;
-};
+export type CreateSessionApiReq = AuthSocketReq<AuthSocketEndpoint.LOG_IN, CreateSessionReq>;
+export type CreateAccountApiReq = AuthSocketReq<AuthSocketEndpoint.REGISTER, CreateAccountReq>;
+export type RefreshApiReq = AuthSocketReq<AuthSocketEndpoint.REFRESH_SESSION, RefreshReq>;
 
-export type CreateAccountApiReq = Record<string, unknown>;
+export type AuthenticateApiReq = SocketReq<SocketEndpoint.AUTHORIZE, AuthorizeReq>;
 
-export type RefreshApiReq = {
-  accessToken: string;
-};
-
-export type AuthenticateApiReq = {
-  authorize: AuthorizeReq;
-};
-
-type DestroySessionApiReq = {
-  logout: Record<string, unknown>;
-};
-
-export type SessionApiReqs = CreateSessionApiReq
-| CreateAccountApiReq
-| RefreshApiReq
-| AuthenticateApiReq
-| DestroySessionApiReq;
+export type SessionApiAuthReqs = CreateSessionApiReq | CreateAccountApiReq | RefreshApiReq;
+export type SessionApiMainReqs = AuthenticateApiReq;
 
 
 /*
@@ -109,7 +100,12 @@ export type RefreshRes = {
 };
 
 export type AuthorizeRes = {
-  validity: number;
+  session: {
+    valid: boolean;
+    info: {
+        user: string;
+    }
+}
 };
 
 export type AuthEidStatusRes = {

@@ -7,7 +7,7 @@ import { useSessionContext } from '../../contexts/Session';
 import { StatusModal } from '../../components/StatusModal';
 import { StatusModalType } from '../../components/StatusModal/typedef';
 import { useAuthEidCancel } from '../../graphql/AuthEidCancel/hooks';
-import { sessionActions, sessionCreateAccountLoadingSelector, sessionRequestIdSelector, sessionWaitingForSignatureSelector } from '../../store/Session';
+import { sessionActions, sessionCreateAccountErrorSelector, sessionCreateAccountLoadingSelector, sessionRequestIdSelector, sessionWaitingForSignatureSelector } from '../../store/Session';
 
 
 export const withRegisterDomain = (Component: FC<Props>) => () => {
@@ -18,6 +18,7 @@ export const withRegisterDomain = (Component: FC<Props>) => () => {
   const requestId = useSelector(sessionRequestIdSelector);
   const loadingCreateSession = useSelector(sessionCreateAccountLoadingSelector);
   const waitingForSignature = useSelector(sessionWaitingForSignatureSelector);
+  const error = useSelector(sessionCreateAccountErrorSelector);
 
   const authEidCancel = useAuthEidCancel();
 
@@ -27,8 +28,20 @@ export const withRegisterDomain = (Component: FC<Props>) => () => {
     dispatch(sessionActions.createAccount());
   }, [statusRegisterModal]);
 
+  useEffect(() => {
+    if (!error) return;
+
+    controls.closeRegister();
+  }, [error]);
+
+  useEffect(() => {
+    if (!status) return;
+
+    controls.closeRegister();
+  }, [status]);
+
   const handleClose = useCallback(() => {
-    controls.closeLogin();
+    controls.closeRegister();
     authEidCancel.cancel(requestId!);
   }, [requestId]);
 

@@ -1,11 +1,11 @@
 import { ChangeEvent, FormEvent, KeyboardEvent, ReactNode, MouseEvent, RefObject, ReactNodeArray } from 'react';
 
-import { ProductType } from '../../constants';
+import { Currency } from '../../typedef';
 import { BankAccount } from '../../graphql/BankAccount/typedef';
 import { WhitelistedAddress } from '../../graphql/WhitelistAddress/typedef';
 
 export type Product = {
-  product: ProductType;
+  product: Currency;
   amount: number;
   placeholder: string;
   error?: null | string;
@@ -171,7 +171,7 @@ export type RowProps = {
   spaceMedium?: boolean;
   spaceSmall?: boolean;
   value?: string | number;
-  product?: ProductType;
+  product?: Currency;
   children?: ReactNode;
 };
 

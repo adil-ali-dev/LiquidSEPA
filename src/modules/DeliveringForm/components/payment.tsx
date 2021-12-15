@@ -1,13 +1,13 @@
 import React, { memo } from 'react';
 import { Grid } from '@material-ui/core';
 
+import { Currency } from '../../../typedef';
 import { PaymentProps } from '../typedef';
 import { useStyles } from '../style';
 import { Row } from './row';
 import { PaymentHeader } from './payment-header';
 import { PaymentTxid } from './payment-txid';
 import { PaymentDetails } from './payment-details';
-import { ProductType } from '../../../constants';
 import { ConverterService, IbanService } from '../../../services';
 
 export const Payment = memo<PaymentProps>(({
@@ -31,7 +31,7 @@ export const Payment = memo<PaymentProps>(({
       <Row
         label="Received"
         value={ ConverterService.separate(paymentDetails.received.amount.toFixed(8), ',') }
-        product={ ProductType.EURX }
+        product={ Currency.EURX }
         spaceMedium
       />
       <Row
@@ -56,7 +56,7 @@ export const Payment = memo<PaymentProps>(({
       <Row
         label="Sending amount"
         value={ ConverterService.separate(paymentDetails.sending.amount.toFixed(2), ',') }
-        product={ ProductType.EUR }
+        product={ Currency.EUR }
         spaceSmall
       />
     </PaymentDetails>
@@ -67,7 +67,7 @@ export const Payment = memo<PaymentProps>(({
       <Row
         label="Received amount"
         value={ ConverterService.separate(paymentDetails.received.amount.toFixed(2), ',') }
-        product={ ProductType.EUR }
+        product={ Currency.EUR }
         spaceMedium
       />
       <Row
@@ -95,7 +95,7 @@ export const Payment = memo<PaymentProps>(({
       <Row
         label="Sending amount"
         value={ ConverterService.separate(paymentDetails.sending.amount.toFixed(8), ',') }
-        product={ ProductType.EURX }
+        product={ Currency.EURX }
         spaceLarge
       />
       <Row
