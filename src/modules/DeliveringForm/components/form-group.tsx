@@ -3,7 +3,7 @@ import { isMobile } from 'react-device-detect';
 import { Grid, InputBase, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 
-import { ProductType } from '../../../constants';
+import { Currency } from '../../../typedef';
 import { FormGroupProps } from '../typedef';
 import { useStyles } from '../style';
 import { ProductIcon } from './product-icon';
@@ -25,7 +25,7 @@ export const FormGroup = memo<FormGroupProps>(({
       onClick={ handleSwapClick }
     >
       <Typography className={ classes.commonLabel }>
-        { label } ({ product.product === ProductType.EUR ? 'cash' : 'stablecoin' })
+        { label } ({ product.product === Currency.EUR ? 'cash' : 'stablecoin' })
       </Typography>
       <Grid className={ classes.formGroupRow }>
         <Grid className={ classes.formGroupCurrency }>

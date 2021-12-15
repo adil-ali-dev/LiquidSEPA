@@ -11,5 +11,6 @@ export type Props = {
   btnText?: string;
   type?: StatusModalType;
   handleClose?: () => void;
+  handleExited?: () => void;
   handleButtonClick?: () => void;
 };

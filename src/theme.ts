@@ -139,7 +139,7 @@ const createdTheme = createMuiTheme({
         backgroundColor: '#FFF',
         borderRadius: 12,
         boxShadow: 'none',
-        marginTop: 14,
+        marginTop: 14
         // borderTop: 'none',
         // borderTopLeftRadius: 0,
         // borderTopRightRadius: 0

@@ -1,30 +1,29 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { AUTH_EID_URL_REQ_PREFIX } from '../../constants';
 import { Props } from './typedef';
-import { useAuthEidLogin } from '../../graphql/Session/hooks';
 import { useAuthEidCancel } from '../../graphql/AuthEidCancel/hooks';
+import { sessionActions, sessionCreateErrorSelector, sessionCreateLoadingSelector, sessionRequestIdSelector, sessionWaitingForSignatureSelector } from '../../store/Session';
 import { useSessionContext } from '../../contexts/Session';
-import { SuccessAlertModal } from '../../components/StatusModal';
-import { StatusModalType } from '../../components/StatusModal/typedef';
 
 
 export const withLoginDomain = (Component: FC<Props>) => () => {
-  const [error, setError] = useState<null | string>(null);
-  const [registerNext, setRegisterNext] = useState(false);
+  const dispatch = useDispatch();
 
-  const authEid = useAuthEidLogin((error?: string, register?: boolean) => authEidCallback(error, register));
+  const { status, statusLoginModal, controls } = useSessionContext();
+
+  const requestId = useSelector(sessionRequestIdSelector);
+  const loadingCreateSession = useSelector(sessionCreateLoadingSelector);
+  const waitingForSignature = useSelector(sessionWaitingForSignatureSelector);
+  const error = useSelector(sessionCreateErrorSelector);
+
   const authEidCancel = useAuthEidCancel();
 
-  const { status, create, statusLoginModal, controls } = useSessionContext();
-
   useEffect(() => {
-    if (statusLoginModal) {
-      authEid.authEidLogin();
-    } else {
-      authEidCancel.cancel(authEid.requestId);
-      authEid.stopPolling?.();
-    }
+    if (!statusLoginModal) return;
+
+    dispatch(sessionActions.createSession());
   }, [statusLoginModal]);
 
   useEffect(() => {
@@ -33,48 +32,33 @@ export const withLoginDomain = (Component: FC<Props>) => () => {
     controls.closeLogin();
   }, [error]);
 
+  useEffect(() => {
+    if (!status) return;
+
+    controls.closeLogin();
+  }, [status]);
+
+  const handleClose = useCallback(() => {
+    controls.closeLogin();
+    authEidCancel.cancel(requestId!);
+  }, [requestId]);
+
+  const loading = useMemo(() => {
+    return waitingForSignature || (loadingCreateSession && !requestId);
+  }, [loadingCreateSession, waitingForSignature, requestId]);
+
   const qrValue = useMemo(() => {
-    if (!authEid.requestId) return null;
+    if (!requestId) return null;
 
-    return `${ AUTH_EID_URL_REQ_PREFIX }${ authEid.requestId }`;
-  }, [authEid.requestId]);
-
-  const handleErrorClose = useCallback(() => {
-    setError(null);
-    setRegisterNext(false);
-  }, []);
-
-  const handleButtonClick = useCallback(() => {
-    registerNext && controls.openRegister();
-    handleErrorClose();
-  }, [registerNext]); 
-
-  const authEidCallback = useCallback((error?: string, register?: boolean) => {
-    if (!error) {
-      create();
-    } else {
-      setError(error);
-      register && setRegisterNext(true);
-    }
-  }, []);
+    return `${ AUTH_EID_URL_REQ_PREFIX }${ requestId }`;
+  }, [requestId]);
 
   return (
-    <>
-      <Component
-        status={ statusLoginModal }
-        handleClose={ controls.closeLogin }
-        loading={ authEid.loading || authEid.waiting || status }
-        qrValue={ qrValue }
-      />
-      <SuccessAlertModal
-        text={ error }
-        type={ StatusModalType.ERROR }
-        status={ !!error }
-        btnText={ registerNext ? 'Register' : 'OK' }
-        handleClose={ handleErrorClose }
-        handleButtonClick={ handleButtonClick }
-      />
-    </>
-
+    <Component
+      status={ statusLoginModal }
+      handleClose={ handleClose }
+      loading={ loading || status }
+      qrValue={ qrValue }
+    />
   );
 };

@@ -5,7 +5,7 @@ import { Props } from './typedef';
 import { CloseIcon } from '../../assets/Icons';
 import { useStyles } from './style';
 
-export const Modal = memo<Props>(({ status, handleClose, children }) => {
+export const Modal = memo<Props>(({ status, handleClose, handleExited, children }) => {
   const styles = useStyles();
 
   return (
@@ -13,6 +13,7 @@ export const Modal = memo<Props>(({ status, handleClose, children }) => {
       classes={{ scrollPaper: styles.scrollPaper, paper: styles.dialogPaper }}
       className={ styles.modal }
       open={ status }
+      onExited={ handleExited }
       onClose={ handleClose }
     >
       <>

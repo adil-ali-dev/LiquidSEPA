@@ -6,7 +6,7 @@ import { useNordigen } from '../../graphql/Nordigen/hooks';
 import { Bank, Country } from '../../graphql/Nordigen/typedef';
 import { useBankAccountContext } from '../../contexts/BankAccount';
 import { StatusModalType } from '../../components/StatusModal/typedef';
-import { SuccessAlertModal } from '../../components/StatusModal';
+import { StatusModal } from '../../components/StatusModal';
 
 export const withBankAccountDomain = (Component: FC<Props>) => () => {
   const history = useHistory();
@@ -88,18 +88,18 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
         handleSubmit={ handleSubmit }
         disabled={ !bank || !country }
       />
-      <SuccessAlertModal
+      <StatusModal
         type={ StatusModalType.PROCESSING }
         status={ processing }
       />
-      <SuccessAlertModal
+      <StatusModal
         text="Account successfully created"
         type={ StatusModalType.SUCCESS }
         status={ success }
         handleClose={ controls.closeStatus }
         handleButtonClick={ controls.closeStatus }
       />
-      <SuccessAlertModal
+      <StatusModal
         text={ error }
         type={ StatusModalType.ERROR }
         status={ !!error }

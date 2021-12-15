@@ -1,7 +1,8 @@
 import React, { ComponentType, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 
-import { BLOCKSTREAM_ASSET_URL, ProductType, SECOND_ASSET_URL } from '../../constants';
+import { BLOCKSTREAM_ASSET_URL, SECOND_ASSET_URL } from '../../constants';
+import { StableCurrency } from '../../typedef';
 import { Asset, TableProps } from './typedef';
 import { BlockStreamApi, ConverterService } from '../../services';
 import { TableRow } from './components/table-row';
@@ -22,7 +23,7 @@ export const withAssetsTableDomain = (Component: ComponentType<TableProps>) => (
     if (!isLoading && firstAssetData.data && secondAssetData.data) {
       setAssets([
         {
-          productName: firstAssetData.data.ticker || ProductType.EURX,
+          productName: firstAssetData.data.ticker || StableCurrency.EURX,
           productType: DEFAULT_PRODUCT_TYPE,
           issuer: firstAssetData.data.entity?.domain || 'pegx.io',
           issuedAmount: ConverterService.convertAmount(
@@ -33,7 +34,7 @@ export const withAssetsTableDomain = (Component: ComponentType<TableProps>) => (
           link: BLOCKSTREAM_ASSET_URL
         },
         {
-          productName: secondAssetData?.data?.ticker || ProductType.USDT,
+          productName: secondAssetData?.data?.ticker || StableCurrency.USDT,
           productType: DEFAULT_PRODUCT_TYPE,
           issuer: secondAssetData.data.entity?.domain || 'tether.io',
           issuedAmount: ConverterService.convertAmount(
