@@ -3,7 +3,7 @@ import { RfqAction, RfqConstants, RfqState } from './typedef';
 
 export const initialState: RfqState = {
   data: null,
-  reference: null,
+  confirmation: null,
   loading: {
     sell: false,
     buy: false,
@@ -26,7 +26,7 @@ export const rfqReducer = (state = initialState, action: RfqAction): RfqState =>
         loading: { ...state.loading, sell: true },
         error: { ...state.error, sell: null },
         data: null,
-        reference: null
+        confirmation: null
       };
     case RfqConstants.SELL_FAILURE:
       return {
@@ -41,7 +41,7 @@ export const rfqReducer = (state = initialState, action: RfqAction): RfqState =>
         loading: { ...state.loading, buy: true },
         error: { ...state.error, buy: null },
         data: null,
-        reference: null
+        confirmation: null
       };
     case RfqConstants.BUY_FAILURE:
       return {
@@ -60,7 +60,7 @@ export const rfqReducer = (state = initialState, action: RfqAction): RfqState =>
       return {
         ...state,
         loading: { ...state.loading, confirm: false, sell: false, buy: false },
-        reference: action.payload.trackingCode
+        confirmation: action.payload
       };
     case RfqConstants.CONFIRM_FAILURE:
       return {
@@ -71,6 +71,9 @@ export const rfqReducer = (state = initialState, action: RfqAction): RfqState =>
 
     case RfqConstants.UPDATE_RFQ_STATUS:
       return { ...state, data: action.payload };
+
+    case RfqConstants.RESET_DATA:
+      return initialState;
 
     default:
       return state;

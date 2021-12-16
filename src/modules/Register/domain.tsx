@@ -29,16 +29,10 @@ export const withRegisterDomain = (Component: FC<Props>) => () => {
   }, [statusRegisterModal]);
 
   useEffect(() => {
-    if (!error) return;
+    if (loadingCreateSession) return;
 
     controls.closeRegister();
-  }, [error]);
-
-  useEffect(() => {
-    if (!status) return;
-
-    controls.closeRegister();
-  }, [status]);
+  }, [loadingCreateSession]);
 
   const handleClose = useCallback(() => {
     controls.closeRegister();

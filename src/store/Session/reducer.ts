@@ -62,7 +62,7 @@ export const sessionReducer = (state = initialState, action: SessionAction): Ses
     case SessionConstants.UPDATE_CREATE_ACCOUNT_STATUS:
       return {
         ...state,
-        loading: { ...state.loading, signature: action.payload.status === AuthEidStatus.WAITING_FOR_SIGNATURE }
+        loading: { ...state.loading, signature: action.payload.status === AuthEidStatus.NOT_READY }
       };
 
     case SessionConstants.CREATE_SESSION_REQUEST:

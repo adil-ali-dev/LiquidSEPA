@@ -41,11 +41,11 @@ function *confirm({ payload }: Confirm) {
 }
 
 function *sellSuccess({ payload }: SellSuccess) {
-  put(rfqActions.confirm({ rfqId: payload.rfqId }));
+  yield put(rfqActions.confirm({ rfqId: payload.rfqId }));
 }
 
 function *buySuccess({ payload }: BuySuccess) {
-  put(rfqActions.confirm({ rfqId: payload.rfqId }));
+  yield put(rfqActions.confirm({ rfqId: payload.rfqId }));
 }
 
 

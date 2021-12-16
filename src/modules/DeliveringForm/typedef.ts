@@ -1,8 +1,6 @@
 import { ChangeEvent, FormEvent, KeyboardEvent, ReactNode, MouseEvent, RefObject, ReactNodeArray } from 'react';
 
-import { Currency } from '../../typedef';
-import { BankAccount } from '../../graphql/BankAccount/typedef';
-import { WhitelistedAddress } from '../../graphql/WhitelistAddress/typedef';
+import { Currency, BankAccount, Address, RfqConfirmation } from '../../typedef';
 
 export type Product = {
   product: Currency;
@@ -11,26 +9,12 @@ export type Product = {
   error?: null | string;
 };
 
-export type Iban = {
-  value: string;
-  details?: null | BankAccount;
-  error: null | string;
-};
-
 export type NameOnAccount = {
   value: string;
   error: null | string;
 };
 
-export type Address = {
-  value: string;
-  details?: null | WhitelistedAddress;
-  error: null | string;
-};
-
-export type ConfirmationDetails = {
-  trackingCode: string;
-  rfqId: string;
+export type ConfirmationDetails = RfqConfirmation & {
   appToAppValue?: string;
   qrValue?: string;
 };
@@ -88,8 +72,8 @@ export type FormProps = {
   fee: number;
   account: null | BankAccount;
   isLoggedIn: boolean;
-  address: null | WhitelistedAddress;
-  addresses: WhitelistedAddress[];
+  address: null | Address;
+  addresses: Address[];
   accounts: BankAccount[];
   textAreaRef: RefObject<HTMLTextAreaElement>;
   deliver: Product;
@@ -99,7 +83,7 @@ export type FormProps = {
   handleContinueClick: (event: FormEvent<HTMLFormElement>) => void;
   handleAddPress: () => void;
   handleAccountSelect: (item: BankAccount) => void;
-  handleAddressSelect: (item: WhitelistedAddress) => void;
+  handleAddressSelect: (item: Address) => void;
 };
 
 export type FormGroupProps = {
@@ -162,7 +146,7 @@ export type RequisitesMainProps = {
 
 export type RequisitesFooterProps = {
   sellSide: boolean;
-  value: BankAccount | WhitelistedAddress;
+  value: BankAccount | Address;
 };
 
 export type RowProps = {

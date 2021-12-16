@@ -1,4 +1,4 @@
-import { Action, FailureAction, SocketReq, SocketEndpoint, StableCurrency, RfqData } from '../../typedef';
+import { Action, FailureAction, SocketReq, SocketEndpoint, RfqData, Currency, RfqConfirmation, EmptyAction } from '../../typedef';
 
 
 export enum RfqConstants {
@@ -14,7 +14,9 @@ export enum RfqConstants {
   CONFIRM_SUCCESS = '@rfq/CONFIRM_SUCCESS',
   CONFIRM_FAILURE = '@rfq/CONFIRM_FAILURE',
 
-  UPDATE_RFQ_STATUS = '@rfq/UPDATE_RFQ_STATUS'
+  UPDATE_RFQ_STATUS = '@rfq/UPDATE_RFQ_STATUS',
+  
+  RESET_DATA = '@rfq/RESET_DATA',
 }
 
 
@@ -24,19 +26,19 @@ export enum RfqConstants {
 
 export type SellReq = {
   amount: number;
-  stableCurrency: StableCurrency;
+  stableCurrency: Currency;
   iban: string;
 };
 
 export type BuyReq = {
   amount: number;
-  stableCurrency: StableCurrency;
+  stableCurrency: Currency;
   label: string;
 };
 
 export type AnyActionReq = {
   amount: number;
-  stableCurrency: StableCurrency;
+  stableCurrency: Currency;
   payoutAccount: string;
 };
 
@@ -72,11 +74,7 @@ export type AnyActionRes = {
   charge: number;
 };
 
-export type ConfirmRes = {
-  trackingCode: string;
-  rfqId: string;
-  isValid: boolean
-};
+export type ConfirmRes = RfqConfirmation;
 
 type UpdateRfqStatusRes = RfqData;
 
@@ -99,6 +97,8 @@ export type ConfirmFailure = FailureAction<RfqConstants.CONFIRM_FAILURE>;
 
 export type UpdateRfqStatus = Action<RfqConstants.UPDATE_RFQ_STATUS, UpdateRfqStatusRes>;
 
+export type ResetData = EmptyAction<RfqConstants.RESET_DATA>;
+
 
 /*
  * Action
@@ -107,7 +107,8 @@ export type UpdateRfqStatus = Action<RfqConstants.UPDATE_RFQ_STATUS, UpdateRfqSt
 export type RfqAction = Sell | SellSuccess | SellFailure
 | Buy | BuySuccess | BuyFailure
 | Confirm | ConfirmSuccess | ConfirmFailure
-| UpdateRfqStatus;
+| UpdateRfqStatus
+| ResetData;
 
 
 /*
@@ -128,6 +129,8 @@ export type RfqActions = {
   confirmFailure: (error: string) => ConfirmFailure;
 
   updateRfqStatus: (payload: UpdateRfqStatusRes) => UpdateRfqStatus;
+
+  resetData: () => ResetData;
 };
 
 
@@ -141,7 +144,7 @@ type ActionKeys = 'sell'
 
 export type RfqState = {
   data: null | RfqData;
-  reference: null | string;
+  confirmation: null | RfqConfirmation;
   loading: { [K in ActionKeys]: boolean };
   error: { [K in ActionKeys]: null | string };
 };

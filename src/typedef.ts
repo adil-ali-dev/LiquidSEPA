@@ -95,8 +95,11 @@ export type SocketRes<M = SocketEndpoint, D = {}> = {
  */
 
 export enum AuthEidStatus {
+  // Waiting for scan:
+  NOT_SCANNED = 'WAITING_LOCAL_ACK',
+
   // Waiting for sign via mobile app:
-  WAITING_FOR_SIGNATURE = 'NOT_READY',
+  NOT_READY = 'NOT_READY',
 
   // Success:
   SUCCESS = 'SUCCESS',
@@ -131,7 +134,7 @@ export type Account<T = AccountType> = {
   name: string;
   acctNum: string;
   ref: null | string;
-  account_details?: AccountDetails;
+  accountDetails?: AccountDetails;
 };
 
 
@@ -146,7 +149,9 @@ export type Address = Account<AccountType.WALLET>;
  * Bank Accounts
  */
 
-export type BankAccount = Account<AccountType.BANK>;
+export type BankAccount = Account<AccountType.BANK> & {
+  logo?: string;
+};
 
 
 /*
@@ -195,6 +200,11 @@ export type RfqData = {
   payoutAddress: string;
 };
 
+export type RfqConfirmation = {
+  trackingCode: string;
+  rfqId: string;
+  isValid: boolean;
+};
 
 /*
  * Status modal

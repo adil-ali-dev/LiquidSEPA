@@ -8,6 +8,7 @@ export const rfqSellLoadingSelector = (state: AppState) => state.rfq.loading.sel
 export const rfqBuyLoadingSelector = (state: AppState) => state.rfq.loading.buy;
 export const rfqConfirmLoadingSelector = (state: AppState) => state.rfq.loading.confirm;
 export const rfqDataSelector = (state: AppState) => state.rfq.data;
+export const rfqConfirmationSelector = (state: AppState) => state.rfq.confirmation;
 
 export const rfqAnyActionLoading = createSelector(
   [rfqSellLoadingSelector, rfqBuyLoadingSelector, rfqConfirmLoadingSelector],

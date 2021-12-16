@@ -14,5 +14,7 @@ export const rfqActions: RfqActions = {
   confirmSuccess: payload => ({ type: RfqConstants.CONFIRM_SUCCESS, payload }),
   confirmFailure: error => ({ type: RfqConstants.CONFIRM_FAILURE, error }),
 
-  updateRfqStatus: payload => ({ type: RfqConstants.UPDATE_RFQ_STATUS, payload })
+  updateRfqStatus: payload => ({ type: RfqConstants.UPDATE_RFQ_STATUS, payload }),
+
+  resetData: () => ({ type: RfqConstants.RESET_DATA })
 };

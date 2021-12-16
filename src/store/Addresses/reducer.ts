@@ -3,7 +3,7 @@ import { AddressesAction, AddressesConstants, AddressesState } from './typedef';
 
 export const initialState: AddressesState = {
   addresses: [],
-  addressValid: null,
+  addressValid: false,
   loading: {
     validate: false,
     whitelist: false,

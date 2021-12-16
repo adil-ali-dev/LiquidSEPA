@@ -2,7 +2,6 @@ import React, { memo } from 'react';
 import { Grid, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 
-import { BitcoinAddressService } from '../../../services';
 import { RequisitesFooterProps } from '../typedef';
 import { CheckIcon } from '../../../assets/Icons';
 import { useStyles } from '../style';

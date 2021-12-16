@@ -28,6 +28,8 @@ const authEidLoginErrors = {
   [AuthEidStatus.REQUEST_ERROR]: 'You need to register this account first'
 };
 
+const authEidIgnoredStatuses = new Set([AuthEidStatus.NOT_SCANNED, AuthEidStatus.NOT_READY]);
+
 
 function *createSession() {
   yield put(authSocketActions.send({
@@ -50,26 +52,36 @@ function *createAccount() {
 }
 
 function *updateCreateAccountStatus({ payload }: UpdateCreateAccountStatus) {
-  if (payload.status === AuthEidStatus.WAITING_FOR_SIGNATURE) return;
+  switch (payload.status) {
+    case AuthEidStatus.NOT_SCANNED:
+    case AuthEidStatus.NOT_READY:
+      break;
 
-  if (payload.status === AuthEidStatus.SUCCESS) {
-    yield put(sessionActions.createAccountSuccess());
-    return;
+    case AuthEidStatus.SUCCESS:
+      yield put(sessionActions.createAccountSuccess());
+      break;
+
+    default:
+      yield put(sessionActions.createAccountFailure(authEidRegisterErrors[payload.status]));
+      break;
   }
-
-  yield put(sessionActions.createAccountFailure(authEidRegisterErrors[payload.status]));
 }
 
-function *updateCreateSessionStatus({ payload }: UpdateCreateSessionStatus) {
-  if (payload.status === AuthEidStatus.WAITING_FOR_SIGNATURE) return;
-
-  if (payload.status === AuthEidStatus.SUCCESS || payload.accessToken) {
+function *updateCreateSessionStatus({ payload }: UpdateCreateSessionStatus) {  
+  if (payload.accessToken) {
     yield put(sessionActions.createSessionSuccess(payload));
-
-    return;
   }
 
-  yield put(sessionActions.createSessionFailure(authEidLoginErrors[payload.status]));
+  switch (payload.status) {
+    case AuthEidStatus.NOT_SCANNED:
+    case AuthEidStatus.NOT_READY:
+    case AuthEidStatus.SUCCESS:
+      break;
+
+    default:
+      yield put(sessionActions.createSessionFailure(authEidLoginErrors[payload.status]));
+      break;
+  }
 }
 
 function *authorize({ payload }: Authorize) {

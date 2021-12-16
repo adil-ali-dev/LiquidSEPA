@@ -3,11 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 
 import { BLOCKSTREAM_ASSET_ID, SIDESWAP_PREFIX } from '../../constants';
-import { Currency } from '../../typedef';
+import { Address, Currency, BankAccount } from '../../typedef';
 import { Props, PaymentDetails, Product, ConfirmationDetails } from './typedef';
 import { useEurDeliver, useEurXDeliver } from '../../graphql/Deliver/hooks';
 import { useRfqStatus, useTxStatus } from '../../graphql/Transaction/hooks';
-import { useConfirmation } from '../../graphql/Confirmation/hooks';
 import { useFeeEstimation } from '../../graphql/Fee/hooks';
 import { useDeliveringFormStatusContext } from '../../contexts/DeliveringForm';
 import { useClipBoard } from '../../hooks/ClipBoard';
@@ -20,12 +19,12 @@ import { Payment } from './components/payment';
 import { useSessionContext } from '../../contexts/Session';
 import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
 import { useBankAccountContext } from '../../contexts/BankAccount';
-import { WhitelistedAddress } from '../../graphql/WhitelistAddress/typedef';
-import { BankAccount } from '../../graphql/BankAccount/typedef';
 import { StatusModalType } from '../../components/StatusModal/typedef';
 import { StatusModal } from '../../components/StatusModal';
 import { TxStatus } from '../../graphql/Transaction/typedef';
-import { rfqAnyActionLoading } from '../../store/Rfq';
+import { rfqActions, rfqAnyActionLoading, rfqDataSelector, rfqConfirmationSelector } from '../../store/Rfq';
+import { addressesActions, addressesItemsSelector } from '../../store/Addresses';
+import { bankAccountsItemsSelector } from '../../store/BankAccounts';
 
 const MAX_CONFS = 2;
 const WIDGET_MARGIN_TOP = 72;
@@ -38,15 +37,15 @@ const amountRegExp = new RegExp(/^(|\d)(|,)(|\d{0,3})(|(\.(\d{0,2})))$/);
 
 const initialDeliver: Product = {
   product: Currency.EUR,
-  amount: 0,
-  placeholder: '',
+  amount: 5,
+  placeholder: '5',
   error: null
 };
 
 const initialReceive: Product = {
   product: Currency.EURX,
-  amount: 0,
-  placeholder: ''
+  amount: 3,
+  placeholder: '3'
 };
 
 const getInputData = (value: number, fixed: number) => {
@@ -67,7 +66,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const [receive, setReceive] = useState(initialReceive);
 
   const [account, setAccount] = useState<null | BankAccount>(null);
-  const [address, setAddress] = useState<null | WhitelistedAddress>(null);
+  const [address, setAddress] = useState<null | Address>(null);
   
   const [error, setError] = useState<null | string>(null);
 
@@ -75,19 +74,21 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
 
   const [payment, setPayment] = useState<null | PaymentDetails>(null);
 
-  const { next, setNext } = useDeliveringFormStatusContext();
   const whitelistAddress = useWhitelistAddressContext();
   const bankAccount = useBankAccountContext();
   const { copyToClipBoard } = useClipBoard();
   const eurDeliver = useEurDeliver();
   const eurXDeliver = useEurXDeliver();
-  const confirmation = useConfirmation();
   const feeEstimation = useFeeEstimation();
   const rfqStatus = useRfqStatus();
   const txStatus = useTxStatus();
   const { status: isLoggedIn, controls: authControls } = useSessionContext();
 
-  const loading = useSelector(rfqAnyActionLoading)
+  const loading = useSelector(rfqAnyActionLoading);
+  const rfqData = useSelector(rfqDataSelector);
+  const rfqConfirmation = useSelector(rfqConfirmationSelector);
+  const whitelistedAddresses = useSelector(addressesItemsSelector);
+  const bankAccounts = useSelector(bankAccountsItemsSelector);
 
   const sellSide = useMemo(() => {
     return deliver.product === Currency.EURX;
@@ -108,6 +109,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   useEffect(() => {
     if (isLoggedIn) {
       deliverInputRef.current?.focus();
+      dispatch(addressesActions.getAddresses());
       return;
     };
 
@@ -118,16 +120,16 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   }, [isLoggedIn]);
 
   useEffect(() => {
-    if (!whitelistAddress.addresses.length || address) return;
+    if (!whitelistedAddresses.length || address) return;
 
-    setAddress(whitelistAddress.addresses[0]);
-  }, [whitelistAddress.addresses.length])
+    setAddress(whitelistedAddresses[0]);
+  }, [whitelistedAddresses.length]);
 
   useEffect(() => {
-    if (!bankAccount.accounts.length || account) return;
+    if (!bankAccounts.length || account) return;
 
-    setAccount(bankAccount.accounts[0]);
-  }, [bankAccount.accounts.length])
+    setAccount(bankAccounts[0]);
+  }, [bankAccounts.length])
 
   useEffect(() => {
     setDeliver({ ...deliver, error: eurDeliver.data?.errorMessage || eurXDeliver.data?.errorMessage });
@@ -140,46 +142,26 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   }, [feeEstimation.data.receive]);
 
   useEffect(() => {
-    (confirmation.loading) && setConfirmationDetails(null);
-  }, [confirmation.loading]);
+    if (!rfqConfirmation) return;
 
-  useEffect(() => {
-    if (eurDeliver.data?.rfqId || eurXDeliver.data?.rfqId) {
-      confirmation.confirm(eurDeliver.data?.rfqId || eurXDeliver.data?.rfqId || '');
-    }
-  }, [eurDeliver.data?.rfqId, eurXDeliver.data?.rfqId]);
+    const address = rfqConfirmation?.trackingCode;
 
-  useEffect(() => {
-    if (confirmation.data) {
-      const commonQuery = {
-        amount: `${deliver.amount}`,
-        label: deliver.product,
-        message: deliver.product,
-        assetid: BLOCKSTREAM_ASSET_ID
-      };
+    const commonQuery = {
+      amount: `${deliver.amount}`,
+      label: deliver.product,
+      message: deliver.product,
+      assetid: BLOCKSTREAM_ASSET_ID
+    };
 
-      const qrQuery = new URLSearchParams(commonQuery);
+    const qrQuery = new URLSearchParams(commonQuery);
+    const appToAppQuery = new URLSearchParams({ ...commonQuery, address, addressType: ADDRESS_TYPE });
 
-      const appToAppQuery = new URLSearchParams({
-        address: confirmation.data.trackingCode,
-        addressType: ADDRESS_TYPE,
-        ...commonQuery
-      });
-
-      setConfirmationDetails({
-        ...confirmation.data,
-        appToAppValue: `${SIDESWAP_PREFIX}/?${appToAppQuery}`,
-        qrValue: `${ADDRESS_TYPE}:${confirmation.data.trackingCode}?${qrQuery}`
-      });
-    }
-  }, [confirmation.data]);
-
-  useEffect(() => {
-    if (confirmation.data) {
-      rfqStatus.fetch({ rfqId: confirmation.data.rfqId });
-      setNext(true);
-    }
-  }, [confirmation.data]);
+    setConfirmationDetails({
+      ...rfqConfirmation,
+      appToAppValue: `${SIDESWAP_PREFIX}/?${appToAppQuery}`,
+      qrValue: `${ADDRESS_TYPE}:${address}?${qrQuery}`
+    });
+  }, [rfqConfirmation?.trackingCode]);
 
   useEffect(() => {
     const txId = rfqStatus.data?.tx_id;
@@ -236,14 +218,14 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
       window.scrollTo(0, widgetRef.current.offsetTop + WIDGET_MARGIN_TOP);
     }
 
-    if (!next) {
+    if (!rfqConfirmation) {
       setPayment(null);
       setError(null);
       setConfirmationDetails(null);
       rfqStatus.stopPolling?.();
       txStatus.stopPolling?.();
     }
-  }, [next]);
+  }, [!!rfqConfirmation]);
 
   const handleSwapClick = useCallback(() => {
     setDeliver({ ...deliver, product: receive.product });
@@ -290,25 +272,33 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     if (disabledContinue) return;
 
     if (sellSide) {
-      eurDeliver.deliver({
+      dispatch(rfqActions.sell({
         iban: account!.name,
+        stableCurrency: deliver.product,
         amount: deliver.amount
-      });
+      }));
     } else {
-      eurXDeliver.deliver({
+      dispatch(rfqActions.buy({
         label: address!.name,
+        stableCurrency: receive.product,
         amount: deliver.amount
-      });
+      }));
     }
   }, [disabledContinue, sellSide, address, account?.name, deliver.amount, isLoggedIn]);
 
   const handleBackClick = useCallback(() => {
-    setNext(false);
-  }, []);
+    if (!rfqConfirmation) return;
+
+    dispatch(rfqActions.resetData());
+  }, [!!rfqConfirmation]);
 
   const handleCopyClick = useCallback(() => {
-    copyToClipBoard(confirmation.data?.trackingCode);
-  }, [confirmation.data?.trackingCode]);
+    copyToClipBoard(rfqConfirmation?.trackingCode);
+  }, [rfqConfirmation?.trackingCode]);
+  // TODO: Remove duplication.
+  const handleRefCopyClick = useCallback(() => {
+    copyToClipBoard(rfqConfirmation?.trackingCode);
+  }, [rfqConfirmation?.trackingCode]);
 
   const handleTxCopyClick = useCallback(() => {
     copyToClipBoard(payment?.txId);
@@ -317,10 +307,6 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const handleIbanCopyClick = useCallback(() => {
     copyToClipBoard('EE84 7700 7710 0294 1438');
   }, []);
-
-  const handleRefCopyClick = useCallback(() => {
-    copyToClipBoard(confirmation.data?.trackingCode);
-  }, [confirmation.data?.trackingCode]);
 
   const handleAddPress = () => {
     if (isLoggedIn) {
@@ -334,7 +320,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     }
   };
 
-  const handleAddressSelect = useCallback((value: WhitelistedAddress) => {
+  const handleAddressSelect = useCallback((value: Address) => {
     setAddress(value);
   }, []);
 
@@ -348,9 +334,9 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
 
   return (
     <>
-      <Component next={next} widgetRef={widgetRef}>
+      <Component next={!!rfqConfirmation} widgetRef={widgetRef}>
         {
-          next && (payment ? (
+          !!rfqConfirmation && (payment ? (
             <Payment
               paymentDetails={payment}
               confirmed={confirmations === MAX_CONFS}
@@ -392,8 +378,8 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
               isLoggedIn={ isLoggedIn }
               receive={ receive }
               textAreaRef={ textAreaRef }
-              addresses={ whitelistAddress.addresses }
-              accounts={ bankAccount.accounts }
+              addresses={ whitelistedAddresses }
+              accounts={ bankAccounts }
               handleSwapClick={ handleSwapClick }
               handleDeliverChange={ handleDeliverChange }
               handleContinueClick={ handleContinueClick }

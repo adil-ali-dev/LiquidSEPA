@@ -115,7 +115,7 @@ type ActionKeys = 'validate'
 
 export type AddressesState = {
   addresses: Address[];
-  addressValid: null | boolean;
+  addressValid: boolean;
   loading: { [K in ActionKeys]: boolean };
   error: { [K in ActionKeys]: null | string };
 };

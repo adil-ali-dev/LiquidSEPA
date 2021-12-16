@@ -2,8 +2,8 @@ import React, { memo } from 'react';
 import { Grid, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 
+import { AccountType } from '../../typedef';
 import { Props } from './typedef';
-import { AccountType } from '../../graphql/typedef';
 import { BitcoinAddressService, IbanService } from '../../services';
 import { useStyles } from './style';
 
@@ -21,13 +21,13 @@ export const Account = memo<Props>(({ value, active, idx, cropAddress }) => {
         // @ts-ignore
         value.account_details?.bank_id && (
           // @ts-ignore
-          <img className={ classes.logo } src={ value.logo } alt={ value.account_details?.bank_name } />
+          <img className={ classes.logo } src={ value.logo } alt={ value.account_details?.bankName } />
         )
       }
       <Grid className={ classes.textContainer }>
         <Typography className={ clsx(classes.headline, active && classes.headlineActive) }>
           {/* @ts-ignore */}
-          { value.account_details?.bank_name || `Account ${ (idx || 0) + 1 }` }
+          { value.account_details?.bankName || `Account ${ (idx || 0) + 1 }` }
         </Typography>
         <Typography className={ classes.subHeadline }>
           { IbanService.format(value.name) }
@@ -40,7 +40,7 @@ export const Account = memo<Props>(({ value, active, idx, cropAddress }) => {
         { value.name }
       </Typography>
       <Typography className={ clsx(classes.subHeadline, active && classes.subHeadlineActive) }>
-        { cropAddress ? BitcoinAddressService.crop(value.acct_num, 135) : value.acct_num }
+        { cropAddress ? BitcoinAddressService.crop(value.acctNum, 135) : value.acctNum }
       </Typography>
     </Grid>   
     );
