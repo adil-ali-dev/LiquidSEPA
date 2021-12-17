@@ -1,34 +1,28 @@
-import React, { ChangeEvent, ComponentType, FormEvent, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState, MouseEvent } from 'react';
+import React, { ChangeEvent, ComponentType, FormEvent, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 
-import { BLOCKSTREAM_ASSET_ID, SIDESWAP_PREFIX } from '../../constants';
 import { Address, Currency, BankAccount } from '../../typedef';
-import { Props, PaymentDetails, Product, ConfirmationDetails } from './typedef';
-import { useEurDeliver, useEurXDeliver } from '../../graphql/Deliver/hooks';
-import { useRfqStatus, useTxStatus } from '../../graphql/Transaction/hooks';
-import { useFeeEstimation } from '../../graphql/Fee/hooks';
-import { useDeliveringFormStatusContext } from '../../contexts/DeliveringForm';
-import { useClipBoard } from '../../hooks/ClipBoard';
-import { ConverterService } from '../../services';
-import { Form } from './components/form';
-import { RequisitesHeader } from './components/requisites-header';
-import { RequisitesMain } from './components/requisites-main';
-import { RequisitesFooter } from './components/requisites-footer';
-import { Payment } from './components/payment';
-import { useSessionContext } from '../../contexts/Session';
-import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
-import { useBankAccountContext } from '../../contexts/BankAccount';
-import { StatusModalType } from '../../components/StatusModal/typedef';
-import { StatusModal } from '../../components/StatusModal';
-import { TxStatus } from '../../graphql/Transaction/typedef';
-import { rfqActions, rfqAnyActionLoading, rfqDataSelector, rfqConfirmationSelector } from '../../store/Rfq';
+import { Props, Product } from './typedef';
 import { addressesActions, addressesItemsSelector } from '../../store/Addresses';
-import { bankAccountsItemsSelector } from '../../store/BankAccounts';
+import { rfqActions, rfqAnyActionLoadingSelector, rfqConfirmationSelector, rfqEstimatedFeeSelector, rfqEstimatedReceiveSelector, rfqConfirmationDetailsSelector, rfqTxDataSelector, rfqPaymentDetailsSelector, rfqTxConfsCountSelector } from '../../store/Rfq';
+import { bankAccountsActions, bankAccountsItemsSelector } from '../../store/BankAccounts';
+import { useClipBoard } from '../../hooks/ClipBoard';
+import { useDebounce } from '../../hooks/Debounce';
+import { useSessionContext } from '../../contexts/Session';
+import { useBankAccountContext } from '../../contexts/BankAccount';
+import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
+import { ConverterService } from '../../services';
+import { Payment } from './components/payment';
+import { RequisitesFooter } from './components/requisites-footer';
+import { RequisitesMain } from './components/requisites-main';
+import { StatusModal } from '../../components/StatusModal';
+import { StatusModalType } from '../../components/StatusModal/typedef';
+import { RequisitesHeader } from './components/requisites-header';
+import { Form } from './components/form';
 
 const MAX_CONFS = 2;
 const WIDGET_MARGIN_TOP = 72;
-const ADDRESS_TYPE = 'liquidnetwork';
 const MAX_DELIVER = 1000;
 const MIN_DELIVER = 2;
 const MAX_DELIVER_SEPARATED = ConverterService.separateWith(MAX_DELIVER, ',');
@@ -37,15 +31,15 @@ const amountRegExp = new RegExp(/^(|\d)(|,)(|\d{0,3})(|(\.(\d{0,2})))$/);
 
 const initialDeliver: Product = {
   product: Currency.EUR,
-  amount: 5,
-  placeholder: '5',
+  amount: 0,
+  placeholder: '',
   error: null
 };
 
 const initialReceive: Product = {
   product: Currency.EURX,
-  amount: 3,
-  placeholder: '3'
+  amount: 0,
+  placeholder: ''
 };
 
 const getInputData = (value: number, fixed: number) => {
@@ -62,31 +56,27 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const formRef = useRef<HTMLFormElement>(null);
   const deliverInputRef = useRef<HTMLInputElement>(null);
 
-  const [deliver, setDeliver] = useState(initialDeliver);
-  const [receive, setReceive] = useState(initialReceive);
-
-  const [account, setAccount] = useState<null | BankAccount>(null);
-  const [address, setAddress] = useState<null | Address>(null);
-  
-  const [error, setError] = useState<null | string>(null);
-
-  const [confirmationDetails, setConfirmationDetails] = useState<null | ConfirmationDetails>(null);
-
-  const [payment, setPayment] = useState<null | PaymentDetails>(null);
-
   const whitelistAddress = useWhitelistAddressContext();
   const bankAccount = useBankAccountContext();
-  const { copyToClipBoard } = useClipBoard();
-  const eurDeliver = useEurDeliver();
-  const eurXDeliver = useEurXDeliver();
-  const feeEstimation = useFeeEstimation();
-  const rfqStatus = useRfqStatus();
-  const txStatus = useTxStatus();
   const { status: isLoggedIn, controls: authControls } = useSessionContext();
 
-  const loading = useSelector(rfqAnyActionLoading);
-  const rfqData = useSelector(rfqDataSelector);
+  const [deliver, setDeliver] = useState(initialDeliver);
+  const [receive, setReceive] = useState(initialReceive);
+  const [account, setAccount] = useState<null | BankAccount>(null);
+  const [address, setAddress] = useState<null | Address>(null);
+  const [error, setError] = useState<null | string>(null);
+
+  const deliverAmountDebounced = useDebounce(deliver.amount);
+  const { copyToClipBoard } = useClipBoard();
+
+  const estimatedFee = useSelector(rfqEstimatedFeeSelector);
+  const estimatedReceive = useSelector(rfqEstimatedReceiveSelector);
+  const loading = useSelector(rfqAnyActionLoadingSelector);
   const rfqConfirmation = useSelector(rfqConfirmationSelector);
+  // @ts-ignore
+  const rfqConfirmationDetails = useSelector(state => rfqConfirmationDetailsSelector(state, deliver.amount, deliver.product));
+  const rfqPaymentDetails = useSelector(rfqPaymentDetailsSelector);
+  const rfqTxConfsCount = useSelector(rfqTxConfsCountSelector);
   const whitelistedAddresses = useSelector(addressesItemsSelector);
   const bankAccounts = useSelector(bankAccountsItemsSelector);
 
@@ -101,15 +91,22 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   }, [receive.product, account, address, loading, deliver.error, deliver.amount]);
 
   const confirmations = useMemo(() => {
-    const confs = txStatus.data?.confs || 0;
+    const confs = rfqTxConfsCount || 0;
 
     return confs >= MAX_CONFS ? MAX_CONFS : confs;
-  }, [txStatus.data?.confs]);
+  }, [rfqTxConfsCount]);
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+
+    dispatch(rfqActions.getEstimation({ amount: deliverAmountDebounced }));
+  }, [deliverAmountDebounced]);
 
   useEffect(() => {
     if (isLoggedIn) {
       deliverInputRef.current?.focus();
       dispatch(addressesActions.getAddresses());
+      dispatch(bankAccountsActions.getBankAccounts());
       return;
     };
 
@@ -132,85 +129,13 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   }, [bankAccounts.length])
 
   useEffect(() => {
-    setDeliver({ ...deliver, error: eurDeliver.data?.errorMessage || eurXDeliver.data?.errorMessage });
-  }, [eurDeliver.data?.errorMessage, eurXDeliver.data?.errorMessage]);
+    setReceive(prevReceive => ({ ...prevReceive, ...getInputData(estimatedReceive, sellSide ? 2 : 8) }));
+  }, [estimatedReceive]);
 
   useEffect(() => {
-    setReceive(prevReceive => ({
-      ...prevReceive, ...getInputData(feeEstimation.data.receive, sellSide ? 2 : 8)
-    }));
-  }, [feeEstimation.data.receive]);
+    if (confirmations !== MAX_CONFS || !widgetRef.current || !isMobile) return
 
-  useEffect(() => {
-    if (!rfqConfirmation) return;
-
-    const address = rfqConfirmation?.trackingCode;
-
-    const commonQuery = {
-      amount: `${deliver.amount}`,
-      label: deliver.product,
-      message: deliver.product,
-      assetid: BLOCKSTREAM_ASSET_ID
-    };
-
-    const qrQuery = new URLSearchParams(commonQuery);
-    const appToAppQuery = new URLSearchParams({ ...commonQuery, address, addressType: ADDRESS_TYPE });
-
-    setConfirmationDetails({
-      ...rfqConfirmation,
-      appToAppValue: `${SIDESWAP_PREFIX}/?${appToAppQuery}`,
-      qrValue: `${ADDRESS_TYPE}:${address}?${qrQuery}`
-    });
-  }, [rfqConfirmation?.trackingCode]);
-
-  useEffect(() => {
-    const txId = rfqStatus.data?.tx_id;
-
-    if (txId) {
-      txStatus.fetch({ txId });
-    }
-  }, [rfqStatus.data?.tx_id]);
-
-  useEffect(() => {
-    const amount = Number(rfqStatus.data?.payout_amount);
-    if (!rfqStatus.data?.payout_amount || !payment) return;
-
-    rfqStatus.stopPolling?.();
-    setPayment({ ...payment, sending: { ...payment?.sending, amount } });
-  }, [rfqStatus.data?.payout_amount]);
-
-  useEffect(() => {
-    if (rfqStatus.data?.status !== TxStatus.LIMIT_REACHED) return;
-
-    setError('Limit reached');
-  }, [rfqStatus.data?.status]);
-
-  useEffect(() => {
-    if (txStatus.data?.unblinded_link && rfqStatus.data?.tx_id) {
-      const { data } = rfqStatus;
-
-      setPayment({
-        txId: data.tx_id!,
-        link: txStatus.data.unblinded_link,
-        received: {
-          amount: Number(data.deposit_amount),
-          iban: data.depositor_iban,
-          nameOnAccount: data.depositor_name
-        },
-        sending: {
-          amount: Number(data.payout_amount),
-          iban: data.payout_iban,
-          nameOnAccount: data.payout_account_owner
-        }
-      });
-    }
-  }, [txStatus.data?.unblinded_link]);
-
-  useEffect(() => {
-    if (confirmations === MAX_CONFS && widgetRef.current) {
-      txStatus.stopPolling?.();
-      isMobile && window.scrollTo(0, widgetRef.current.offsetTop + WIDGET_MARGIN_TOP);
-    }
+    window.scrollTo(0, widgetRef.current.offsetTop + WIDGET_MARGIN_TOP);
   }, [confirmations]);
 
   useEffect(() => {
@@ -219,11 +144,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     }
 
     if (!rfqConfirmation) {
-      setPayment(null);
       setError(null);
-      setConfirmationDetails(null);
-      rfqStatus.stopPolling?.();
-      txStatus.stopPolling?.();
     }
   }, [!!rfqConfirmation]);
 
@@ -237,9 +158,6 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     if (!amountRegExp.test(value)) return;
 
     const amount = ConverterService.convertToNumber(value);
-
-    feeEstimation.estimate(amount);
-
     const placeholder = !amount
       ? ''
       : ConverterService.separateWith(
@@ -253,13 +171,6 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
 
     setDeliver({ ...deliver, amount, placeholder, error: minError || maxError || null });
   }, [deliver]);
-
-  const handleEnterTextAreaPress = useCallback((event: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === 'Enter' && formRef?.current) {
-      formRef.current.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-      event.preventDefault();
-    }
-  }, []);
 
   const handleContinueClick = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -301,8 +212,8 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   }, [rfqConfirmation?.trackingCode]);
 
   const handleTxCopyClick = useCallback(() => {
-    copyToClipBoard(payment?.txId);
-  }, [payment?.txId]);
+    copyToClipBoard(rfqPaymentDetails?.txId);
+  }, [rfqPaymentDetails?.txId]);
 
   const handleIbanCopyClick = useCallback(() => {
     copyToClipBoard('EE84 7700 7710 0294 1438');
@@ -336,9 +247,9 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     <>
       <Component next={!!rfqConfirmation} widgetRef={widgetRef}>
         {
-          !!rfqConfirmation && (payment ? (
+          !!rfqConfirmation && (rfqPaymentDetails ? (
             <Payment
-              paymentDetails={payment}
+              paymentDetails={rfqPaymentDetails}
               confirmed={confirmations === MAX_CONFS}
               sellSide={sellSide}
               confs={confirmations}
@@ -354,7 +265,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
               />
               <RequisitesMain
                 sellSide={sellSide}
-                details={confirmationDetails}
+                details={rfqConfirmationDetails}
                 handleAddressCopyClick={handleCopyClick}
                 handleIbanCopyClick={handleIbanCopyClick}
                 handleRefCopyClick={handleRefCopyClick}
@@ -372,7 +283,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
               disabled={ disabledContinue }
               loading={ loading }
               account={ account }
-              fee={ feeEstimation.data.fee }
+              fee={ estimatedFee }
               address={ address }
               deliver={ deliver }
               isLoggedIn={ isLoggedIn }

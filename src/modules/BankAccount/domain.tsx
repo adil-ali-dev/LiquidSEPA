@@ -1,20 +1,32 @@
 import React, { ChangeEvent, FC, FormEvent, useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { default as countries } from '../../constants/nordigen-countries';
+import { SupportedBank, Country } from '../../typedef';
 import { Props } from './typedef';
-import { useNordigen } from '../../graphql/Nordigen/hooks';
-import { Bank, Country } from '../../graphql/Nordigen/typedef';
+import { bankAccountsActions, bankAccountsAgreementLinkLoadingSelector, bankAccountsAgreementLinkSelector, bankAccountsCreateLoadingSelector, bankAccountsSupportedBanksLoadingSelector, bankAccountsSupportedBanksSelector, bankAccountsWaitingForContinueSelector } from '../../store/BankAccounts';
+import { sessionStatusSelector } from '../../store/Session';
 import { useBankAccountContext } from '../../contexts/BankAccount';
 import { StatusModalType } from '../../components/StatusModal/typedef';
 import { StatusModal } from '../../components/StatusModal';
 
 export const withBankAccountDomain = (Component: FC<Props>) => () => {
+  const dispatch = useDispatch();
   const history = useHistory();
-  const [country, setCountry] = useState<null | Country>(null);
-  const [bank, setBank] = useState<null | Bank>(null);
 
-  const { modalStatus, success, error, processing, controls } = useBankAccountContext();
-  const { banks, banksLoading, countries, link, getBanksByCountry, waitingForContinue, loading, createAgreement, saveAccount } = useNordigen(controls.openStatus);
+  const [country, setCountry] = useState<null | Country>(null);
+  const [bank, setBank] = useState<null | SupportedBank>(null);
+
+  const { modalStatus, controls } = useBankAccountContext();
+
+  const sessionStatus = useSelector(sessionStatusSelector);
+  const supportedBanks = useSelector(bankAccountsSupportedBanksSelector);
+  const supportedBanksLoading = useSelector(bankAccountsSupportedBanksLoadingSelector);
+  const agreementLink = useSelector(bankAccountsAgreementLinkSelector);
+  const agreementLinkLoading = useSelector(bankAccountsAgreementLinkLoadingSelector);
+  const createLoading = useSelector(bankAccountsCreateLoadingSelector);
+  const waitingForContinue = useSelector(bankAccountsWaitingForContinueSelector);
 
   useEffect(() => {
     if (!modalStatus && country && bank) {
@@ -26,13 +38,12 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
   useEffect(() => {
     if (!country) return;
 
-    getBanksByCountry(country.code)
+    dispatch(bankAccountsActions.getSupportedBanks({ countryCode: country.code }));
   }, [country]);
 
   useEffect(() => {
-    if (!window.location.search) return;
+    if (!window.location.search || !sessionStatus) return;
 
-    
     const params = new URL(window.location.href).searchParams;
     const ref = params.get('ref');
     const error = params.get('error');
@@ -42,34 +53,32 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
 
     if (error) {
       controls.openStatus(error);
-    } else {
-      controls.openProcessing();
+      dispatch(bankAccountsActions.createBankAccountFailure(error));
     }
 
-    saveAccount(!!error, ref);
-  }, [window.location.search]); 
+    dispatch(bankAccountsActions.createBankAccount({ ref }));
+  }, [sessionStatus]);
 
   useEffect(() => {
-    if (!link) return;
+    if (!agreementLink) return;
 
-    window.open(link, '_parent');
-  }, [link]);
+    window.open(agreementLink, '_parent');
+  }, [agreementLink]);
 
   const handleCountryChange = useCallback((_: ChangeEvent<Record<string, unknown>>, value: null | Country) => {
     setCountry(value);
     setBank(null);
   }, []);
 
-  const handleBankChange = useCallback((_: ChangeEvent<Record<string, unknown>>, value: null | Bank) => {
+  const handleBankChange = useCallback((_: ChangeEvent<Record<string, unknown>>, value: null | SupportedBank) => {
     setBank(value);
   }, []);
 
   const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     if (!bank || !country) return;
 
-    createAgreement(bank.id);
+    dispatch(bankAccountsActions.createAgreementLink({ bankId: bank.id }));
   }, [bank, country]);
 
   return (
@@ -78,11 +87,11 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
         status={ modalStatus }
         handleClose={ controls.close }
         country={ country }
-        banksLoading={ banksLoading }
+        banksLoading={ supportedBanksLoading }
         bank={ bank }
-        banks={ banks }
+        banks={ supportedBanks }
         countries={ countries }
-        loading={ loading }
+        loading={ agreementLinkLoading }
         handleCountryChange={ handleCountryChange }
         handleBankChange={ handleBankChange }
         handleSubmit={ handleSubmit }
@@ -90,21 +99,7 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
       />
       <StatusModal
         type={ StatusModalType.PROCESSING }
-        status={ processing }
-      />
-      <StatusModal
-        text="Account successfully created"
-        type={ StatusModalType.SUCCESS }
-        status={ success }
-        handleClose={ controls.closeStatus }
-        handleButtonClick={ controls.closeStatus }
-      />
-      <StatusModal
-        text={ error }
-        type={ StatusModalType.ERROR }
-        status={ !!error }
-        handleClose={ controls.closeStatus }
-        handleButtonClick={ controls.closeStatus }
+        status={ createLoading }
       />
     </>
   );

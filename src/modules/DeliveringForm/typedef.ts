@@ -1,6 +1,7 @@
-import { ChangeEvent, FormEvent, KeyboardEvent, ReactNode, MouseEvent, RefObject, ReactNodeArray } from 'react';
+import { ChangeEvent, FormEvent, KeyboardEvent, ReactNode, RefObject } from 'react';
 
-import { Currency, BankAccount, Address, RfqConfirmation } from '../../typedef';
+import { Currency, BankAccount, Address, RfqConfirmationDetails, RfqPaymentDetails } from '../../typedef';
+
 
 export type Product = {
   product: Currency;
@@ -14,28 +15,8 @@ export type NameOnAccount = {
   error: null | string;
 };
 
-export type ConfirmationDetails = RfqConfirmation & {
-  appToAppValue?: string;
-  qrValue?: string;
-};
-
-export type PaymentDetails = {
-  txId: string;
-  link: string;
-  received: {
-    amount: number;
-    iban?: string;
-    nameOnAccount?: string;
-  };
-  sending: {
-    amount: number;
-    iban?: string;
-    nameOnAccount?: string;
-  }
-};
-
 export type PaymentProps = {
-  paymentDetails: PaymentDetails;
+  paymentDetails: RfqPaymentDetails;
   confirmed: boolean;
   sellSide: boolean;
   confs: number;
@@ -138,7 +119,7 @@ export type RequisitesHeaderProps = {
 
 export type RequisitesMainProps = {
   sellSide: boolean;
-  details: null | ConfirmationDetails;
+  details: null | RfqConfirmationDetails;
   handleAddressCopyClick: () => void;
   handleIbanCopyClick: () => void;
   handleRefCopyClick: () => void;

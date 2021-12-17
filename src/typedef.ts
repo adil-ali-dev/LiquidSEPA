@@ -68,10 +68,12 @@ export enum SocketEndpoint {
   CREATE_BANK_AGREEMENT_LINK = 'create_agreement_link',
   GET_BANK_ACCOUNTS = 'currency_accounts',
 
+  GET_RFQ_ESTIMATION = 'estimate',
   RFQ_SELL = 'sell',
   RFQ_BUY = 'buy',
   CONFIRM_RFQ = 'confirm',
   RFQ_STATUS = 'status',
+  RFQ_TX_STATUS = 'tx_status'
 }
 
 export type SocketReq<M = SocketEndpoint, A = {}> = {
@@ -160,13 +162,23 @@ export type BankAccount = Account<AccountType.BANK> & {
  * Supported Banks
  */
 
-export type SupportedBanks = {
+export type SupportedBank = {
   id: string;
   name: string;
   bic: string;
   transactionTotalDays: string;
   logo: string;
 }
+
+
+/*
+ * Countries
+ */
+
+export type Country = {
+  name: string;
+  code: string;
+};
 
 
 /*
@@ -194,22 +206,24 @@ export enum RfqDirection {
   SELL = 'sell'
 }
 
-export type RfqStatus = string;
+export enum RfqStatus {
+  LIMIT_REACHED = 'Limit_REACHED'
+};
 
 export type RfqData = {
   direction: RfqDirection;
   confirm: boolean;
   payoutAmount: string;
-  payoutAccountOwner: null | string;
+  payoutAccountOwner: string;
   rfqId: string;
   status: RfqStatus;
   depositAmount: string;
   created: string;
   txId: string;
   settled: string;
-  payoutIban: null | string;
+  payoutIban: string;
   matched: boolean,
-  depositAddress: null | string;
+  depositAddress: string;
   depositorName: string;
   depositorIban: string;
   payoutAddress: string;
@@ -220,6 +234,40 @@ export type RfqConfirmation = {
   rfqId: string;
   isValid: boolean;
 };
+
+export type RfqConfirmationDetails = RfqConfirmation & {
+  appToAppValue?: string;
+  qrValue?: string;
+};
+
+export type RfqPaymentDetails = {
+  txId: string;
+  link: string;
+  received: {
+    amount: number;
+    iban?: string;
+    nameOnAccount?: string;
+  };
+  sending: {
+    amount: number;
+    iban?: string;
+    nameOnAccount?: string;
+  }
+};
+
+export type RfqTxData = {
+  txId: string;
+  confs: number;
+  address: string;
+  unblindedLink: string;
+};
+
+export type RfqEstimation = {
+  charge: number;
+  fee: number;
+  payoutEstimation: number;
+};
+
 
 /*
  * Status modal

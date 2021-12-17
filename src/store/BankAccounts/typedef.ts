@@ -1,4 +1,4 @@
-import { Action, FailureAction, EmptyAction, BankAccount, SocketReq, SocketEndpoint, SupportedBanks } from '../../typedef';
+import { Action, FailureAction, EmptyAction, BankAccount, SocketReq, SocketEndpoint, SupportedBank } from '../../typedef';
 
 
 export enum BankAccountsConstants {
@@ -16,7 +16,9 @@ export enum BankAccountsConstants {
 
   CREATE_BANK_ACCOUNT_REQUEST = '@bank-accounts/CREATE_BANK_ACCOUNT_REQUEST', 
   CREATE_BANK_ACCOUNT_SUCCESS = '@bank-accounts/CREATE_BANK_ACCOUNT_SUCCESS', 
-  CREATE_BANK_ACCOUNT_FAILURE = '@bank-accounts/CREATE_BANK_ACCOUNT_FAILURE'
+  CREATE_BANK_ACCOUNT_FAILURE = '@bank-accounts/CREATE_BANK_ACCOUNT_FAILURE',
+
+  RESET_WAITING_FOR_CONTINUE = '@bank-accounts/RESET_WAITING_FOR_CONTINUE'
 }
 
 
@@ -65,7 +67,7 @@ export type BankAccountsApiMainReqs = GetBankAccountsApiReq
 
 export type GetBankAccountsRes = BankAccount[];
 
-export type GetSupportedBanksRes = SupportedBanks[];
+export type GetSupportedBanksRes = SupportedBank[];
 
 export type CreateAgreementLinkRes = {
   initiate: string;
@@ -96,6 +98,8 @@ export type CreateBankAccount = Action<BankAccountsConstants.CREATE_BANK_ACCOUNT
 export type CreateBankAccountSuccess = Action<BankAccountsConstants.CREATE_BANK_ACCOUNT_SUCCESS, CreateBankAccountRes>;
 export type CreateBankAccountFailure = FailureAction<BankAccountsConstants.CREATE_BANK_ACCOUNT_FAILURE>;
 
+export type ResetWaitingForContinue = EmptyAction<BankAccountsConstants.RESET_WAITING_FOR_CONTINUE>;
+
 
 /*
  * Action
@@ -104,7 +108,8 @@ export type CreateBankAccountFailure = FailureAction<BankAccountsConstants.CREAT
 export type BankAccountsAction = GetBankAccounts | GetBankAccountsSuccess | GetBankAccountsFailure
 | GetSupportedBanks | GetSupportedBanksSuccess | GetSupportedBanksFailure
 | CreateAgreementLink | CreateAgreementLinkSuccess | CreateAgreementLinkFailure
-| CreateBankAccount | CreateBankAccountSuccess | CreateBankAccountFailure;
+| CreateBankAccount | CreateBankAccountSuccess | CreateBankAccountFailure
+| ResetWaitingForContinue;
 
 
 /*
@@ -127,6 +132,8 @@ export type BankAccountsActions = {
   createBankAccount: (payload: CreateBankAccountReq) => CreateBankAccount;
   createBankAccountSuccess: (payload: CreateBankAccountRes) => CreateBankAccountSuccess;
   createBankAccountFailure: (error: string) => CreateBankAccountFailure;
+
+  resetWaitingForContinue: () => ResetWaitingForContinue;
 };
 
 
@@ -141,8 +148,9 @@ type ActionKeys = 'bankAccounts'
 
 export type BankAccountsState = {
   bankAccounts: BankAccount[];
-  supportedBanks: SupportedBanks[];
+  supportedBanks: SupportedBank[];
   agreementLink: null | string;
+  waitingForContinue: boolean;
   loading: { [K in ActionKeys]: boolean };
   error: { [K in ActionKeys]: null | string };
 };

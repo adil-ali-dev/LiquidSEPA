@@ -28,8 +28,6 @@ const authEidLoginErrors = {
   [AuthEidStatus.REQUEST_ERROR]: 'You need to register this account first'
 };
 
-const authEidIgnoredStatuses = new Set([AuthEidStatus.NOT_SCANNED, AuthEidStatus.NOT_READY]);
-
 
 function *createSession() {
   yield put(authSocketActions.send({

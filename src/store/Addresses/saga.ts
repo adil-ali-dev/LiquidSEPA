@@ -30,7 +30,7 @@ function *getAddresses() {
     method: SocketEndpoint.GET_ADDRESSES,
     api: 'account',
     messageId: `${Date.now()}`,
-    args: { accountType: AccountType.WALLET }
+    args: {}
   }));
 }
 
@@ -39,7 +39,7 @@ function *whitelistAddressSuccess() {
   yield put(alertActions.show({
     type: StatusModalType.SUCCESS,
     message: 'Address successfully whitelisted'
-  }))
+  }));
 }
 
 

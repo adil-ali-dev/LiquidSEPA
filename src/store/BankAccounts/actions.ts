@@ -16,5 +16,7 @@ export const bankAccountsActions: BankAccountsActions = {
 
   createBankAccount: payload => ({ type: BankAccountsConstants.CREATE_BANK_ACCOUNT_REQUEST, payload }),
   createBankAccountSuccess: payload => ({ type: BankAccountsConstants.CREATE_BANK_ACCOUNT_SUCCESS, payload }),
-  createBankAccountFailure: error => ({ type: BankAccountsConstants.CREATE_BANK_ACCOUNT_FAILURE, error })
+  createBankAccountFailure: error => ({ type: BankAccountsConstants.CREATE_BANK_ACCOUNT_FAILURE, error }),
+
+  resetWaitingForContinue: () => ({ type: BankAccountsConstants.RESET_WAITING_FOR_CONTINUE })
 };

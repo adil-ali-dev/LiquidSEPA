@@ -1,13 +1,22 @@
+import { alertActions } from './../Alert/actions';
 import { takeLatest, put } from 'redux-saga/effects';
 
-import { SocketEndpoint } from '../../typedef';
-import { Sell, Buy, SellSuccess , BuySuccess, Confirm, RfqConstants } from './typedef';
+import { RfqStatus, SocketEndpoint, StatusModalType } from '../../typedef';
+import { Sell, Buy, SellSuccess, BuySuccess, Confirm, RfqConstants, GetEstimation, UpdateRfqData } from './typedef';
 import { socketActions } from '../Socket';
 import { rfqActions } from './actions';
 
 
 const RFQ_API = 'rfq' as const;
 
+function *getEstimation({ payload }: GetEstimation) {
+  yield put(socketActions.send({
+    method: SocketEndpoint.GET_RFQ_ESTIMATION,
+    api: RFQ_API,
+    messageId: `${Date.now()}`,
+    args: payload
+  }));
+}
 
 function *sell({ payload }: Sell) {
   const { iban, ...restArgs } = payload;
@@ -40,6 +49,15 @@ function *confirm({ payload }: Confirm) {
   }));
 }
 
+function *updateRfqData({ payload }: UpdateRfqData) {
+  if (payload.status !== RfqStatus.LIMIT_REACHED) return;
+
+  yield put(alertActions.show({
+    type: StatusModalType.ERROR,
+    message: 'Limit reached'
+  }));
+}
+
 function *sellSuccess({ payload }: SellSuccess) {
   yield put(rfqActions.confirm({ rfqId: payload.rfqId }));
 }
@@ -50,9 +68,12 @@ function *buySuccess({ payload }: BuySuccess) {
 
 
 export function *rfqSaga() {
+  yield takeLatest(RfqConstants.GET_ESTIMATION_REQUEST, getEstimation);
   yield takeLatest(RfqConstants.SELL_REQUEST, sell);
   yield takeLatest(RfqConstants.BUY_REQUEST, buy);
   yield takeLatest(RfqConstants.CONFIRM_REQUEST, confirm);
+
+  yield takeLatest(RfqConstants.UPDATE_RFQ_DATA, updateRfqData);
 
   yield takeLatest(RfqConstants.SELL_SUCCESS, sellSuccess);
   yield takeLatest(RfqConstants.BUY_SUCCESS, buySuccess);

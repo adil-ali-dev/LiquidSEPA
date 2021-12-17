@@ -1,7 +1,11 @@
-import { Action, FailureAction, SocketReq, SocketEndpoint, RfqData, Currency, RfqConfirmation, EmptyAction } from '../../typedef';
+import { Action, FailureAction, SocketReq, SocketEndpoint, RfqData, Currency, RfqConfirmation, EmptyAction, RfqTxData, RfqEstimation } from '../../typedef';
 
 
 export enum RfqConstants {
+  GET_ESTIMATION_REQUEST = '@rfq/GET_ESTIMATION_REQUEST',
+  GET_ESTIMATION_SUCCESS = '@rfq/GET_ESTIMATION_SUCCESS',
+  GET_ESTIMATION_FAILURE = '@rfq/GET_ESTIMATION_FAILURE',
+
   SELL_REQUEST = '@rfq/SELL_REQUEST',
   SELL_SUCCESS = '@rfq/SELL_SUCCESS',
   SELL_FAILURE = '@rfq/SELL_FAILURE',
@@ -14,15 +18,21 @@ export enum RfqConstants {
   CONFIRM_SUCCESS = '@rfq/CONFIRM_SUCCESS',
   CONFIRM_FAILURE = '@rfq/CONFIRM_FAILURE',
 
-  UPDATE_RFQ_STATUS = '@rfq/UPDATE_RFQ_STATUS',
-  
-  RESET_DATA = '@rfq/RESET_DATA',
+  UPDATE_RFQ_DATA = '@rfq/UPDATE_RFQ_DATA',
+  UPDATE_TX_DATA = '@rfq/UPDATE_TX_DATA',
+
+  RESET_ESTIMATION = '@rfq/RESET_ESTIMATION',
+  RESET_DATA = '@rfq/RESET_DATA'
 }
 
 
 /*
  * Request
  */
+
+export type GetEstimationReq = {
+  amount: number;
+};
 
 export type SellReq = {
   amount: number;
@@ -55,16 +65,22 @@ export type ConfirmExtendedReq = ConfirmReq & {
  * API Request
  */
 
+export type GetEstimationApiReq = SocketReq<SocketEndpoint.GET_RFQ_ESTIMATION, GetEstimationReq>;
 export type SellApiReq = SocketReq<SocketEndpoint.RFQ_SELL, AnyActionReq>;
 export type BuyApiReq = SocketReq<SocketEndpoint.RFQ_BUY, AnyActionReq>;
 export type ConfirmApiReq = SocketReq<SocketEndpoint.CONFIRM_RFQ, ConfirmExtendedReq>;
 
-export type RfqApiMainReqs = SellApiReq | BuyApiReq | ConfirmApiReq;
+export type RfqApiMainReqs = GetEstimationApiReq
+| SellApiReq
+| BuyApiReq
+| ConfirmApiReq;
 
 
 /*
  * API Response
  */
+
+export type GetEstimationRes = RfqEstimation;
 
 export type AnyActionRes = {
   rfqId: string;
@@ -76,12 +92,18 @@ export type AnyActionRes = {
 
 export type ConfirmRes = RfqConfirmation;
 
-type UpdateRfqStatusRes = RfqData;
+type UpdateRfqDataRes = RfqData;
+
+type UpdateTxDataRes = RfqTxData;
 
 
 /*
  * Single Action
  */
+
+export type GetEstimation = Action<RfqConstants.GET_ESTIMATION_REQUEST, GetEstimationReq>;
+export type GetEstimationSuccess = Action<RfqConstants.GET_ESTIMATION_SUCCESS, GetEstimationRes>;
+export type GetEstimationFailure = FailureAction<RfqConstants.GET_ESTIMATION_FAILURE>;
 
 export type Sell = Action<RfqConstants.SELL_REQUEST, SellReq>;
 export type SellSuccess = Action<RfqConstants.SELL_SUCCESS, AnyActionRes>;
@@ -95,8 +117,10 @@ export type Confirm = Action<RfqConstants.CONFIRM_REQUEST, ConfirmReq>;
 export type ConfirmSuccess = Action<RfqConstants.CONFIRM_SUCCESS, ConfirmRes>;
 export type ConfirmFailure = FailureAction<RfqConstants.CONFIRM_FAILURE>;
 
-export type UpdateRfqStatus = Action<RfqConstants.UPDATE_RFQ_STATUS, UpdateRfqStatusRes>;
+export type UpdateRfqData = Action<RfqConstants.UPDATE_RFQ_DATA, UpdateRfqDataRes>;
+export type UpdateTxData = Action<RfqConstants.UPDATE_TX_DATA, UpdateTxDataRes>;
 
+export type ResetEstimation = EmptyAction<RfqConstants.RESET_ESTIMATION>;
 export type ResetData = EmptyAction<RfqConstants.RESET_DATA>;
 
 
@@ -104,10 +128,13 @@ export type ResetData = EmptyAction<RfqConstants.RESET_DATA>;
  * Action
  */
 
-export type RfqAction = Sell | SellSuccess | SellFailure
+export type RfqAction = GetEstimation | GetEstimationSuccess | GetEstimationFailure
+| Sell | SellSuccess | SellFailure
 | Buy | BuySuccess | BuyFailure
 | Confirm | ConfirmSuccess | ConfirmFailure
-| UpdateRfqStatus
+| UpdateRfqData
+| UpdateTxData
+| ResetEstimation
 | ResetData;
 
 
@@ -116,6 +143,10 @@ export type RfqAction = Sell | SellSuccess | SellFailure
  */
 
 export type RfqActions = {
+  getEstimation: (payload: GetEstimationReq) => GetEstimation;
+  getEstimationSuccess: (payload: GetEstimationRes) => GetEstimationSuccess;
+  getEstimationFailure: (error: string) => GetEstimationFailure;
+
   sell: (payload: SellReq) => Sell;
   sellSuccess: (payload: AnyActionRes) => SellSuccess;
   sellFailure: (error: string) => SellFailure;
@@ -128,8 +159,10 @@ export type RfqActions = {
   confirmSuccess: (payload: ConfirmRes) => ConfirmSuccess;
   confirmFailure: (error: string) => ConfirmFailure;
 
-  updateRfqStatus: (payload: UpdateRfqStatusRes) => UpdateRfqStatus;
+  updateRfqData: (payload: UpdateRfqDataRes) => UpdateRfqData;
+  updateTxData: (payload: UpdateTxDataRes) => UpdateTxData;
 
+  resetEstimation: () => ResetEstimation;
   resetData: () => ResetData;
 };
 
@@ -138,12 +171,15 @@ export type RfqActions = {
  * State
  */
 
-type ActionKeys = 'sell'
+type ActionKeys = 'estimation'
+| 'sell'
 | 'buy'
 | 'confirm';
 
 export type RfqState = {
-  data: null | RfqData;
+  rfqData: null | RfqData;
+  txData: null | RfqTxData;
+  estimation: null | RfqEstimation;
   confirmation: null | RfqConfirmation;
   loading: { [K in ActionKeys]: boolean };
   error: { [K in ActionKeys]: null | string };
