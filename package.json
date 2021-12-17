@@ -1,8 +1,8 @@
 {
-  "name": "digital-eights",
+  "name": "BlockSettle",
   "version": "0.0.1",
   "description": "",
-  "author": "sideswap-io",
+  "author": "BlockSettle AB",
   "license": "ISC",
   "main": "index.tsx",
   "engines": {
