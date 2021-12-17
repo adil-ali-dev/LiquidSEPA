@@ -6,7 +6,7 @@ import { useStyles } from './style';
 import { Header } from '../../components/Header';
 import { Footer } from '../../components/Footer';
 
-const EMAIL = 'compliance@liquidsepa.com';
+const EMAIL = 'compliance@blocksettle.com';
 
 const RegulationPage: FC = () => {
   const classes = useStyles();
@@ -29,7 +29,7 @@ const RegulationPage: FC = () => {
               regulator Finansinspektionen since September 2019.
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMedium) }>
-              Liquid SEPA is committed to upholding the highest of standards with regards to knowing our customers,
+              BlockSettle is committed to upholding the highest of standards with regards to knowing our customers,
               anti-money laundering and compliance.
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMedium) }>

@@ -2,13 +2,13 @@ import React from 'react';
 import { Button, CircularProgress, Grid, Typography } from '@material-ui/core';
 // @ts-ignore
 import Flag from 'react-country-flag';
-
-import { useStyles } from './style';
-import { Modal } from '../../components/Modal';
 import clsx from 'clsx';
+
+import { SupportedBank, Country } from '../../typedef';
 import { withBankAccountDomain } from './domain';
+import { Modal } from '../../components/Modal';
 import { Autocomplete } from '../../components/Autocomplete';
-import { Bank, Country } from '../../graphql/Nordigen/typedef';
+import { useStyles } from './style';
 
 export const BankAccountModule = withBankAccountDomain(({
   children,
@@ -37,7 +37,7 @@ export const BankAccountModule = withBankAccountDomain(({
     </>
   );
 
-  const renderBank = (option: Bank) => (
+  const renderBank = (option: SupportedBank) => (
     <Grid className={ classes.modalInfoOption }>
       <img
         className={ clsx(classes.modalInfoOptionIcon, classes.bankIcon) }

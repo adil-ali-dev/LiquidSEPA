@@ -61,15 +61,19 @@ export enum SocketEndpoint {
 
   VALIDATE_ADDRESS = 'validate_payout_address',
   WHITELIST_ADDRESS = 'new_payout_account',
-  
-  CREATE_BANK_ACCOUNT = 'add_iban_account',
+  GET_ADDRESSES = 'stable_coin_accounts',
 
-  GET_ACCOUNTS = 'currency_accounts',
+  CREATE_BANK_ACCOUNT = 'save_accounts',
+  GET_SUPPORTED_BANKS = 'supported_banks',
+  CREATE_BANK_AGREEMENT_LINK = 'create_agreement_link',
+  GET_BANK_ACCOUNTS = 'currency_accounts',
 
+  GET_RFQ_ESTIMATION = 'estimate',
   RFQ_SELL = 'sell',
   RFQ_BUY = 'buy',
   CONFIRM_RFQ = 'confirm',
   RFQ_STATUS = 'status',
+  RFQ_TX_STATUS = 'tx_status'
 }
 
 export type SocketReq<M = SocketEndpoint, A = {}> = {
@@ -95,8 +99,11 @@ export type SocketRes<M = SocketEndpoint, D = {}> = {
  */
 
 export enum AuthEidStatus {
+  // Waiting for scan:
+  NOT_SCANNED = 'WAITING_LOCAL_ACK',
+
   // Waiting for sign via mobile app:
-  WAITING_FOR_SIGNATURE = 'NOT_READY',
+  NOT_READY = 'NOT_READY',
 
   // Success:
   SUCCESS = 'SUCCESS',
@@ -131,7 +138,7 @@ export type Account<T = AccountType> = {
   name: string;
   acctNum: string;
   ref: null | string;
-  account_details?: AccountDetails;
+  accountDetails?: AccountDetails;
 };
 
 
@@ -146,7 +153,32 @@ export type Address = Account<AccountType.WALLET>;
  * Bank Accounts
  */
 
-export type BankAccount = Account<AccountType.BANK>;
+export type BankAccount = Account<AccountType.BANK> & {
+  logo?: string;
+};
+
+
+/*
+ * Supported Banks
+ */
+
+export type SupportedBank = {
+  id: string;
+  name: string;
+  bic: string;
+  transactionTotalDays: string;
+  logo: string;
+}
+
+
+/*
+ * Countries
+ */
+
+export type Country = {
+  name: string;
+  code: string;
+};
 
 
 /*
@@ -174,25 +206,66 @@ export enum RfqDirection {
   SELL = 'sell'
 }
 
-export type RfqStatus = string;
+export enum RfqStatus {
+  LIMIT_REACHED = 'Limit_REACHED'
+};
 
 export type RfqData = {
   direction: RfqDirection;
   confirm: boolean;
   payoutAmount: string;
-  payoutAccountOwner: null | string;
+  payoutAccountOwner: string;
   rfqId: string;
   status: RfqStatus;
   depositAmount: string;
   created: string;
   txId: string;
   settled: string;
-  payoutIban: null | string;
+  payoutIban: string;
   matched: boolean,
-  depositAddress: null | string;
+  depositAddress: string;
   depositorName: string;
   depositorIban: string;
   payoutAddress: string;
+};
+
+export type RfqConfirmation = {
+  trackingCode: string;
+  rfqId: string;
+  isValid: boolean;
+};
+
+export type RfqConfirmationDetails = RfqConfirmation & {
+  appToAppValue?: string;
+  qrValue?: string;
+};
+
+export type RfqPaymentDetails = {
+  txId: string;
+  link: string;
+  received: {
+    amount: number;
+    iban?: string;
+    nameOnAccount?: string;
+  };
+  sending: {
+    amount: number;
+    iban?: string;
+    nameOnAccount?: string;
+  }
+};
+
+export type RfqTxData = {
+  txId: string;
+  confs: number;
+  address: string;
+  unblindedLink: string;
+};
+
+export type RfqEstimation = {
+  charge: number;
+  fee: number;
+  payoutEstimation: number;
 };
 
 

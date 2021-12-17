@@ -1,19 +1,16 @@
 import React, { FC, memo } from 'react';
 import { Button, Grid, Typography, CircularProgress } from '@material-ui/core';
-import clsx from 'clsx';
 
+import { BankAccount, Address } from '../../../typedef';
 import { FormProps } from '../typedef';
-import { useStyles } from '../style';
-import { SwapArrowsIcon } from '../../../assets/Icons';
-import { FormGroup } from './form-group';
-import { ConverterService, IbanService } from '../../../services';
+import { ConverterService } from '../../../services';
 import { Dropdown } from '../../../components/Dropdown';
-import { BankAccount } from '../../../graphql/BankAccount/typedef';
-import { WhitelistedAddress } from '../../../graphql/WhitelistAddress/typedef';
-import { AccountType } from '../../../graphql/typedef';
 import { Account } from '../../../components/Account';
+import { FormGroup } from './form-group';
+import { SwapArrowsIcon } from '../../../assets/Icons';
+import { useStyles } from '../style';
 
-const keyExtractor = (item: WhitelistedAddress | BankAccount) => item.acct_num;
+const keyExtractor = (item: BankAccount | Address) => item.acctNum;
 
 export const Form = memo<FormProps>(({
   deliverInputRef,
@@ -39,7 +36,7 @@ export const Form = memo<FormProps>(({
 }) => {
   const classes = useStyles();
 
-  const renderDropDownItem = (item: BankAccount | WhitelistedAddress, idx: number, active = false) => (
+  const renderDropDownItem = (item: BankAccount | Address, idx: number, active = false) => (
     <Account value={ item } idx={ idx } active={ active } />
   );
 

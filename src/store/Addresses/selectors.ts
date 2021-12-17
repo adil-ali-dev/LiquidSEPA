@@ -7,3 +7,4 @@ export const addressesItemsSelector = (state: AppState) => state.addresses.addre
 export const addressesAddressValidSelector = (state: AppState) => state.addresses.addressValid;
 export const addressesValidateAddressLoadingSelector = (state: AppState) => state.addresses.loading.validate;
 export const addressesWhitelistAddressLoadingSelector = (state: AppState) => state.addresses.loading.whitelist;
+export const addressesWhitelistAddressErrorSelector = (state: AppState) => state.addresses.error.whitelist;

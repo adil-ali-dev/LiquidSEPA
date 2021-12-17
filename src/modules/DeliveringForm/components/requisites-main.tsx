@@ -82,7 +82,7 @@ export const RequisitesMain = memo<RequisitesMainProps>(({
             </Typography>
           </Grid>
         </Grid>
-        <Row label="Account holder" value="Digital Eights OU" spaceMedium/>
+        <Row label="Account holder" value="BlockSettle AB" spaceMedium/>
         <Row label="Bank" value="LHV (LHVBEE22)" spaceSmall/>
         <Row label="Country" value="Estonia" spaceSmall/>
       </Grid>

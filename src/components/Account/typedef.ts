@@ -1,9 +1,8 @@
-import { WhitelistedAddress } from '../../graphql/WhitelistAddress/typedef';
-import { BankAccount } from './../../graphql/BankAccount/typedef';
+import { Account } from '../../typedef';
 
 
 export type Props = {
-  value: null | BankAccount | WhitelistedAddress;
+  value: null | Account;
   idx?: number;
   active: boolean;
   cropAddress?: boolean;

@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useState } from 'react';
-import { ClickAwayListener, Grid, InputBase, InputLabel, Typography } from '@material-ui/core';
+import { ClickAwayListener, Grid, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 
 import { useStyles } from './styles';

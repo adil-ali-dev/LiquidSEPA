@@ -1,29 +1,32 @@
-import React, { memo, useCallback, MouseEvent, useMemo } from 'react';
-import { Grid, Button, Typography, Link as MuiLink, CircularProgress } from '@material-ui/core';
+import React, { memo, useCallback, MouseEvent } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Grid, Button } from '@material-ui/core';
 import { Link, useLocation, useHistory } from 'react-router-dom';
-import QRCode from 'react-qr-code';
 import clsx from 'clsx';
 
 import { HOME_PATH, FAQ_PATH } from '../../constants';
-import { useDeliveringFormStatusContext } from '../../contexts/DeliveringForm';
+import { rfqActions, rfqConfirmationSelector } from '../../store/Rfq';
 import { useSessionContext } from '../../contexts/Session';
-import { Modal } from '../Modal';
-import { AuthEidLogoIcon } from '../../assets/Icons';
 import { useStyles } from './style';
 
 const faqRegExp = new RegExp(FAQ_PATH);
 
 export const Header = memo(() => {
+  const dispatch = useDispatch();
   const classes = useStyles();
   const history = useHistory();
   const { pathname } = useLocation();
 
-  const { setNext } = useDeliveringFormStatusContext();
   const { status, destroy, controls } = useSessionContext();
 
+  const rfqConfirmation = useSelector(rfqConfirmationSelector);
+
+  // Resetting RFQ
   const handleLogoClick = useCallback(() => {
-    setNext(false);
-  }, []);
+    if (!rfqConfirmation) return;
+
+    dispatch(rfqActions.resetData());
+  }, [!!rfqConfirmation]);
 
   const handleFAQClick = useCallback((event: MouseEvent<HTMLAnchorElement>) => {
     if (faqRegExp.test(pathname)) {
@@ -47,7 +50,7 @@ export const Header = memo(() => {
       <Grid className={ classes.header }>
         <Grid className={ classes.headerWrapper }>
           <Link className={ classes.headerLogoLink } to={ HOME_PATH } onClick={ handleLogoClick }>
-            Liquid SEPA
+            BlockSettle
           </Link>
           <Grid className={ classes.headerLinks }>
             <Link className={ classes.headerLink } to={ FAQ_PATH } onClick={ handleFAQClick }>

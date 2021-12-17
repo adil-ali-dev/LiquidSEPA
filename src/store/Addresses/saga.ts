@@ -1,8 +1,9 @@
 import { takeLatest, put } from 'redux-saga/effects';
 
-import { SocketEndpoint, AccountType } from '../../typedef';
+import { SocketEndpoint, AccountType, StatusModalType } from '../../typedef';
 import { AddressesConstants, ValidateAddress, WhitelistAddress } from './typedef';
 import { socketActions } from '../Socket';
+import { alertActions } from '../Alert';
 import { addressesActions } from './actions';
 
 
@@ -26,15 +27,19 @@ function *whitelistAddress({ payload }: WhitelistAddress) {
 
 function *getAddresses() {
   yield put(socketActions.send({
-    method: SocketEndpoint.GET_ACCOUNTS,
+    method: SocketEndpoint.GET_ADDRESSES,
     api: 'account',
     messageId: `${Date.now()}`,
-    args: { accountType: AccountType.WALLET }
+    args: {}
   }));
 }
 
 function *whitelistAddressSuccess() {
-  put(addressesActions.getAddresses());
+  yield put(addressesActions.getAddresses());
+  yield put(alertActions.show({
+    type: StatusModalType.SUCCESS,
+    message: 'Address successfully whitelisted'
+  }));
 }
 
 

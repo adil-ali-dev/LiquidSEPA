@@ -1,17 +1,12 @@
 import React, { FC, memo, useCallback, useMemo } from 'react';
 import { Button, ButtonBase, Grid, Link, Typography } from '@material-ui/core';
-import pluralize from 'pluralize';
 import clsx from 'clsx';
 
 import { useStyles } from './styles';
-import { AccountListItem, DropdownContentProps } from './typedef';
-import { DotsIcon } from '../../assets/Icons';
-import { IbanService } from '../../services';
+import { DropdownContentProps } from './typedef';
 import { useSessionContext } from '../../contexts/Session';
 import { DropdownAlert } from './dropdown-alert';
 import { DropdownHeader } from './dropdown-header';
-import { WhitelistedAddress } from '../../graphql/WhitelistAddress/typedef';
-import { BankAccount } from '../../graphql/BankAccount/typedef';
 
 export const DropdownContent: FC<DropdownContentProps> = ({
   open,

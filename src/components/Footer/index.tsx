@@ -7,7 +7,7 @@ import { useStyles } from './style';
 import { EnvelopeIcon } from '../../assets/Icons';
 import { PRIVACY_POLICY_PATH, REGULATION_PATH, TERMS_OF_USE_PATH } from '../../constants';
 
-const EMAIL = 'hello@liquidsepa.com';
+const EMAIL = 'hello@blocksettle.com';
 
 export const Footer = memo(() => {
   const classes = useStyles();
@@ -34,7 +34,7 @@ export const Footer = memo(() => {
             Privacy Policy
           </RouterLink>
         </Grid>
-        <Typography className={ classes.copyText }>&copy; 2021 liquidsepa.com</Typography>
+        <Typography className={ classes.copyText }>&copy; 2021 blocksettle.com</Typography>
       </Grid>
     </Grid>
   );

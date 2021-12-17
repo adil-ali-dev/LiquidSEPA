@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, KeyboardEvent, ReactNode } from 'react'
+import React, { ChangeEvent, FC, ReactNode } from 'react'
 
 export type DropdownProps = {
   background?: boolean;
