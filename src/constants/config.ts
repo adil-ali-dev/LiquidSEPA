@@ -26,11 +26,3 @@ export const WS_AUTH_URL = (LIVE
 export const WS_MAIN_URL = (LIVE
   ? process.env.REACT_APP_WS_MAIN_API_URL_LIVE
   : process.env.REACT_APP_WS_MAIN_API_URL_DEV) as string;
-
-export const GQL_HTTP_URL = LIVE
-  ? process.env.REACT_APP_GQL_HTTP_LIVE_URL
-  : process.env.REACT_APP_GQL_HTTP_URL as string;
-
-export const REFUND_ADDRESS = LIVE
-  ? process.env.REACT_APP_REFUND_ADDRESS_LIVE
-  : process.env.REACT_APP_REFUND_ADDRESS as string;

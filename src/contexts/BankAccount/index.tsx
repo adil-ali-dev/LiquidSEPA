@@ -1,16 +1,11 @@
 import React, { useContext, useState, createContext, FC, ReactNode, useCallback, useEffect } from 'react';
 
-import { BankAccount } from '../../graphql/BankAccount/typedef';
-import { useBankAccounts } from '../../graphql/BankAccount/hooks';
-import { useSessionContext } from '../Session';
-
 type Props = {
   children: ReactNode;
 };
 
 const BankAccountContext = createContext({
   modalStatus: false,
-  accounts: [] as BankAccount[],
   success: false,
   error: null as null | string,
   processing: false,
@@ -29,16 +24,6 @@ export const BankAccountProvider: FC<Props> = ({ children }) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<null | string>(null);
   const [processing, setProcessing] = useState(false);
-
-  const { fetch, accounts } = useBankAccounts();
-
-  const { status } = useSessionContext();
-
-  useEffect(() => {
-    if (modalStatus || !status) return;
-
-    fetch();
-  }, [modalStatus, status]);
 
   useEffect(() => {
     if (!error || !success) return;
@@ -79,7 +64,6 @@ export const BankAccountProvider: FC<Props> = ({ children }) => {
 
   const value = {
     modalStatus,
-    accounts,
     success,
     error,
     processing,

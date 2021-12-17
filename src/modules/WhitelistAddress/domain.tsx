@@ -2,12 +2,9 @@ import React, { ChangeEvent, FC, FormEvent, useCallback, useEffect, useState } f
 import { useDispatch, useSelector } from 'react-redux';
 
 import { WrappedProps } from './typedef';
-import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
-import { useAuthEidCancel } from '../../graphql/AuthEidCancel/hooks';
-import { StatusModal } from '../../components/StatusModal';
-import { StatusModalType } from '../../components/StatusModal/typedef';
-import { useDebounce } from '../../hooks/Debounce';
 import { addressesActions, addressesAddressValidSelector, addressesWhitelistAddressErrorSelector, addressesWhitelistAddressLoadingSelector } from '../../store/Addresses';
+import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
+import { useDebounce } from '../../hooks/Debounce';
 import { usePrevious } from '../../hooks/Previous';
 
 
@@ -17,9 +14,7 @@ export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () =>
   const [label, setLabel] = useState('');
   const [address, setAddress] = useState('');
   const debouncedAddress = useDebounce(address);
-
-  const { cancel } = useAuthEidCancel();
-  const { modalStatus, success, controls } = useWhitelistAddressContext();
+  const { modalStatus, controls } = useWhitelistAddressContext();
 
   const debouncedAddressPrev = usePrevious(debouncedAddress);
 
@@ -30,7 +25,6 @@ export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () =>
   useEffect(() => {
     if (modalStatus) return;
 
-    // cancel(requestId);
     setLabel('');
     setAddress('');
   }, [modalStatus]);
@@ -75,20 +69,6 @@ export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () =>
         handleLabelChange={ handleLabelChange }
         handleAddressChange={ handleAddressChange }
         handleSubmit={ handleSubmit }
-      />
-      <StatusModal
-        text="Address successfully whitelisted"
-        type={ StatusModalType.SUCCESS }
-        status={ success }
-        handleClose={ controls.closeStatus }
-        handleButtonClick={ controls.closeStatus }
-      />
-      <StatusModal
-        text={ error }
-        type={ StatusModalType.ERROR }
-        status={ !!error }
-        handleClose={ controls.closeStatus }
-        handleButtonClick={ controls.closeStatus }
       />
     </>
 

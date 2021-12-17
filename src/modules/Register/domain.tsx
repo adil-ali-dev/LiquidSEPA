@@ -4,9 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Props } from './typedef';
 import { AUTH_EID_URL_REQ_PREFIX } from '../../constants';
 import { useSessionContext } from '../../contexts/Session';
-import { StatusModal } from '../../components/StatusModal';
-import { StatusModalType } from '../../components/StatusModal/typedef';
-import { useAuthEidCancel } from '../../graphql/AuthEidCancel/hooks';
 import { sessionActions, sessionCreateAccountErrorSelector, sessionCreateAccountLoadingSelector, sessionRequestIdSelector, sessionWaitingForSignatureSelector } from '../../store/Session';
 
 
@@ -18,9 +15,6 @@ export const withRegisterDomain = (Component: FC<Props>) => () => {
   const requestId = useSelector(sessionRequestIdSelector);
   const loadingCreateSession = useSelector(sessionCreateAccountLoadingSelector);
   const waitingForSignature = useSelector(sessionWaitingForSignatureSelector);
-  const error = useSelector(sessionCreateAccountErrorSelector);
-
-  const authEidCancel = useAuthEidCancel();
 
   useEffect(() => {
     if (!statusRegisterModal) return;
@@ -36,7 +30,6 @@ export const withRegisterDomain = (Component: FC<Props>) => () => {
 
   const handleClose = useCallback(() => {
     controls.closeRegister();
-    authEidCancel.cancel(requestId!);
   }, [requestId]);
 
   const loading = useMemo(() => {

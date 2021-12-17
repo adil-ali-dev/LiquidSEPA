@@ -1,16 +1,14 @@
 import React, { FC, memo } from 'react';
 import { Button, Grid, Typography, CircularProgress } from '@material-ui/core';
-import clsx from 'clsx';
 
 import { BankAccount, Address } from '../../../typedef';
 import { FormProps } from '../typedef';
-import { useStyles } from '../style';
-import { SwapArrowsIcon } from '../../../assets/Icons';
-import { FormGroup } from './form-group';
-import { ConverterService, IbanService } from '../../../services';
+import { ConverterService } from '../../../services';
 import { Dropdown } from '../../../components/Dropdown';
-import { AccountType } from '../../../graphql/typedef';
 import { Account } from '../../../components/Account';
+import { FormGroup } from './form-group';
+import { SwapArrowsIcon } from '../../../assets/Icons';
+import { useStyles } from '../style';
 
 const keyExtractor = (item: BankAccount | Address) => item.acctNum;
 

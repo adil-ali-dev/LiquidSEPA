@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { AUTH_EID_URL_REQ_PREFIX } from '../../constants';
 import { Props } from './typedef';
-import { useAuthEidCancel } from '../../graphql/AuthEidCancel/hooks';
 import { sessionActions, sessionCreateLoadingSelector, sessionRequestIdSelector, sessionWaitingForSignatureSelector } from '../../store/Session';
 import { useSessionContext } from '../../contexts/Session';
 
@@ -16,8 +15,6 @@ export const withLoginDomain = (Component: FC<Props>) => () => {
   const requestId = useSelector(sessionRequestIdSelector);
   const loadingCreateSession = useSelector(sessionCreateLoadingSelector);
   const waitingForSignature = useSelector(sessionWaitingForSignatureSelector);
-
-  const authEidCancel = useAuthEidCancel();
 
   useEffect(() => {
     if (!statusLoginModal) return;
@@ -33,7 +30,6 @@ export const withLoginDomain = (Component: FC<Props>) => () => {
 
   const handleClose = useCallback(() => {
     controls.closeLogin();
-    authEidCancel.cancel(requestId!);
   }, [requestId]);
 
   const loading = useMemo(() => {
