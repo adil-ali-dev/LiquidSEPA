@@ -27,7 +27,7 @@ function *whitelistAddress({ payload }: WhitelistAddress) {
 
 function *getAddresses() {
   yield put(socketActions.send({
-    method: SocketEndpoint.GET_ACCOUNTS,
+    method: SocketEndpoint.GET_ADDRESSES,
     api: 'account',
     messageId: `${Date.now()}`,
     args: { accountType: AccountType.WALLET }

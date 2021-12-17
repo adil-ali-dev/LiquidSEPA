@@ -61,10 +61,12 @@ export enum SocketEndpoint {
 
   VALIDATE_ADDRESS = 'validate_payout_address',
   WHITELIST_ADDRESS = 'new_payout_account',
-  
-  CREATE_BANK_ACCOUNT = 'add_iban_account',
+  GET_ADDRESSES = 'stable_coin_accounts',
 
-  GET_ACCOUNTS = 'currency_accounts',
+  CREATE_BANK_ACCOUNT = 'save_accounts',
+  GET_SUPPORTED_BANKS = 'supported_banks',
+  CREATE_BANK_AGREEMENT_LINK = 'create_agreement_link',
+  GET_BANK_ACCOUNTS = 'currency_accounts',
 
   RFQ_SELL = 'sell',
   RFQ_BUY = 'buy',
@@ -152,6 +154,19 @@ export type Address = Account<AccountType.WALLET>;
 export type BankAccount = Account<AccountType.BANK> & {
   logo?: string;
 };
+
+
+/*
+ * Supported Banks
+ */
+
+export type SupportedBanks = {
+  id: string;
+  name: string;
+  bic: string;
+  transactionTotalDays: string;
+  logo: string;
+}
 
 
 /*

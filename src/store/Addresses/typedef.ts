@@ -1,4 +1,4 @@
-import { Action, FailureAction, EmptyAction, AccountType, Address, SocketReq, SocketEndpoint } from '../../typedef';
+import { Action, FailureAction, EmptyAction, Address, SocketReq, SocketEndpoint } from '../../typedef';
 
 
 export enum AddressesConstants {
@@ -29,9 +29,7 @@ export type WhitelistAddressReq = {
   label: string;
 };
 
-export type GetAddressesReq = {
-  accountType: AccountType.WALLET;
-};
+export type GetAddressesReq = Record<string, unknown>;
 
 
 /*
@@ -40,7 +38,7 @@ export type GetAddressesReq = {
 
 export type ValidateAddressApiReq = SocketReq<SocketEndpoint.VALIDATE_ADDRESS, ValidateAddressReq>;
 export type WhitelistAddressApiReq = SocketReq<SocketEndpoint.WHITELIST_ADDRESS, WhitelistAddressReq>;
-export type GetAddressesApiReq = SocketReq<SocketEndpoint.GET_ACCOUNTS, GetAddressesReq>;
+export type GetAddressesApiReq = SocketReq<SocketEndpoint.GET_ADDRESSES, GetAddressesReq>;
 
 export type AddressesApiMainReqs = ValidateAddressApiReq | WhitelistAddressApiReq | GetAddressesApiReq;
 
