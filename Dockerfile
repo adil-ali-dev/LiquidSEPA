@@ -1,10 +1,23 @@
-from node:14
+FROM node:14-alpine as builder
 
-workdir /build
-copy . /
-copy docker/entrypoint.sh /build
-copy docker/.env /build
+ARG ENV="dev"
+ENV ENV=$ENV
 
-cmd bash entrypoint.sh
+WORKDIR /app
 
+COPY package.json yarn.lock ./
 
+RUN yarn
+
+COPY . .
+
+RUN mv .env-docker .env
+
+RUN yarn build:$ENV
+
+# Final
+FROM nginx:1.17.0-alpine
+
+RUN rm -rf /etc/nginx/conf.d/*
+
+COPY --from=builder /app/build/ /usr/share/nginx/html/
