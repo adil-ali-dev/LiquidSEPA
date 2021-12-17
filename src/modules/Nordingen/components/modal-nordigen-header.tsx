@@ -12,7 +12,7 @@ export const ModalNordigenHeader = memo<ModalHeaderProps>(({ iban, step, error, 
   return (
     <Grid className={ classes.modalHeader }>
       <Typography className={ classes.modalHeadline }>
-        Welcome to Liquid SEPA
+        Welcome to BlockSettle
       </Typography>
       <Typography className={ classes.modalSubHeadline }>
         Let&apos;s get your account setup

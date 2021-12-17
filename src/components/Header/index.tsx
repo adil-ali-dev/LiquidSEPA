@@ -50,7 +50,7 @@ export const Header = memo(() => {
       <Grid className={ classes.header }>
         <Grid className={ classes.headerWrapper }>
           <Link className={ classes.headerLogoLink } to={ HOME_PATH } onClick={ handleLogoClick }>
-            Liquid SEPA
+            BlockSettle
           </Link>
           <Grid className={ classes.headerLinks }>
             <Link className={ classes.headerLink } to={ FAQ_PATH } onClick={ handleFAQClick }>

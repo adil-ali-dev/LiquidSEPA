@@ -6,7 +6,7 @@ import { useStyles } from './style';
 import { Header } from '../../components/Header';
 import { Footer } from '../../components/Footer';
 
-const EMAIL = 'compliance@liquidsepa.com';
+const EMAIL = 'compliance@blocksettle.com';
 
 const PrivacyPolicyPage: FC = () => {
   const classes = useStyles();
@@ -31,7 +31,7 @@ const PrivacyPolicyPage: FC = () => {
 
           <Grid className={ classes.sectionSpace }>
             <Typography className={ classes.sectionText }>
-              Our Privacy Policy applies to all services offered by Liquid SEPA and its affiliates, unless specifically
+              Our Privacy Policy applies to all services offered by BlockSettle and its affiliates, unless specifically
               excluded. These Private Policy rules are subject to "Data Protection Laws" which means all laws and
               regulations that apply to or govern the processing of personal data, including but not limited to, the Swedish
               Personal Data Act (Sw. personuppgiftslagen (1998:204)) and any other national data protection laws and
@@ -52,7 +52,7 @@ const PrivacyPolicyPage: FC = () => {
 
           <Grid className={ classes.sectionSpace }>
             <Typography className={ classes.sectionHeadline } component="h3">
-              Your Personal Information Collected by Liquid SEPA
+              Your Personal Information Collected by BlockSettle
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMain) }>
               BlockSettle AB, Storgatan 5, 211 41 Malmö, Sweden is solely responsible for collecting and processing all
@@ -65,7 +65,7 @@ const PrivacyPolicyPage: FC = () => {
               Collection and use of Personal Information
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMain) }>
-              Liquid SEPA undertakes to only collect and process Personal Data necessary for the performance of our
+              BlockSettle undertakes to only collect and process Personal Data necessary for the performance of our
               obligations.
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMedium) }>
@@ -87,7 +87,7 @@ const PrivacyPolicyPage: FC = () => {
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMedium) }>
               Your data may be used for the following purposes: user on-boarding or sign-in process, either directly or via
-              engagement of subcontractors. Liquid SEPA use subcontractors for services such as validating the Personal Data,
+              engagement of subcontractors. BlockSettle use subcontractors for services such as validating the Personal Data,
               screening against EU and UN Sanction lists and perform PEP checks.
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMedium) }>
@@ -104,9 +104,9 @@ const PrivacyPolicyPage: FC = () => {
               personally-identifiable information about you or any other person.
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMedium) }>
-            Liquid SEPA does not collect any other personal and publicly unavailable information that you do not expressly
-              provide. Liquid SEPA will not sell, rent or share your personal information, including your email address, with
-              any third parties for marketing purposes without your permission. Liquid SEPA may not transfer Personal Data outside
+              BlockSettle does not collect any other personal and publicly unavailable information that you do not expressly
+              provide. BlockSettle will not sell, rent or share your personal information, including your email address, with
+              any third parties for marketing purposes without your permission. BlockSettle may not transfer Personal Data outside
               of EU/EEA without prior written consent if it isn’t allowed under applicable Data Protection Laws.
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMedium) }>
@@ -126,8 +126,8 @@ const PrivacyPolicyPage: FC = () => {
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMain) }>
               All information described here is stored on restricted database servers. The information is accessible for
-              Liquid SEPA personnel. Personnel will process your personal information only to fulfill our stated purposes.
-              Liquid SEPA ensures that all personnel have undertaken to observe confidentiality.
+              BlockSettle personnel. Personnel will process your personal information only to fulfill our stated purposes.
+              BlockSettle ensures that all personnel have undertaken to observe confidentiality.
             </Typography>
           </Grid>
 
@@ -151,7 +151,7 @@ const PrivacyPolicyPage: FC = () => {
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMain) }>
               All information and documentation collected shall be archived for at least five (5) years after the information was
-              collected by Liquid SEPA and five (5) years after termination of the business relationship, according to Directive
+              collected by BlockSettle and five (5) years after termination of the business relationship, according to Directive
               (EU) 2015/849 of the European Parliament and the council of 20 May 2015.
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMedium) }>
@@ -168,15 +168,15 @@ const PrivacyPolicyPage: FC = () => {
               Cookies
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMain) }>
-              When you access Liquid SEPA, we may make use of the standard practice of placing tiny data files called cookies, flash
-              cookies, pixel tags or other tracking tools (herein, "Cookies") on your computer or other devices used to visit Liquid SEPA.
-              We use these technologies to help us recognize you as a Participant, collect information about your use of Liquid SEPA to
+              When you access BlockSettle, we may make use of the standard practice of placing tiny data files called cookies, flash
+              cookies, pixel tags or other tracking tools (herein, "Cookies") on your computer or other devices used to visit BlockSettle.
+              We use these technologies to help us recognize you as a Participant, collect information about your use of BlockSettle to
               better customize our services and content and collect information about your computer or other access device to a) ensure
               compliance with our Compliance Program and b) ensure that your account security has not been compromised by detecting
-              irregular or suspicious account activities. By using Liquid SEPA you agree that Liquid SEPA and its affiliates may
+              irregular or suspicious account activities. By using BlockSettle you agree that BlockSettle and its affiliates may
               collect and/or transmit any data collected to our third party service providers, such as analytics providers, which may
               also make use of such technologies as described above. Please note that if you block or delete cookies you will not be
-              able to use all or a portion of Liquid SEPA.
+              able to use all or a portion of BlockSettle.
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMedium) }>
               Upon your request, you can access a summary of the information we collect about you. You may have an opportunity to
@@ -204,7 +204,7 @@ const PrivacyPolicyPage: FC = () => {
               Business Transitions
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMain) }>
-              In the event Liquid SEPA goes through a business transition, such as a merger or acquisition by another company,
+              In the event BlockSettle goes through a business transition, such as a merger or acquisition by another company,
               or sale of a portion of its assets, users' personal information will, in most instances, be part of the assets
               transferred.
             </Typography>
@@ -216,7 +216,7 @@ const PrivacyPolicyPage: FC = () => {
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMain) }>
               As part of the services we provide, we may create links allowing you to access third-party sites.
-              Liquid SEPA is not responsible for the content that appears on those sites and does not endorse them.
+              BlockSettle is not responsible for the content that appears on those sites and does not endorse them.
               Please consult those sites' individual privacy policies in order to determine how they treat user
               information.
             </Typography>
@@ -227,7 +227,7 @@ const PrivacyPolicyPage: FC = () => {
               Changes to This Policy
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMain) }>
-              Liquid SEPA reserves the right to change this policy from time to time. If we decide to change our
+              BlockSettle reserves the right to change this policy from time to time. If we decide to change our
               privacy policy, we will post those changes on this page so that you are aware of what information we
               collect, how we use it and in what circumstances we disclose it.
             </Typography>
@@ -248,8 +248,8 @@ const PrivacyPolicyPage: FC = () => {
               Your Consent
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMain) }>
-              In using Liquid SEPA' s website or services, you consent to the collection and use of this
-              information by Liquid SEPA in ways described above.
+              In using BlockSettle' s website or services, you consent to the collection and use of this
+              information by BlockSettle in ways described above.
             </Typography>
           </Grid>
 
@@ -258,8 +258,8 @@ const PrivacyPolicyPage: FC = () => {
               Complaints/Comments
             </Typography>
             <Typography className={ clsx(classes.sectionText, classes.sectionTextSpaceMain) }>
-              Liquid SEPA takes your privacy concerns seriously.If you have any questions about this policy
-              or if you believe that Liquid SEPA has not complied with this Privacy Policy with respect to your
+              BlockSettle takes your privacy concerns seriously.If you have any questions about this policy
+              or if you believe that BlockSettle has not complied with this Privacy Policy with respect to your
               personal information, you may write to <Link className={ classes.sectionLink } href={ `mailto:${ EMAIL }` } target="_blank">
                 { EMAIL }
               </Link> or send a letter to us at BlockSettle AB, Storgatan 5, 211 41 Malmö, Sweden.

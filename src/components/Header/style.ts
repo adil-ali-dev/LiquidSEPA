@@ -28,8 +28,8 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
   },
 
   headerLogoLink: {
-    width: '183px',
-    height: '41px',
+    width: '175px',
+    height: '32px',
     color: 'transparent',
     backgroundImage: 'url(/brand.svg)'
   },
