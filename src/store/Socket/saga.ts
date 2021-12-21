@@ -5,8 +5,10 @@ import { sessionActions, sessionTokenValueSelector } from '../Session';
 
 function *connect() {
   const accessToken: null | string = yield select(sessionTokenValueSelector);
-
-  yield put(sessionActions.refresh({ accessToken: accessToken! }));
+  yield (accessToken
+      ? put(sessionActions.refresh({ accessToken }))
+      : put(sessionActions.refreshFailure('No Token'))
+  );
 }
 
 export function *socketSaga() {
