@@ -35,7 +35,8 @@ function *createAgreementLink({ payload }: CreateAgreementLink) {
     method: SocketEndpoint.CREATE_BANK_AGREEMENT_LINK,
     api: ACCOUNT_API,
     messageId: `${Date.now()}`,
-    args: { ...payload, sandbox: !LIVE, redirectUrl: window.location.origin }
+    // args: { ...payload, sandbox: !LIVE, redirectUrl: window.location.origin }
+    args: { ...payload, sandbox: true, redirectUrl: window.location.origin }
   }));
 }
 
