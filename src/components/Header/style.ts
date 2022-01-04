@@ -10,7 +10,20 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
   },
 
   header: {
-    padding: '30px 0 10px'
+    padding: '30px 0 10px',
+    '-webkit-transition': '.5s ease-in-out',
+    '-moz-transition': '.5s ease-in-out',
+    '-o-transition': '.5s ease-in-out',
+    transition: '.5s ease-in-out',
+
+    [breakpoints.down(875)]: {
+      height: '64px',
+      overflowY: 'hidden'
+    }
+  },
+
+  headerOpen: {
+    height: 'calc(100vh - 40px)'
   },
 
   headerWrapper: {
@@ -24,20 +37,47 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
 
     [breakpoints.down('md')]: {
       padding: '0 20px'
+    },
+
+    [breakpoints.down(875)]: {
+      flexDirection: 'column',
+      height: '100%'
     }
+  },
+
+  headerWrapperMobile: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%'
   },
 
   headerLogoLink: {
     width: '175px',
     height: '32px',
     color: 'transparent',
-    backgroundImage: 'url(/brand.svg)'
+    backgroundImage: 'url(/brand.svg)',
+    backgroundRepeat: 'no-repeat',
+
+    [breakpoints.down(875)]: {
+      height: 24
+    }
   },
 
   headerLinks: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+
+    [breakpoints.down(875)]: {
+      display: 'none',
+      flexDirection: 'column',
+      justifyContent: 'space-evenly',
+      height: '100%'
+    }
+  },
+
+  headerLinksOpen: {
+    display: 'flex'
   },
 
   headerLink: {
@@ -49,6 +89,10 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
 
     '&:hover': {
       color: palette.primary.main
+    },
+
+    [breakpoints.down(875)]: {
+      marginRight: 0
     }
   },
 
@@ -68,6 +112,10 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
 
     '&:hover': {
       backgroundColor: palette.primary.dark
+    },
+
+    [breakpoints.down(875)]: {
+      marginLeft: 0,
     }
   },
 
