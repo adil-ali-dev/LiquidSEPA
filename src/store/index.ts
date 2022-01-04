@@ -60,6 +60,14 @@ const initStore = () => {
 
   sagaMiddleware.run(rootSaga);
 
+  if (module.hot && APP_DEV) {
+    // Enable Webpack hot module replacement for reducers
+    module.hot.accept('./reducer', () => {
+      const nextRootReducer = require('./reducer');
+      store.replaceReducer(nextRootReducer);
+    });
+  }
+
   return { store, persistor };
 };
 

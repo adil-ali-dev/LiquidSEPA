@@ -16,6 +16,7 @@ export interface FailureAction<T> extends ReduxAction<T> { error: string }
 
 export enum Environment {
   DEV = 'dev',
+  TESTING = 'testing',
   LIVE = 'live'
 }
 
@@ -60,7 +61,7 @@ export enum SocketEndpoint {
   AUTHORIZE = 'authorize',
 
   VALIDATE_ADDRESS = 'validate_payout_address',
-  WHITELIST_ADDRESS = 'new_payout_account',
+  WHITELIST_ADDRESS = 'whitelist_address',
   GET_ADDRESSES = 'stable_coin_accounts',
 
   CREATE_BANK_ACCOUNT = 'save_accounts',
