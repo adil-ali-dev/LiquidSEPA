@@ -11,8 +11,6 @@ RUN yarn
 
 COPY . .
 
-RUN mv .env-docker .env
-
 RUN yarn build:$ENV
 
 # Final
