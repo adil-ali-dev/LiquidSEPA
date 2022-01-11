@@ -112,7 +112,11 @@ export const sessionReducer = (state = initialState, action: SessionAction): Ses
     case SessionConstants.REFRESH_SESSION_SUCCESS:
       return {
         ...state,
-        loading: { ...state.loading, refresh: false }
+        loading: { ...state.loading, refresh: false },
+        token: {
+          value: action.payload.accessToken,
+          expiresIn: action.payload.expiresIn
+        }
       };
     case SessionConstants.REFRESH_SESSION_FAILURE:
       return {

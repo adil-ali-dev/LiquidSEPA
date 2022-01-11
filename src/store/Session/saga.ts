@@ -65,7 +65,7 @@ function *updateCreateAccountStatus({ payload }: UpdateCreateAccountStatus) {
   }
 }
 
-function *updateCreateSessionStatus({ payload }: UpdateCreateSessionStatus) {  
+function *updateCreateSessionStatus({ payload }: UpdateCreateSessionStatus) {
   if (payload.accessToken) {
     yield put(sessionActions.createSessionSuccess(payload));
   }
