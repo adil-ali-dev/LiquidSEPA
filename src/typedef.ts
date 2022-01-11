@@ -209,16 +209,16 @@ export enum RfqDirection {
 
 export enum RfqStatus {
   LIMIT_REACHED = 'Limit_REACHED'
-};
+}
 
-export type RfqData = {
+export type RfqData<T> = {
   direction: RfqDirection;
   confirm: boolean;
-  payoutAmount: string;
+  payoutAmount: T;
   payoutAccountOwner: string;
   rfqId: string;
   status: RfqStatus;
-  depositAmount: string;
+  depositAmount: T;
   created: string;
   txId: string;
   settled: string;
@@ -257,7 +257,7 @@ export type RfqPaymentDetails = {
 };
 
 export type RfqTxData = {
-  txId: string;
+  txid: string;
   confs: number;
   address: string;
   unblindedLink: string;

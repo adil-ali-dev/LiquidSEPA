@@ -92,7 +92,7 @@ export type AnyActionRes = {
 
 export type ConfirmRes = RfqConfirmation;
 
-type UpdateRfqDataRes = RfqData;
+type UpdateRfqDataRes = RfqData<string>;
 
 type UpdateTxDataRes = RfqTxData;
 
@@ -177,7 +177,7 @@ type ActionKeys = 'estimation'
 | 'confirm';
 
 export type RfqState = {
-  rfqData: null | RfqData;
+  rfqData: null | RfqData<number>;
   txData: null | RfqTxData;
   estimation: null | RfqEstimation<number>;
   confirmation: null | RfqConfirmation;

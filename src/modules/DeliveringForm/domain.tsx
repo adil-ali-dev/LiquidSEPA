@@ -5,7 +5,7 @@ import { isMobile } from 'react-device-detect';
 import { Address, Currency, BankAccount } from '../../typedef';
 import { Props, Product } from './typedef';
 import { addressesActions, addressesItemsSelector } from '../../store/Addresses';
-import { rfqActions, rfqAnyActionLoadingSelector, rfqConfirmationSelector, rfqEstimatedFeeSelector, rfqEstimatedReceiveSelector, rfqConfirmationDetailsSelector, rfqTxDataSelector, rfqPaymentDetailsSelector, rfqTxConfsCountSelector } from '../../store/Rfq';
+import { rfqActions, rfqAnyActionLoadingSelector, rfqConfirmationSelector, rfqEstimatedFeeSelector, rfqEstimatedReceiveSelector, rfqConfirmationDetailsSelector, rfqPaymentDetailsSelector, rfqTxConfirmationsCountSelector } from '../../store/Rfq';
 import { bankAccountsActions, bankAccountsItemsSelector } from '../../store/BankAccounts';
 import { useClipBoard } from '../../hooks/ClipBoard';
 import { useDebounce } from '../../hooks/Debounce';
@@ -76,7 +76,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   // @ts-ignore
   const rfqConfirmationDetails = useSelector(state => rfqConfirmationDetailsSelector(state, deliver.amount, deliver.product));
   const rfqPaymentDetails = useSelector(rfqPaymentDetailsSelector);
-  const rfqTxConfsCount = useSelector(rfqTxConfsCountSelector);
+  const rfqTxConfirmationsCount = useSelector(rfqTxConfirmationsCountSelector);
   const whitelistedAddresses = useSelector(addressesItemsSelector);
   const bankAccounts = useSelector(bankAccountsItemsSelector);
 
@@ -91,10 +91,8 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   }, [receive.product, account, address, loading, deliver.error, deliver.amount]);
 
   const confirmations = useMemo(() => {
-    const confs = rfqTxConfsCount || 0;
-
-    return confs >= MAX_CONFS ? MAX_CONFS : confs;
-  }, [rfqTxConfsCount]);
+    return rfqTxConfirmationsCount >= MAX_CONFS ? MAX_CONFS : rfqTxConfirmationsCount;
+  }, [rfqTxConfirmationsCount]);
 
   useEffect(() => {
     if (!isLoggedIn) return;
@@ -108,7 +106,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
       dispatch(addressesActions.getAddresses());
       dispatch(bankAccountsActions.getBankAccounts());
       return;
-    };
+    }
 
     setDeliver(initialDeliver);
     setReceive(initialReceive);
@@ -206,10 +204,6 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const handleCopyClick = useCallback(() => {
     copyToClipBoard(rfqConfirmation?.trackingCode);
   }, [rfqConfirmation?.trackingCode]);
-  // TODO: Remove duplication.
-  const handleRefCopyClick = useCallback(() => {
-    copyToClipBoard(rfqConfirmation?.trackingCode);
-  }, [rfqConfirmation?.trackingCode]);
 
   const handleTxCopyClick = useCallback(() => {
     copyToClipBoard(rfqPaymentDetails?.txId);
@@ -268,7 +262,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
                 details={rfqConfirmationDetails}
                 handleAddressCopyClick={handleCopyClick}
                 handleIbanCopyClick={handleIbanCopyClick}
-                handleRefCopyClick={handleRefCopyClick}
+                handleRefCopyClick={handleCopyClick}
               />
               <RequisitesFooter
                 sellSide={ sellSide }

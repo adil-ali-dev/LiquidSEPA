@@ -10,7 +10,6 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
       borderRadius: '24px',
       backgroundColor: palette.background.paper,
       width: '100%',
-      // overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
 
@@ -521,6 +520,8 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
       padding: '32px',
       backgroundColor: palette.background.default,
       flex: 1,
+      borderBottomLeftRadius: 24,
+      borderBottomRightRadius: 24,
 
       [breakpoints.down('xs')]: {
         padding: '32px 20px'
@@ -566,6 +567,8 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) =>
       borderRadius: '12px',
       border: `1px solid ${palette.primary.main} !important`,
       color: `${palette.primary.main} !important`,
+      width: 135,
+      maxWidth: 135,
 
       '&:first-child': {
         marginRight: '10px'

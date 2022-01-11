@@ -127,6 +127,13 @@ export const sessionReducer = (state = initialState, action: SessionAction): Ses
         error: { ...state.error, refresh: action.error }
       };
 
+    case SessionConstants.DESTROY_SESSION_REQUEST:
+      return {
+        ...state,
+        token: null,
+        authenticated: false
+      }
+
     default:
       return state;
   }
