@@ -33,5 +33,5 @@ const wsMainApi = {
   [Environment.LIVE]: process.env.REACT_APP_WS_MAIN_API_URL_LIVE
 }
 
-export const WS_AUTH_URL = wsAuthApi[MODE];
-export const WS_MAIN_URL = wsMainApi[MODE];
+export const WS_AUTH_URL = wsAuthApi[MODE] as string;
+export const WS_MAIN_URL = wsMainApi[MODE] as string;

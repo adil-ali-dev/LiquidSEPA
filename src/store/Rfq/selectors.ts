@@ -17,7 +17,7 @@ export const rfqConfirmationLoadingSelector = (state: AppState) => state.rfq.loa
 export const rfqConfirmationSelector = (state: AppState) => state.rfq.confirmation;
 export const rfqDataSelector = (state: AppState) => state.rfq.rfqData;
 export const rfqTxDataSelector = (state: AppState) => state.rfq.txData;
-export const rfqTxConfsCountSelector = (state: AppState) => state.rfq.txData?.confs;
+export const rfqTxConfCountSelector = (state: AppState) => state.rfq.txData?.confs;
 
 export const rfqDeliverAmountSelector = (_: AppState, deliverAmount: number) => deliverAmount;
 export const rfqDeliverProductSelector = (_: AppState, deliverProduct: Currency) => deliverProduct;
@@ -33,7 +33,7 @@ export const rfqEstimatedFeeSelector = createSelector([rfqEstimationSelector], e
 
 export const rfqEstimatedReceiveSelector = createSelector([rfqEstimationSelector], estimation => {
   if (!estimation?.payoutEstimation) return 0;
-  
+
   const { payoutEstimation } = estimation;
 
   return payoutEstimation > 0 ? payoutEstimation : 0;
@@ -42,6 +42,11 @@ export const rfqEstimatedReceiveSelector = createSelector([rfqEstimationSelector
 export const rfqAnyActionLoadingSelector = createSelector(
   [rfqSellLoadingSelector, rfqBuyLoadingSelector, rfqConfirmationLoadingSelector],
   (loadingSell, loadingBuy, loadingConfirmation) => loadingSell || loadingBuy || loadingConfirmation
+);
+
+export const rfqTxConfirmationsCountSelector = createSelector(
+  [rfqTxConfCountSelector],
+  confirmations => confirmations || 0
 );
 
 export const rfqConfirmationDetailsSelector = createSelector(
@@ -72,18 +77,18 @@ export const rfqConfirmationDetailsSelector = createSelector(
 export const rfqPaymentDetailsSelector = createSelector(
   [rfqDataSelector, rfqTxDataSelector],
   (rfq, tx) => {
-    if (!rfq || !tx) return;
+    if (!rfq || !tx) return null;
 
     return {
-      txId: tx.txId,
+      txId: tx.txid,
       link: tx.unblindedLink,
       received: {
-        amount: Number(rfq.depositAmount),
+        amount: rfq.depositAmount,
         iban: rfq.depositorIban,
         nameOnAccount: rfq.depositorName
       },
       sending: {
-        amount: Number(rfq.payoutAmount),
+        amount: rfq.payoutAmount,
         iban: rfq.payoutIban,
         nameOnAccount: rfq.payoutAccountOwner
       }

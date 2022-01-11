@@ -14,7 +14,7 @@ export function *rootSaga() {
   // Wait for the persist store
   yield take(REHYDRATE);
   // Wait for the socket connection
-  yield take(AuthSocketConstants.CONNECT);
+  yield take(AuthSocketConstants.CONNECTED);
 
   // Run sagas
   yield all([

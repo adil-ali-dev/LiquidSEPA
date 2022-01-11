@@ -5,9 +5,10 @@ import { SessionApiAuthReqs } from '../Session';
 
 
 export enum AuthSocketConstants {
-  CLOSE = '@auth-socket/CLOSE',
   CONNECT = '@auth-socket/CONNECT',
-  RESET = '@auth-socket/RESET',
+  CONNECTED = '@auth-socket/CONNECTED',
+  CLOSE = '@auth-socket/CLOSE',
+  CLOSED = '@auth-socket/CLOSED',
   SEND = '@auth-socket/SEND',
   ERROR = '@auth-socket/ERROR'
 }
@@ -43,9 +44,11 @@ export type AuthSocketHandler = {
  */
 
 export type Connect = EmptyAction<AuthSocketConstants.CONNECT>;
+export type Connected = EmptyAction<AuthSocketConstants.CONNECTED>;
 export type Send = Action<AuthSocketConstants.SEND, SendReq>;
 export type Error = FailureAction<AuthSocketConstants.ERROR>;
 export type Close = EmptyAction<AuthSocketConstants.CLOSE>;
+export type Closed = EmptyAction<AuthSocketConstants.CLOSED>;
 
 
 /*
@@ -53,9 +56,11 @@ export type Close = EmptyAction<AuthSocketConstants.CLOSE>;
  */
 
 export type AuthSocketAction = Connect
+| Connected
 | Send
 | Error
-| Close;
+| Close
+| Closed;
 
 
 /*

@@ -1,21 +1,24 @@
 import { createStore, applyMiddleware, Middleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import { persistStore, persistReducer, PersistConfig, createTransform } from 'redux-persist';
+import { createSocketMiddleware } from 'redux-awesome-socket-middleware'
 import { createLogger } from 'redux-logger';
 import storage from 'redux-persist/lib/storage';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 
-import { WS_AUTH_URL, WS_MAIN_URL, APP_DEV } from '../constants';
+import { APP_DEV } from '../constants';
 import { AppState } from './typedef';
-import { AuthSocketConstants, createAuthSocketMiddleware } from './AuthSocket';
+import { authSocketOptions, AuthSocketConstants } from './AuthSocket';
 import { SessionState } from './Session';
 import { BankAccountsState } from './BankAccounts';
-import { createSocketMiddleware, SocketConstants } from './Socket';
+import { mainSocketOptions, SocketConstants } from './Socket';
 import { rootReducer } from './reducer';
 import { rootSaga } from './saga';
+import { createAppMiddleware } from './middleware';
 
 
 const blacklistedActions = new Set([SocketConstants.SEND, AuthSocketConstants.SEND]);
+
 
 const sessionTransform = createTransform<SessionState, {}>(
   state => ({ token: state.token }),
@@ -23,11 +26,13 @@ const sessionTransform = createTransform<SessionState, {}>(
   { whitelist: ['session'] }
 );
 
+
 const bankAccountsTransform = createTransform<BankAccountsState, {}>(
   state => ({ waitingForContinue: state.waitingForContinue }),
   null,
   { whitelist: ['bankAccounts'] }
 );
+
 
 const persistConfig: PersistConfig<AppState | {}> = {
   version: 1,
@@ -40,10 +45,11 @@ const persistConfig: PersistConfig<AppState | {}> = {
 
 
 const initStore = () => {
-  const authSocketMiddleware = createAuthSocketMiddleware(WS_AUTH_URL);
-  const socketMiddleware = createSocketMiddleware(WS_MAIN_URL);
+  const authSocketMiddleware = createSocketMiddleware(authSocketOptions);
+  const mainSocketMiddleware = createSocketMiddleware(mainSocketOptions);
   const sagaMiddleware = createSagaMiddleware();
-  const middleware: Middleware[] = [authSocketMiddleware, socketMiddleware, sagaMiddleware];
+  const appMiddleware = createAppMiddleware();
+  const middleware: Middleware[] = [authSocketMiddleware, mainSocketMiddleware, appMiddleware, sagaMiddleware];
 
   if (APP_DEV) {
     const loggerMiddleware = createLogger({

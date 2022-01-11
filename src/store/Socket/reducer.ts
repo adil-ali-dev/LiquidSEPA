@@ -8,13 +8,13 @@ const initialState: SocketState = {
 export const socketReducer = (state = initialState, action: SocketAction): SocketState => {
   switch (action.type) {
 
-    case SocketConstants.CONNECT:
+    case SocketConstants.CONNECTED:
       return { ...state, status: true };
 
     case SocketConstants.ERROR:
       return { ...state, error: action.error };
 
-    case SocketConstants.CLOSE:
+    case SocketConstants.CLOSED:
       return { ...state, status: false };
 
     default:

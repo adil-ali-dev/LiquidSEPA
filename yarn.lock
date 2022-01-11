@@ -9815,6 +9815,11 @@ recursive-readdir@2.2.2:
   dependencies:
     minimatch "3.0.4"
 
+redux-awesome-socket-middleware@1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/redux-awesome-socket-middleware/-/redux-awesome-socket-middleware-1.1.5.tgz#69616a534853e704e2863a614e9919d2a8f48d49"
+  integrity sha512-8HO6MXREgTpDTZt1AloyiuEnDaPjJtKs8mYLvsA954Mke6Rg0M/ZdMmvyqPaB+AlulKL0FsEwI+hLLmkh3VkjQ==
+
 redux-logger@3.0.6:
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/redux-logger/-/redux-logger-3.0.6.tgz#f7555966f3098f3c88604c449cf0baf5778274bf"

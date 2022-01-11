@@ -9,13 +9,13 @@ const initialState: AuthSocketState = {
 export const authSocketReducer = (state = initialState, action: AuthSocketAction): AuthSocketState => {
   switch (action.type) {
 
-    case AuthSocketConstants.CONNECT:
+    case AuthSocketConstants.CONNECTED:
       return { ...state, status: true };
 
     case AuthSocketConstants.ERROR:
       return { ...state, error: action.error };
 
-    case AuthSocketConstants.CLOSE:
+    case AuthSocketConstants.CLOSED:
       return { ...state, status: false };
 
     default:

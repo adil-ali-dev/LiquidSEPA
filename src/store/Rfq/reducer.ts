@@ -1,5 +1,5 @@
 import { RfqAction, RfqConstants, RfqState } from './typedef';
-import { serializeEstimation } from './serializer';
+import { serializeEstimation, serializeRfq } from './serializer';
 
 
 export const initialState: RfqState = {
@@ -97,7 +97,7 @@ export const rfqReducer = (state = initialState, action: RfqAction): RfqState =>
       };
 
     case RfqConstants.UPDATE_RFQ_DATA:
-      return { ...state, rfqData: action.payload };
+      return { ...state, rfqData: serializeRfq(action.payload) };
 
     case RfqConstants.UPDATE_TX_DATA:
       return { ...state, txData: action.payload };

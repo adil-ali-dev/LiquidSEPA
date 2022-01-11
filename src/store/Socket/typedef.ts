@@ -1,4 +1,5 @@
 import { AnyAction } from 'redux';
+import { CloseAction, ClosedAction } from 'redux-awesome-socket-middleware';
 
 import { SocketRes, Action, EmptyAction, FailureAction, SocketEndpoint } from '../../typedef';
 import { SessionApiMainReqs } from '../Session';
@@ -8,11 +9,21 @@ import { RfqApiMainReqs } from '../Rfq';
 
 
 export enum SocketConstants {
-  CLOSE = '@socket/CLOSE',
   CONNECT = '@socket/CONNECT',
-  RESET = '@socket/RESET',
+  CONNECTED = '@socket/CONNECTED',
+  CLOSE = '@socket/CLOSE',
+  CLOSED = '@socket/CLOSED',
   SEND = '@socket/SEND',
   ERROR = '@socket/ERROR'
+}
+
+
+/*
+ * Requests
+ */
+
+export type CloseReq = {
+  code: number
 }
 
 
@@ -50,9 +61,11 @@ export type SocketHandler = {
  */
 
 export type Connect = EmptyAction<SocketConstants.CONNECT>;
+export type Connected = EmptyAction<SocketConstants.CONNECTED>;
 export type Send = Action<SocketConstants.SEND, SendReq>;
 export type Error = FailureAction<SocketConstants.ERROR>;
-export type Close = EmptyAction<SocketConstants.CLOSE>;
+export type Close = CloseAction<SocketConstants.CLOSE>;
+export type Closed = ClosedAction<SocketConstants.CLOSED>;
 
 
 /*
@@ -60,9 +73,11 @@ export type Close = EmptyAction<SocketConstants.CLOSE>;
  */
 
 export type SocketAction = Connect
+| Connected
 | Send
 | Error
-| Close;
+| Close
+| Closed;
 
 
 /*
@@ -73,7 +88,7 @@ export type SocketActions = {
   connect: () => Connect;
   send: (payload: SendReq) => Send;
   error: (error: string) => Error;
-  close: () => Close;
+  close: (payload?: CloseReq) => Close;
 };
 
 
