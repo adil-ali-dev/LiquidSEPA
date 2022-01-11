@@ -1,4 +1,5 @@
 import { RfqAction, RfqConstants, RfqState } from './typedef';
+import { serializeEstimation } from './serializer';
 
 
 export const initialState: RfqState = {
@@ -35,7 +36,7 @@ export const rfqReducer = (state = initialState, action: RfqAction): RfqState =>
         ...state,
         loading: { ...state.loading, estimation: true },
         error: { ...state.error, estimation: null },
-        estimation: action.payload
+        estimation: serializeEstimation(action.payload)
       };
     case RfqConstants.GET_ESTIMATION_FAILURE:
       return {
