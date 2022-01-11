@@ -80,7 +80,7 @@ export type RfqApiMainReqs = GetEstimationApiReq
  * API Response
  */
 
-export type GetEstimationRes = RfqEstimation;
+export type GetEstimationRes = RfqEstimation<string>;
 
 export type AnyActionRes = {
   rfqId: string;
@@ -179,7 +179,7 @@ type ActionKeys = 'estimation'
 export type RfqState = {
   rfqData: null | RfqData;
   txData: null | RfqTxData;
-  estimation: null | RfqEstimation;
+  estimation: null | RfqEstimation<number>;
   confirmation: null | RfqConfirmation;
   loading: { [K in ActionKeys]: boolean };
   error: { [K in ActionKeys]: null | string };

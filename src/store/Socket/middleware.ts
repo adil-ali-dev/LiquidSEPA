@@ -72,6 +72,7 @@ export const createSocketMiddleware = (url?: string) => {
       }
 
       if (action.type !== SessionConstants.REFRESH_SESSION_FAILURE
+        && action.type !== SessionConstants.AUTHORIZE_SESSION_FAILURE
         && action.type.endsWith('FAILURE')
         && (action as AnyAction).error) {
         store.dispatch(alertActions.show({

@@ -263,10 +263,10 @@ export type RfqTxData = {
   unblindedLink: string;
 };
 
-export type RfqEstimation = {
-  charge: number;
-  fee: number;
-  payoutEstimation: number;
+export type RfqEstimation<T> = {
+  charge: T;
+  fee: T;
+  payoutEstimation: T;
 };
 
 
