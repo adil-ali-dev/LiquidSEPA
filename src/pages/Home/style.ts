@@ -90,4 +90,4 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
     padding: '50px 0 100px',
     backgroundColor: palette.background.default
   }
-}));
+}), { index: 1 });

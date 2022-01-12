@@ -118,4 +118,4 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
   sectionLink: {
     cursor: 'pointer'
   }
-}));
+}), { index: 1 });
