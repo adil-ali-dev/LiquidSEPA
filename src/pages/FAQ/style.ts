@@ -114,4 +114,4 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
   sectionTextSpaceMedium: {
     marginTop: '24px'
   }
-}));
+}), { index: 1 });
