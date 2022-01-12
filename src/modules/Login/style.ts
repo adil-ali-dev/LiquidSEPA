@@ -32,4 +32,4 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
       }
     }
   },
-}));
+}), { index: 1 });

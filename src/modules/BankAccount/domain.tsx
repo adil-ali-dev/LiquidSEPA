@@ -54,6 +54,7 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
     if (error) {
       controls.openStatus(error);
       dispatch(bankAccountsActions.createBankAccountFailure(error));
+      return;
     }
 
     dispatch(bankAccountsActions.createBankAccount({ ref }));

@@ -1,126 +1,124 @@
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 
-export const useStyles = makeStyles(({ palette }) =>
-  createStyles({
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      width: 75
-    },
+export const useStyles = makeStyles(({ palette }) => createStyles({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: 75
+  },
 
-    label: {
-      padding: '0 14px',
-      color: palette.text.secondary,
-      fontSize: '14px !important',
-      lineHeight: '14px !important',
-      cursor: 'pointer'
-    },
+  label: {
+    padding: '0 14px',
+    color: palette.text.secondary,
+    fontSize: '14px !important',
+    lineHeight: '14px !important',
+    cursor: 'pointer'
+  },
 
-    formGroup: {
-      position: 'relative',
-      padding: '14px 0',
-      borderRadius: '12px',
-      border: '1px solid #41748F',
-      backgroundColor: '#012438',
-      boxShadow: '0px 0px 0px 1px #012438 inset',
+  formGroup: {
+    position: 'relative',
+    padding: '14px 0',
+    borderRadius: '12px',
+    border: '1px solid #41748F',
+    backgroundColor: '#012438',
+    boxShadow: '0px 0px 0px 1px #012438 inset',
 
-      '&:focus-within': {
-        border: `1px solid ${palette.primary.main}`,
-
-        '& .MuiIconButton-root': {
-          color: palette.primary.main
-        }
-      },
-
-      '& .MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
-        padding: 0,
-        paddingTop: 6,
-        paddingLeft: 14
-      },
+    '&:focus-within': {
+      border: `1px solid ${palette.primary.main}`,
 
       '& .MuiIconButton-root': {
-        color: '#41748F'
+        color: palette.primary.main
       }
     },
 
-    inputContainer: {
-      display: 'flex',
-      alignItems: 'center'
+    '& .MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
+      padding: 0,
+      paddingTop: 6,
+      paddingLeft: 14
     },
 
-    input: {
-      flex: 1,
-      marginTop: '6px',
-      color: palette.text.primary,
-      fontSize: '16px',
-      lineHeight: '22px',
-      width: '100%',
-      padding: '0 14px',
+    '& .MuiIconButton-root': {
+      color: '#41748F'
+    }
+  },
 
-      '& div': {
-        border: 'none'
-      }
-    },
+  inputContainer: {
+    display: 'flex',
+    alignItems: 'center'
+  },
 
-    modalFlag: {
-      marginRight: 14
-    },
+  input: {
+    flex: 1,
+    marginTop: '6px',
+    color: palette.text.primary,
+    fontSize: '16px',
+    lineHeight: '22px',
+    width: '100%',
+    padding: '0 14px',
 
-    modalInfoOption: {
-      display: 'flex',
-      alignItems: 'center',
-      padding: '0 18px',
-      marginBottom: 14,
-      cursor: 'pointer'
-    },
+    '& div': {
+      border: 'none'
+    }
+  },
 
-    modalInfoOptionIcon: {
-      marginRight: 16,
-      width: 24,
-      height: 24,
-      borderRadius: 6,
-      overflow: 'hidden'
-    },
+  modalFlag: {
+    marginRight: 14
+  },
 
-    bankIcon: {
-      width: 48,
-      height: 48,
-      borderRadius: '100%'
-    },
+  modalInfoOption: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '0 18px',
+    marginBottom: 14,
+    cursor: 'pointer'
+  },
 
-    modalInfoOptionLabel: {
-      fontSize: '16px',
-      lineHeight: '24px',
-      color: '#142A36'
-    },
+  modalInfoOptionIcon: {
+    marginRight: 16,
+    width: 24,
+    height: 24,
+    borderRadius: 6,
+    overflow: 'hidden'
+  },
 
-    popup: {
-      overflowY: 'scroll',
-      maxHeight: 400
-    },
+  bankIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: '100%'
+  },
 
-    selectNoItems: {
-      padding: '24px',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center'
-    },
+  modalInfoOptionLabel: {
+    fontSize: '16px',
+    lineHeight: '24px',
+    color: '#142A36'
+  },
 
-    selectNoItemsNotice: {
-      color: '#142A36',
-      fontWeight: 500,
-      fontSize: '16px',
-      lineHeight: '19px'
-    },
+  popup: {
+    overflowY: 'scroll',
+    maxHeight: 400
+  },
 
-    addItemButton: {
-      marginTop: '24px',
-      height: '50px',
-      background: '#00B4E9',
-      borderRadius: '12px',
-      color: '#FFF',
-      width: '100%'
-    },
-  })
-)
+  selectNoItems: {
+    padding: '24px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+
+  selectNoItemsNotice: {
+    color: '#142A36',
+    fontWeight: 500,
+    fontSize: '16px',
+    lineHeight: '19px'
+  },
+
+  addItemButton: {
+    marginTop: '24px',
+    height: '50px',
+    background: '#00B4E9',
+    borderRadius: '12px',
+    color: '#FFF',
+    width: '100%'
+  }
+}), { index: 1 })

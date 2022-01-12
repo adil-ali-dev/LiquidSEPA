@@ -8,7 +8,7 @@ import { AuthSocketConstants } from './typedef';
 import { messageHandler } from './handlers';
 
 
-export const authSocketOptions: MiddlewareOptions<AuthSocketReq, AuthSocketRes, any> = {
+export const authSocketOptions: MiddlewareOptions<AuthSocketReq, AuthSocketRes, unknown> = {
   url: WS_AUTH_URL,
   actionTypes: [AuthSocketConstants.SEND, AuthSocketConstants.CONNECT, AuthSocketConstants.CLOSE],
   completedActionTypes: [AuthSocketConstants.CONNECTED, AuthSocketConstants.CLOSED],

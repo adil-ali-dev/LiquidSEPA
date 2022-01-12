@@ -6,8 +6,8 @@ import { sessionActions, sessionTokenValueSelector } from '../Session';
 function *connected() {
   const accessToken: null | string = yield select(sessionTokenValueSelector);
   yield (accessToken
-      ? put(sessionActions.authorize({ accessToken }))
-      : put(sessionActions.authorizeFailure('No Token'))
+      ? put(sessionActions.refresh({ accessToken }))
+      : put(sessionActions.refreshFailure('No Token'))
   );
 }
 

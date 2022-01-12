@@ -123,4 +123,4 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
     width: '100%',
     height: '100%'
   }
-}));
+}), { index: 1 });

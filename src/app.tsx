@@ -16,12 +16,15 @@ import { BankAccountProvider } from './contexts/BankAccount';
 const queryClient = new QueryClient();
 
 
+// persistor.purge();
+
+
 export const App: FC = () => (
   <Provider store={store}>
     <PersistGate persistor={persistor}>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <StylesProvider injectFirst>
+        <StylesProvider injectFirst>
+          <ThemeProvider theme={theme}>
             <CssBaseline />
             <SessionProvider>
               <WhitelistAddressProvider>
@@ -30,8 +33,8 @@ export const App: FC = () => (
                 </BankAccountProvider>
               </WhitelistAddressProvider>
             </SessionProvider>
-          </StylesProvider>
-        </ThemeProvider>
+          </ThemeProvider>
+        </StylesProvider>
       </QueryClientProvider>
     </PersistGate>
   </Provider>

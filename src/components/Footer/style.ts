@@ -81,4 +81,4 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
       marginTop: '16px'
     }
   }
-}));
+}), { index: 1 });
