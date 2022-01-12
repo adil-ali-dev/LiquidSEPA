@@ -87,4 +87,4 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
       top: 16
     },
   }
-}));
+}), { index: 1 });

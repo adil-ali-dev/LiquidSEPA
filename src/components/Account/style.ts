@@ -51,4 +51,4 @@ export const useStyles = makeStyles(({ palette }) => createStyles({
   },
 
   listItemMoreButton: {}
-}));
+}), { index: 1 });

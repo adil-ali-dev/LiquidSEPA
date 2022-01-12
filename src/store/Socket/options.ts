@@ -8,7 +8,7 @@ import { SocketConstants } from './typedef';
 import { messageHandler } from './handlers';
 
 
-export const mainSocketOptions: MiddlewareOptions<SocketReq, SocketRes, any> = {
+export const mainSocketOptions: MiddlewareOptions<SocketReq, SocketRes, unknown> = {
   url: WS_MAIN_URL,
   actionTypes: [SocketConstants.SEND, SocketConstants.CONNECT, SocketConstants.CLOSE],
   completedActionTypes: [SocketConstants.CONNECTED, SocketConstants.CLOSED],

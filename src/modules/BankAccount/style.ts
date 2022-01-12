@@ -246,4 +246,4 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
     justifyContent: 'space-between',
     alignItems: 'center'
   }
-}));
+}),{ index: 1 });

@@ -32,4 +32,4 @@ export const useStyles = makeStyles(({ palette }) => createStyles({
   dialogPaper: {
     overflowY: 'visible'
   }
-}));
+}), { index: 1 });

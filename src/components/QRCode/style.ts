@@ -16,4 +16,4 @@ export const useStyles = makeStyles(() => createStyles({
   containerBackground: {
     backgroundColor: '#FFF'
   },
-}));
+}), { index: 1 });

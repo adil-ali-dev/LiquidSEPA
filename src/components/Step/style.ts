@@ -19,4 +19,4 @@ export const useStyles = makeStyles(({ palette }) => createStyles({
   labelInactive: {
     color: '#56859F'
   }
-}));
+}), { index: 1 });

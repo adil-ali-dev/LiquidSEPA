@@ -36,5 +36,5 @@ export const useStyles = makeStyles(({ breakpoints }) => createStyles({
         marginBottom: 8
       }
     }
-  },
-}));
+  }
+}), { index: 1 });

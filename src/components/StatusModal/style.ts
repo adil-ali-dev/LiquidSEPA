@@ -57,4 +57,4 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
   buttonIndicator: {
     color: palette.text.primary
   }
-}));
+}), { index: 1 });

@@ -100,4 +100,4 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
       transform: 'translateX(50%)'
     }
   }
-}));
+}), { index: 1 });
