@@ -31,6 +31,12 @@ export const Header = memo(() => {
     root.style.overflow = burgerStatus ? 'hidden' : 'auto';
   }, [burgerStatus]);
 
+  useEffect(() => {
+    if (!status) return;
+
+    setBurgerStatus(false);
+  }, [status])
+
   // Resetting RFQ
   const handleLogoClick = useCallback(() => {
     if (!rfqConfirmation) return;

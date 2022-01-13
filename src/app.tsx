@@ -8,6 +8,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { theme } from './theme';
 import { store, persistor } from './store';
 import { Routes } from './routes';
+import { ErrorBoundary } from './error';
 import { SessionProvider } from './contexts/Session';
 import { WhitelistAddressProvider } from './contexts/WhitelistAddress';
 import { BankAccountProvider } from './contexts/BankAccount';
@@ -20,22 +21,24 @@ const queryClient = new QueryClient();
 
 
 export const App: FC = () => (
-  <Provider store={store}>
-    <PersistGate persistor={persistor}>
-      <QueryClientProvider client={queryClient}>
-        <StylesProvider injectFirst>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <SessionProvider>
-              <WhitelistAddressProvider>
-                <BankAccountProvider>
-                  <Routes />
-                </BankAccountProvider>
-              </WhitelistAddressProvider>
-            </SessionProvider>
-          </ThemeProvider>
-        </StylesProvider>
-      </QueryClientProvider>
-    </PersistGate>
-  </Provider>
+  <ErrorBoundary>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <QueryClientProvider client={queryClient}>
+          <StylesProvider injectFirst>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <SessionProvider>
+                <WhitelistAddressProvider>
+                  <BankAccountProvider>
+                    <Routes />
+                  </BankAccountProvider>
+                </WhitelistAddressProvider>
+              </SessionProvider>
+            </ThemeProvider>
+          </StylesProvider>
+        </QueryClientProvider>
+      </PersistGate>
+    </Provider>
+  </ErrorBoundary>
 );
