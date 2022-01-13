@@ -128,11 +128,7 @@ export const sessionReducer = (state = initialState, action: SessionAction): Ses
       };
 
     case SessionConstants.DESTROY_SESSION_REQUEST:
-      return {
-        ...state,
-        token: null,
-        authenticated: false
-      }
+      return initialState;
 
     default:
       return state;
