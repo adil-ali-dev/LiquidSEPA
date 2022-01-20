@@ -44,12 +44,8 @@ export const Autocomplete = memo<Props>(({
         value={ value }
         placeholder={ placeholder }
         openOnFocus
-        loadingText={
-          <AutocompleteAlert text="Loading..."/>
-        }
-        noOptionsText={
-          <AutocompleteAlert text={emptyText} />
-        }
+        loadingText={ <AutocompleteAlert text="Loading..."/> }
+        noOptionsText={ <AutocompleteAlert text={emptyText} /> }
         loading={ optionsLoading }
         renderInput={ props => renderInput({ ...props, placeholder, autoFocus: autoFocus && !value }) }
         disableClearable

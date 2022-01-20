@@ -20,10 +20,12 @@ export const createAppMiddleware = () => {
         store.dispatch(socketActions.close({ code: 1000 }));
       }
 
-      if (action.type !== SessionConstants.REFRESH_SESSION_FAILURE
+      if (
+        action.type !== SessionConstants.REFRESH_SESSION_FAILURE
         && action.type !== SessionConstants.AUTHORIZE_SESSION_FAILURE
         && action.type.endsWith('FAILURE')
-        && (action as AnyAction).error) {
+        && (action as AnyAction).error
+      ) {
         store.dispatch(alertActions.show({
           type: StatusModalType.ERROR,
           message: (action as AnyAction).error

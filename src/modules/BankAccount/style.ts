@@ -5,7 +5,12 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
     padding: '52px 32px',
     maxWidth: 495,
     flex: 1,
-    width: 495
+    width: 495,
+
+    [breakpoints.down('xs')]: {
+      width: '100%',
+      flex: 'unset'
+    }
   },
 
   modalHeader: {
