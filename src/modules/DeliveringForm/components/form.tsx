@@ -24,7 +24,6 @@ export const Form = memo<FormProps>(({
   account,
   address,
   isLoggedIn,
-  textAreaRef,
   addresses,
   accounts,
   handleSwapClick,

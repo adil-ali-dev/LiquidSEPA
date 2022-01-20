@@ -6,7 +6,8 @@ export enum SessionConstants {
   CANCEL_AUTH_EID_SUCCESS = '@session/CANCEL_AUTH_EID_SUCCESS',
   CANCEL_AUTH_EID_FAILURE = '@session/CANCEL_AUTH_EID_FAILURE',
 
-  UPDATE_AUTH_EID_REQUEST_ID = '@session/UPDATE_AUTH_EID_REQUEST_ID',
+  UPDATE_CREATE_ACCOUNT_REQUEST_ID = '@session/UPDATE_CREATE_ACCOUNT_REQUEST_ID',
+  UPDATE_CREATE_SESSION_REQUEST_ID = '@session/UPDATE_CREATE_SESSION_REQUEST_ID',
 
   UPDATE_CREATE_SESSION_STATUS = '@session/UPDATE_CREATE_SESSION_STATUS',
   UPDATE_CREATE_ACCOUNT_STATUS = '@session/UPDATE_CREATE_ACCOUNT_STATUS',
@@ -117,7 +118,8 @@ export type AuthEidStatusRes = {
  * Single Action
  */
 
-export type UpdateAuthEidRequestId = Action<SessionConstants.UPDATE_AUTH_EID_REQUEST_ID, AuthEidReq>;
+export type UpdateCreateAccountRequestId = Action<SessionConstants.UPDATE_CREATE_ACCOUNT_REQUEST_ID, AuthEidReq>;
+export type UpdateCreateSessionRequestId = Action<SessionConstants.UPDATE_CREATE_SESSION_REQUEST_ID, AuthEidReq>;
 
 export type UpdateCreateAccountStatus = Action<SessionConstants.UPDATE_CREATE_ACCOUNT_STATUS, AuthEidIdStatusRes>;
 export type UpdateCreateSessionStatus = Action<SessionConstants.UPDATE_CREATE_SESSION_STATUS, CreateSessionStatusRes>;
@@ -152,7 +154,7 @@ export type DestroyFailure = FailureAction<SessionConstants.DESTROY_SESSION_FAIL
  */
 
 export type SessionAction = CancelAuthEid | CancelAuthEidSuccess | CancelAuthEidFailure
-| UpdateAuthEidRequestId
+| UpdateCreateAccountRequestId | UpdateCreateSessionRequestId
 | CreateAccount | UpdateCreateAccountStatus | CreateAccountSuccess | CreateAccountFailure
 | CreateSession | UpdateCreateSessionStatus | CreateSessionSuccess | CreateSessionFailure
 | Authorize | AuthorizeSuccess | AuthorizeFailure
@@ -165,7 +167,8 @@ export type SessionAction = CancelAuthEid | CancelAuthEidSuccess | CancelAuthEid
  */
 
 export type SessionActions = {
-  updateAuthEidRequestId: (payload: AuthEidReq) => UpdateAuthEidRequestId;
+  updateCreateAccountRequestId: (payload: AuthEidReq) => UpdateCreateAccountRequestId;
+  updateCreateSessionRequestId: (payload: AuthEidReq) => UpdateCreateSessionRequestId;
 
   updateCreateAccountStatus: (payload: AuthEidIdStatusRes) => UpdateCreateAccountStatus;
   updateCreateSessionStatus: (payload: CreateSessionStatusRes) => UpdateCreateSessionStatus;
@@ -208,7 +211,8 @@ type ActionKeys = 'refresh'
 
 export type SessionState = {
   authenticated: null | boolean;
-  requestId: null | string;
+  loginRequestId: null | string;
+  registerRequestId: null | string;
   token: null | {
     value: string;
     expiresIn: number;

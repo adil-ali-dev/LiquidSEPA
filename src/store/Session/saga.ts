@@ -12,7 +12,6 @@ import { socketActions } from '../Socket';
 
 
 const authEidErrors = {
-  [AuthEidStatus.TIMEOUT]: 'Auth eID signature timeout',
   [AuthEidStatus.CANCELLED]: 'Auth eID signature has cancelled',
   [AuthEidStatus.REQUEST_CANCELLED]: 'Auth eID signature has cancelled',
   [AuthEidStatus.ACCOUNT_NOT_VERIFIED]: 'Auth eID account is not verified'
@@ -55,6 +54,11 @@ function *updateCreateAccountStatus({ payload }: UpdateCreateAccountStatus) {
     case AuthEidStatus.NOT_READY:
       break;
 
+    // Refreshing the QR when timeout.
+    case AuthEidStatus.TIMEOUT:
+      yield put(sessionActions.createAccount());
+      break;
+
     case AuthEidStatus.SUCCESS:
       yield put(sessionActions.createAccountSuccess());
       break;
@@ -68,12 +72,18 @@ function *updateCreateAccountStatus({ payload }: UpdateCreateAccountStatus) {
 function *updateCreateSessionStatus({ payload }: UpdateCreateSessionStatus) {
   if (payload.accessToken) {
     yield put(sessionActions.createSessionSuccess(payload));
+    return;
   }
 
   switch (payload.status) {
     case AuthEidStatus.NOT_SCANNED:
     case AuthEidStatus.NOT_READY:
     case AuthEidStatus.SUCCESS:
+      break;
+
+    // Refreshing the QR when timeout.
+    case AuthEidStatus.TIMEOUT:
+      yield put(sessionActions.createSession());
       break;
 
     default:

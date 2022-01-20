@@ -1,10 +1,15 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Props } from './typedef';
-import { AUTH_EID_URL_REQ_PREFIX } from '../../constants';
+import {
+  sessionActions,
+  sessionCreateAccountLoadingSelector,
+  sessionRegisterUrlSelector,
+  sessionRegisterRequestIdSelector,
+  sessionWaitingForSignatureSelector
+} from '../../store/Session';
 import { useSessionContext } from '../../contexts/Session';
-import { sessionActions, sessionCreateAccountErrorSelector, sessionCreateAccountLoadingSelector, sessionRequestIdSelector, sessionWaitingForSignatureSelector } from '../../store/Session';
 
 
 export const withRegisterDomain = (Component: FC<Props>) => () => {
@@ -12,8 +17,9 @@ export const withRegisterDomain = (Component: FC<Props>) => () => {
 
   const { status, statusRegisterModal, controls } = useSessionContext();
 
-  const requestId = useSelector(sessionRequestIdSelector);
-  const loadingCreateSession = useSelector(sessionCreateAccountLoadingSelector);
+  const registerUrl = useSelector(sessionRegisterUrlSelector);
+  const requestId = useSelector(sessionRegisterRequestIdSelector);
+  const loadingCreateAccount = useSelector(sessionCreateAccountLoadingSelector);
   const waitingForSignature = useSelector(sessionWaitingForSignatureSelector);
 
   useEffect(() => {
@@ -23,31 +29,32 @@ export const withRegisterDomain = (Component: FC<Props>) => () => {
   }, [statusRegisterModal]);
 
   useEffect(() => {
-    if (loadingCreateSession) return;
+    if (loadingCreateAccount) return;
 
     controls.closeRegister();
-  }, [loadingCreateSession]);
+  }, [loadingCreateAccount]);
+
+  const loading = useMemo(() => {
+    return waitingForSignature || (loadingCreateAccount && !registerUrl);
+  }, [loadingCreateAccount, waitingForSignature, registerUrl]);
 
   const handleClose = useCallback(() => {
     controls.closeRegister();
-  }, [requestId]);
+  }, []);
 
-  const loading = useMemo(() => {
-    return waitingForSignature || (loadingCreateSession && !requestId);
-  }, [loadingCreateSession, waitingForSignature, requestId]);
+  const handleExited = useCallback(() => {
+    if (!requestId) return;
 
-  const qrValue = useMemo(() => {
-    if (!requestId) return null;
-
-    return `${ AUTH_EID_URL_REQ_PREFIX }${ requestId }`;
+    dispatch(sessionActions.cancelAuthEid({ requestId }));
   }, [requestId]);
 
   return (
     <Component
       status={ statusRegisterModal }
-      handleClose={ handleClose }
       loading={ loading || status }
-      qrValue={ qrValue }
+      qrValue={ registerUrl }
+      handleClose={ handleClose }
+      handleExited={ handleExited }
     />
   );
 };

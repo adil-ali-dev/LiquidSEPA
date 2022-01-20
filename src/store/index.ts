@@ -57,7 +57,7 @@ const initStore = () => {
       predicate: (_, action) => !blacklistedActions.has(action.type)
     });
 
-    middleware.push(loggerMiddleware);
+    middleware.unshift(loggerMiddleware);
   }
 
   const persistedReducer = persistReducer(persistConfig, rootReducer);

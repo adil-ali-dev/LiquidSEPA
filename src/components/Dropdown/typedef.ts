@@ -29,13 +29,13 @@ export type DropdownContentProps = {
   emptyText: string;
   loginRequired?: boolean;
   headerText?: string;
-  handleAddClick?: () => void;
   checkSelected?: (item: any) => boolean;
   close: () => void;
   renderItem: (item: any, idx: number, active?: boolean) => ReactNode;
   keyExtractor: (item: any) => string;
   handleItemSelect: (item: any) => void;
   renderHeader?: () => ReactNode;
+  handleAddClick?: () => void;
 };
 
 export type DropdownAlertProps = {

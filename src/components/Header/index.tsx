@@ -1,4 +1,4 @@
-import React, { memo, useCallback, MouseEvent, useState, useEffect, useLayoutEffect } from 'react';
+import React, { memo, useCallback, MouseEvent, useState, useEffect, useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Button } from '@material-ui/core';
 import { Link, useLocation, useHistory } from 'react-router-dom';
@@ -7,10 +7,13 @@ import clsx from 'clsx';
 import { HOME_PATH, FAQ_PATH } from '../../constants';
 import { rfqActions, rfqConfirmationSelector } from '../../store/Rfq';
 import { useSessionContext } from '../../contexts/Session';
-import { useStyles } from './style';
+import { LoginAndRegisterButtonsModule } from '../../modules/LoginRegisterButtons';
 import { Burger } from '../Burger';
+import { useStyles } from './style';
+
 
 const faqRegExp = new RegExp(FAQ_PATH);
+
 
 export const Header = memo(() => {
   const dispatch = useDispatch();
@@ -20,7 +23,7 @@ export const Header = memo(() => {
 
   const [burgerStatus, setBurgerStatus] = useState(false);
 
-  const { status, destroy, controls } = useSessionContext();
+  const { status, destroy } = useSessionContext();
 
   const rfqConfirmation = useSelector(rfqConfirmationSelector);
 
@@ -51,14 +54,6 @@ export const Header = memo(() => {
     }
   }, [pathname]);
 
-  const handleRegisterClick = () => {
-    controls.openRegister();
-  };
-
-  const handleLoginClick = () => {
-    controls.openLogin();
-  };
-
   const handleLogoutClick = () => destroy();
 
   const handleBurgerClick = useCallback(() => {
@@ -79,25 +74,13 @@ export const Header = memo(() => {
             <Link className={ classes.headerLink } to={ FAQ_PATH } onClick={ handleFAQClick }>
               FAQ
             </Link>
-            { status
-              ? (
+            {
+              status ? (
                 <Button className={ classes.headerButton } onClick={ handleLogoutClick }>
                   Logout
                 </Button>
-              )
-              : (
-                <>
-                  <Button className={ classes.headerButton } onClick={ handleLoginClick }>
-                    Login
-                  </Button>
-                  <Button
-                    className={ clsx(classes.headerButton, classes.registerButton) }
-                    onClick={ handleRegisterClick }
-                  >
-                    Register
-                  </Button>
-                </>
-              ) }
+              ) : <LoginAndRegisterButtonsModule />
+            }
           </Grid>
         </Grid>
       </Grid>

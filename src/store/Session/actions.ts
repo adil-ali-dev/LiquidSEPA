@@ -1,7 +1,8 @@
 import { SessionActions, SessionConstants } from './typedef';
 
 export const sessionActions: SessionActions = {
-  updateAuthEidRequestId: payload => ({ type: SessionConstants.UPDATE_AUTH_EID_REQUEST_ID, payload }),
+  updateCreateAccountRequestId: payload => ({ type: SessionConstants.UPDATE_CREATE_ACCOUNT_REQUEST_ID, payload }),
+  updateCreateSessionRequestId: payload => ({ type: SessionConstants.UPDATE_CREATE_SESSION_REQUEST_ID, payload }),
 
   updateCreateAccountStatus: payload => ({ type: SessionConstants.UPDATE_CREATE_ACCOUNT_STATUS, payload }),
   updateCreateSessionStatus: payload => ({ type: SessionConstants.UPDATE_CREATE_SESSION_STATUS, payload }),
