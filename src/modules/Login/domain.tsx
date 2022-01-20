@@ -1,9 +1,14 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { AUTH_EID_URL_REQ_PREFIX } from '../../constants';
 import { Props } from './typedef';
-import { sessionActions, sessionCreateLoadingSelector, sessionRequestIdSelector, sessionWaitingForSignatureSelector } from '../../store/Session';
+import {
+  sessionActions,
+  sessionCreateLoadingSelector,
+  sessionLoginUrlSelector, sessionLoginRequestIdSelector,
+  sessionRegisterRequestIdSelector,
+  sessionWaitingForSignatureSelector
+} from '../../store/Session';
 import { useSessionContext } from '../../contexts/Session';
 
 
@@ -12,7 +17,8 @@ export const withLoginDomain = (Component: FC<Props>) => () => {
 
   const { status, statusLoginModal, controls } = useSessionContext();
 
-  const requestId = useSelector(sessionRequestIdSelector);
+  const loginUrl = useSelector(sessionLoginUrlSelector);
+  const requestId = useSelector(sessionLoginRequestIdSelector);
   const loadingCreateSession = useSelector(sessionCreateLoadingSelector);
   const waitingForSignature = useSelector(sessionWaitingForSignatureSelector);
 
@@ -28,26 +34,27 @@ export const withLoginDomain = (Component: FC<Props>) => () => {
     controls.closeLogin();
   }, [loadingCreateSession]);
 
+  const loading = useMemo(() => {
+    return waitingForSignature || (loadingCreateSession && !loginUrl);
+  }, [loadingCreateSession, waitingForSignature, loginUrl]);
+
   const handleClose = useCallback(() => {
     controls.closeLogin();
-  }, [requestId]);
+  }, []);
 
-  const loading = useMemo(() => {
-    return waitingForSignature || (loadingCreateSession && !requestId);
-  }, [loadingCreateSession, waitingForSignature, requestId]);
+  const handleExited = useCallback(() => {
+    if (!requestId) return;
 
-  const qrValue = useMemo(() => {
-    if (!requestId) return null;
-
-    return `${ AUTH_EID_URL_REQ_PREFIX }${ requestId }`;
+    dispatch(sessionActions.cancelAuthEid({ requestId }));
   }, [requestId]);
 
   return (
     <Component
       status={ statusLoginModal }
-      handleClose={ handleClose }
       loading={ loading || status }
-      qrValue={ qrValue }
+      qrValue={ loginUrl }
+      handleClose={ handleClose }
+      handleExited={ handleExited }
     />
   );
 };

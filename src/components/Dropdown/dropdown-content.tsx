@@ -7,6 +7,7 @@ import { DropdownContentProps } from './typedef';
 import { useSessionContext } from '../../contexts/Session';
 import { DropdownAlert } from './dropdown-alert';
 import { DropdownHeader } from './dropdown-header';
+import { isMobile } from 'react-device-detect';
 
 export const DropdownContent: FC<DropdownContentProps> = ({
   open,
@@ -24,7 +25,7 @@ export const DropdownContent: FC<DropdownContentProps> = ({
   handleItemSelect
 }) => {
   const classes = useStyles();
-  const { status, controls } = useSessionContext();
+  const { status } = useSessionContext();
 
   const alertText = useMemo(() => {
     return (loginRequired && !status) ? 'You need to be logged in' : emptyText;
@@ -35,12 +36,7 @@ export const DropdownContent: FC<DropdownContentProps> = ({
   }, [status]);
 
   const handleAlertButtonClick = useCallback(() => {
-    if (loginRequired && !status) {
-      controls.openLogin()
-    } else {
-      handleAddClick?.();
-    }
-
+    handleAddClick?.();
     close();
   }, [status, handleAddClick]);
 

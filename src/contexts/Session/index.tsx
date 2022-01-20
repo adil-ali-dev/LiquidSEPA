@@ -1,7 +1,8 @@
-import React, { createContext, FC, ReactNode, useState, useContext, useEffect } from 'react';
+import React, { createContext, FC, ReactNode, useState, useContext, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { sessionActions, sessionStatusSelector } from '../../store/Session';
+import { isMobile } from 'react-device-detect';
 
 
 const SessionContext = createContext({
@@ -11,9 +12,9 @@ const SessionContext = createContext({
   statusRegisterModal: false,
   destroy: (): void => {},
   controls: {
-    openLogin: (): void => {},
+    openLogin: (_?: string | null): void => {},
     closeLogin: (): void => {},
-    openRegister: (): void => {},
+    openRegister: (_?: string | null): void => {},
     closeRegister: (): void => {}
   }
 });
@@ -30,20 +31,35 @@ export const SessionProvider: FC<Props> = ({ children }) => {
   const [statusLoginModal, setStatusLoginModal] = useState(false);
   const [statusRegisterModal, setStatusRegisterModal] = useState(false);
 
+  const openUrl = (url?: string | null) => {
+    if (!url) return;
+
+    window.open(url, '_blank');
+  };
+
   const destroy = () => {
     dispatch(sessionActions.destroy());
   };
 
-  const openLogin = () => {
-    setStatusLoginModal(true);
+  const openLogin = (url?: string | null) => {
+    if (isMobile) {
+      console.log('HERE');
+      openUrl(url);
+    } else {
+      setStatusLoginModal(true);
+    }
   };
 
   const closeLogin = () => {
     setStatusLoginModal(false);
   };
 
-  const openRegister = () => {
-    setStatusRegisterModal(true);
+  const openRegister = (url?: string | null) => {
+    if (isMobile) {
+      openUrl(url);
+    } else {
+      setStatusRegisterModal(true);
+    }
   };
 
   const closeRegister = () => {

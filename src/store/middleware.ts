@@ -1,6 +1,6 @@
 import { AnyAction, Dispatch, MiddlewareAPI } from 'redux';
 
-import { StatusModalType } from '../typedef';
+import { AuthEidStatus, StatusModalType } from '../typedef';
 import { AppState } from './typedef';
 import { AuthSocketConstants } from './AuthSocket';
 import { socketActions } from './Socket';

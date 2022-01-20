@@ -20,6 +20,7 @@ import { StatusModal } from '../../components/StatusModal';
 import { StatusModalType } from '../../components/StatusModal/typedef';
 import { RequisitesHeader } from './components/requisites-header';
 import { Form } from './components/form';
+import { sessionLoginUrlSelector } from '../../store/Session';
 
 const MAX_CONFS = 2;
 const WIDGET_MARGIN_TOP = 72;
@@ -69,6 +70,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const deliverAmountDebounced = useDebounce(deliver.amount);
   const { copyToClipBoard } = useClipBoard();
 
+  const loginUrl = useSelector(sessionLoginUrlSelector);
   const estimatedFee = useSelector(rfqEstimatedFeeSelector);
   const estimatedReceive = useSelector(rfqEstimatedReceiveSelector);
   const loading = useSelector(rfqAnyActionLoadingSelector);
@@ -170,11 +172,15 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     setDeliver({ ...deliver, amount, placeholder, error: minError || maxError || null });
   }, [deliver]);
 
-  const handleContinueClick = useCallback((event: FormEvent<HTMLFormElement>) => {
+  const handleLoginClick = useCallback(() => {
+    authControls.openLogin(loginUrl);
+  }, [loginUrl])
+
+  const handleContinueClick =(event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!isLoggedIn) {
-      authControls.openLogin();
+      handleLoginClick();
       return;
     }
 
@@ -193,7 +199,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
         amount: deliver.amount
       }));
     }
-  }, [disabledContinue, sellSide, address, account?.name, deliver.amount, isLoggedIn]);
+  };
 
   const handleBackClick = useCallback(() => {
     if (!rfqConfirmation) return;
@@ -213,7 +219,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     copyToClipBoard('EE84 7700 7710 0294 1438');
   }, []);
 
-  const handleAddPress = () => {
+  const handleAddPress = useCallback(() => {
     if (isLoggedIn) {
       if (sellSide) {
         bankAccount.controls.open();
@@ -221,9 +227,9 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
         whitelistAddress.controls.open();
       }
     } else {
-      authControls.openLogin();
+      handleLoginClick();
     }
-  };
+  }, [isLoggedIn, sellSide, loginUrl]);
 
   const handleAddressSelect = useCallback((value: Address) => {
     setAddress(value);

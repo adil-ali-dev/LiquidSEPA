@@ -4,7 +4,8 @@ import { SessionAction, SessionConstants, SessionState } from './typedef';
 export const initialState: SessionState = {
   authenticated: null,
   token: null,
-  requestId: null,
+  loginRequestId: null,
+  registerRequestId: null,
   loading: {
     signature: false,
     createSession: false,
@@ -28,7 +29,8 @@ export const sessionReducer = (state = initialState, action: SessionAction): Ses
       return {
         ...state,
         loading: { ...state.loading, signature: false, createSession: false, createAccount: false },
-        requestId: null
+        loginRequestId: null,
+        registerRequestId: null
       };
     case SessionConstants.CANCEL_AUTH_EID_FAILURE:
       return {
@@ -46,7 +48,7 @@ export const sessionReducer = (state = initialState, action: SessionAction): Ses
       return {
         ...state,
         loading: { ...state.loading, createAccount: false, signature: false },
-        requestId: null
+        registerRequestId: null
       };
     case SessionConstants.CREATE_ACCOUNT_FAILURE:
       return {
@@ -55,8 +57,11 @@ export const sessionReducer = (state = initialState, action: SessionAction): Ses
         error: { ...state.error, createAccount: action.error }
       };
 
-    case SessionConstants.UPDATE_AUTH_EID_REQUEST_ID:
-      return { ...state, requestId: action.payload.requestId };
+    case SessionConstants.UPDATE_CREATE_ACCOUNT_REQUEST_ID:
+      return { ...state, registerRequestId: action.payload.requestId };
+    case SessionConstants.UPDATE_CREATE_SESSION_REQUEST_ID:
+      return { ...state, loginRequestId: action.payload.requestId };
+
 
     case SessionConstants.UPDATE_CREATE_SESSION_STATUS:
     case SessionConstants.UPDATE_CREATE_ACCOUNT_STATUS:
@@ -79,7 +84,7 @@ export const sessionReducer = (state = initialState, action: SessionAction): Ses
           value: action.payload.accessToken,
           expiresIn: action.payload.expiresIn
         },
-        requestId: null
+        loginRequestId: null
       };
     case SessionConstants.CREATE_SESSION_FAILURE:
       return {

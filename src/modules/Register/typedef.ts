@@ -3,4 +3,5 @@ export type Props = {
   loading: boolean;
   qrValue?: null | string;
   handleClose: () => void;
+  handleExited: () => void;
 };
