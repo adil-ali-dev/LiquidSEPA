@@ -1,6 +1,6 @@
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
-export const useStyles = makeStyles(({ palette }) => createStyles({
+export const useStyles = makeStyles(({ palette, breakpoints }) => createStyles({
   modal: {
     position: 'relative'
   },
@@ -18,6 +18,10 @@ export const useStyles = makeStyles(({ palette }) => createStyles({
       '& .MuiSvgIcon-root': {
         color: palette.text.secondary
       }
+    },
+
+    [breakpoints.down('xs')]: {
+      position: 'fixed'
     }
   },
 

@@ -149,7 +149,8 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
     color: '#142A36',
     fontWeight: 500,
     fontSize: '16px',
-    lineHeight: '19px'
+    lineHeight: '19px',
+    textAlign: 'center'
   },
 
   addItemButton: {

@@ -10,7 +10,7 @@ export const useStyles = makeStyles(({ breakpoints }) => createStyles({
     backgroundColor: '#1E5E80',
     borderRadius: 12,
 
-    [breakpoints.down('md')]: {
+    [breakpoints.down('xs')]: {
       flexDirection: 'column'
     }
   },
@@ -21,7 +21,7 @@ export const useStyles = makeStyles(({ breakpoints }) => createStyles({
     justifyContent: 'center',
     alignItems: 'center',
 
-    [breakpoints.down('md')]: {
+    [breakpoints.down('xs')]: {
       marginRight: 0
     }
   },
@@ -31,9 +31,9 @@ export const useStyles = makeStyles(({ breakpoints }) => createStyles({
     lineHeight: '22px',
     color: '#A1C9DE',
 
-    [breakpoints.down('md')]: {
-      '&:not(:last-child)': {
-        marginBottom: 8
+    [breakpoints.down('xs')]: {
+      '&:first-child': {
+        marginTop: 14
       }
     }
   }

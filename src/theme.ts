@@ -1,6 +1,7 @@
 import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 
 import { RubikLight, RubikRegular, RubikMedium, RubikBold } from './fonts';
+import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
 
 const palette = {
   primary: {
@@ -24,6 +25,7 @@ const palette = {
   }
 };
 
+const breakpoints = createBreakpoints({});
 const createdTheme = createMuiTheme({
   typography: {
     fontFamily: "'Rubik', sans-serif"
@@ -110,6 +112,27 @@ const createdTheme = createMuiTheme({
       },
       rounded: {
         borderRadius: 24
+      }
+    },
+    MuiDialog: {
+      paper: {
+        [breakpoints.down('xs')]: {
+          width: '100%',
+          margin: 0,
+          borderRadius: 0,
+          height: '100%',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }
+      },
+      paperScrollPaper: {
+        maxHeight: 'unset',
+        minHeight: 'fit-content',
+        overflow: 'auto',
+
+        '@media (max-height: 500px)': {
+          display: 'block'
+        }
       }
     },
     // @ts-ignore
