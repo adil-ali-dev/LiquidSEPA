@@ -1,4 +1,4 @@
-import { Action, FailureAction, EmptyAction, Address, SocketReq, SocketEndpoint } from '../../typedef';
+import { Action, FailureAction, EmptyAction, Address, SocketReq, SocketEndpoint, AuthEidStatus } from '../../typedef';
 
 
 export enum AddressesConstants {
@@ -6,12 +6,14 @@ export enum AddressesConstants {
   VALIDATE_ADDRESS_SUCCESS = '@addresses/VALIDATE_ADDRESS_SUCCESS',
   VALIDATE_ADDRESS_FAILURE = '@addresses/VALIDATE_ADDRESS_FAILURE',
 
-  WHITELIST_ADDRESS_REQUEST = '@addresses/WHITELIST_ADDRESS_REQUEST', 
-  WHITELIST_ADDRESS_SUCCESS = '@addresses/WHITELIST_ADDRESS_SUCCESS', 
-  WHITELIST_ADDRESS_FAILURE = '@addresses/WHITELIST_ADDRESS_FAILURE', 
+  WHITELIST_ADDRESS_REQUEST = '@addresses/WHITELIST_ADDRESS_REQUEST',
+  WHITELIST_ADDRESS_SUCCESS = '@addresses/WHITELIST_ADDRESS_SUCCESS',
+  WHITELIST_ADDRESS_FAILURE = '@addresses/WHITELIST_ADDRESS_FAILURE',
 
-  GET_ADDRESSES_REQUEST = '@addresses/GET_ADDRESSES_REQUEST', 
-  GET_ADDRESSES_SUCCESS = '@addresses/GET_ADDRESSES_SUCCESS', 
+  UPDATE_WHITELISTING_STATUS = '@addresses/UPDATE_WHITELISTING_STATUS',
+
+  GET_ADDRESSES_REQUEST = '@addresses/GET_ADDRESSES_REQUEST',
+  GET_ADDRESSES_SUCCESS = '@addresses/GET_ADDRESSES_SUCCESS',
   GET_ADDRESSES_FAILURE = '@addresses/GET_ADDRESSES_FAILURE'
 }
 
@@ -47,11 +49,11 @@ export type AddressesApiMainReqs = ValidateAddressApiReq | WhitelistAddressApiRe
  * API Response
  */
 
-export type ValidateAddressRes = {
-  status: boolean;
+export type WhitelistingStatusRes = {
+  status: AuthEidStatus;
 };
 
-export type WhitelistAddressRes = {
+export type ValidateAddressRes = {
   status: boolean;
 };
 
@@ -67,8 +69,10 @@ export type ValidateAddressSuccess = Action<AddressesConstants.VALIDATE_ADDRESS_
 export type ValidateAddressFailure = FailureAction<AddressesConstants.VALIDATE_ADDRESS_FAILURE>;
 
 export type WhitelistAddress = Action<AddressesConstants.WHITELIST_ADDRESS_REQUEST, WhitelistAddressReq>;
-export type WhitelistAddressSuccess = Action<AddressesConstants.WHITELIST_ADDRESS_SUCCESS, WhitelistAddressRes>;
+export type WhitelistAddressSuccess = EmptyAction<AddressesConstants.WHITELIST_ADDRESS_SUCCESS>;
 export type WhitelistAddressFailure = FailureAction<AddressesConstants.WHITELIST_ADDRESS_FAILURE>;
+
+export type UpdateWhitelistingStatus = Action<AddressesConstants.UPDATE_WHITELISTING_STATUS, WhitelistingStatusRes>;
 
 export type GetAddresses = EmptyAction<AddressesConstants.GET_ADDRESSES_REQUEST>;
 export type GetAddressesSuccess = Action<AddressesConstants.GET_ADDRESSES_SUCCESS, GetAddressesRes>;
@@ -79,9 +83,11 @@ export type GetAddressesFailure = FailureAction<AddressesConstants.GET_ADDRESSES
  * Action
  */
 
-export type AddressesAction = ValidateAddress | ValidateAddressSuccess | ValidateAddressFailure
-| WhitelistAddress | WhitelistAddressSuccess | WhitelistAddressFailure
-| GetAddresses | GetAddressesSuccess | GetAddressesFailure;
+export type AddressesAction =
+  ValidateAddress | ValidateAddressSuccess | ValidateAddressFailure
+  | WhitelistAddress | WhitelistAddressSuccess | WhitelistAddressFailure
+  | UpdateWhitelistingStatus
+  | GetAddresses | GetAddressesSuccess | GetAddressesFailure;
 
 
 /*
@@ -94,8 +100,10 @@ export type AddressesActions = {
   validateAddressFailure: (error: string) => ValidateAddressFailure;
 
   whitelistAddress: (payload: WhitelistAddressReq) => WhitelistAddress;
-  whitelistAddressSuccess: (payload: WhitelistAddressRes) => WhitelistAddressSuccess;
+  whitelistAddressSuccess: () => WhitelistAddressSuccess;
   whitelistAddressFailure: (error: string) => WhitelistAddressFailure;
+
+  updateWhitelistingStatus: (payload: WhitelistingStatusRes) => UpdateWhitelistingStatus;
 
   getAddresses: () => GetAddresses;
   getAddressesSuccess: (payload: GetAddressesRes) => GetAddressesSuccess;

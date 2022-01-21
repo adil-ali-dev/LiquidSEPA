@@ -25,15 +25,21 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
   const supportedBanksLoading = useSelector(bankAccountsSupportedBanksLoadingSelector);
   const agreementLink = useSelector(bankAccountsAgreementLinkSelector);
   const agreementLinkLoading = useSelector(bankAccountsAgreementLinkLoadingSelector);
-  const createLoading = useSelector(bankAccountsCreateLoadingSelector);
+  const loading = useSelector(bankAccountsCreateLoadingSelector);
   const waitingForContinue = useSelector(bankAccountsWaitingForContinueSelector);
 
   useEffect(() => {
-    if (!modalStatus && country && bank) {
-      setBank(null);
-      setCountry(null);
-    }
+    if (modalStatus) return;
+
+    setBank(null);
+    setCountry(null);
   }, [modalStatus]);
+
+  useEffect(() => {
+    if (!bank || !country || loading) return;
+
+    dispatch(bankAccountsActions.getBankAccounts());
+  }, [loading]);
 
   useEffect(() => {
     if (!country) return;
@@ -52,7 +58,6 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
     history.replace('');
 
     if (error) {
-      controls.openStatus(error);
       dispatch(bankAccountsActions.createBankAccountFailure(error));
       return;
     }
@@ -100,7 +105,7 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
       />
       <StatusModal
         type={ StatusModalType.PROCESSING }
-        status={ createLoading }
+        status={ loading }
       />
     </>
   );

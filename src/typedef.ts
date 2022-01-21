@@ -62,6 +62,7 @@ export enum SocketEndpoint {
 
   VALIDATE_ADDRESS = 'validate_payout_address',
   WHITELIST_ADDRESS = 'whitelist_address',
+  WHITELISTING_STATUS = 'address_status',
   GET_ADDRESSES = 'stable_coin_accounts',
 
   CREATE_BANK_ACCOUNT = 'save_accounts',

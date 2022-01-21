@@ -7,8 +7,10 @@ export const addressesActions: AddressesActions = {
   validateAddressFailure: error => ({ type: AddressesConstants.VALIDATE_ADDRESS_FAILURE, error }),
 
   whitelistAddress: payload => ({ type: AddressesConstants.WHITELIST_ADDRESS_REQUEST, payload }),
-  whitelistAddressSuccess: payload => ({ type: AddressesConstants.WHITELIST_ADDRESS_SUCCESS, payload }),
+  whitelistAddressSuccess: () => ({ type: AddressesConstants.WHITELIST_ADDRESS_SUCCESS }),
   whitelistAddressFailure: error => ({ type: AddressesConstants.WHITELIST_ADDRESS_FAILURE, error }),
+
+  updateWhitelistingStatus: payload => ({ type: AddressesConstants.UPDATE_WHITELISTING_STATUS, payload }),
 
   getAddresses: () => ({ type: AddressesConstants.GET_ADDRESSES_REQUEST }),
   getAddressesSuccess: payload => ({ type: AddressesConstants.GET_ADDRESSES_SUCCESS, payload }),

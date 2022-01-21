@@ -29,8 +29,8 @@ export const sessionReducer = (state = initialState, action: SessionAction): Ses
       return {
         ...state,
         loading: { ...state.loading, signature: false, createSession: false, createAccount: false },
-        loginRequestId: null,
-        registerRequestId: null
+        loginRequestId: state.loginRequestId === action.payload.requestId ? null : state.loginRequestId,
+        registerRequestId: state.registerRequestId === action.payload.requestId ? null : state.registerRequestId
       };
     case SessionConstants.CANCEL_AUTH_EID_FAILURE:
       return {

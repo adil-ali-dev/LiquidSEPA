@@ -1,7 +1,6 @@
-import { SocketEndpoint } from './../../typedef';
 import { delay, select, takeLatest, put } from 'redux-saga/effects';
 
-import { WS_MAIN_URL } from '../../constants';
+import { SocketEndpoint } from '../../typedef';
 import { AuthEidStatus, AuthSocketEndpoint, StatusModalType } from '../../typedef';
 import { CreateSessionSuccess, Refresh, SessionConstants, UpdateCreateSessionStatus, UpdateCreateAccountStatus, Authorize, AuthorizeSuccess, RefreshSuccess } from './typedef';
 import { authSocketActions } from '../AuthSocket';
