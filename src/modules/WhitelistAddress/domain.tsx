@@ -6,6 +6,8 @@ import { addressesActions, addressesAddressValidSelector, addressesWhitelistAddr
 import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
 import { useDebounce } from '../../hooks/Debounce';
 import { usePrevious } from '../../hooks/Previous';
+import { StatusModal } from '../../components/StatusModal';
+import { StatusModalType } from '../../components/StatusModal/typedef';
 
 
 export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () => {
@@ -30,10 +32,14 @@ export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () =>
   }, [modalStatus]);
 
   useEffect(() => {
-    if (loading || !address || error) return;
+    if (!address || error) return;
 
-    controls.close();
-  }, [loading])
+    if (loading) {
+      controls.close();
+    } else {
+      dispatch(addressesActions.getAddresses());
+    }
+  }, [loading]);
 
   useEffect(() => {
     if (!debouncedAddress && !debouncedAddressPrev) return;
@@ -69,6 +75,11 @@ export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () =>
         handleLabelChange={ handleLabelChange }
         handleAddressChange={ handleAddressChange }
         handleSubmit={ handleSubmit }
+      />
+      <StatusModal
+        type={ StatusModalType.PROCESSING }
+        processingText="Waiting for Auth eID sign"
+        status={ loading }
       />
     </>
 

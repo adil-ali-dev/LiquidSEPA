@@ -7,6 +7,7 @@ export enum StatusModalType {
 export type Props = {
   status: boolean;
   text?: null | string;
+  processingText?: null | string;
   onlyBody?: boolean;
   btnText?: string;
   type?: StatusModalType;

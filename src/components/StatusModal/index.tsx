@@ -8,6 +8,7 @@ import { Modal } from '../Modal';
 
 export const StatusModal = memo<Props>(({
   text,
+  processingText,
   type,
   btnText,
   onlyBody,
@@ -39,7 +40,7 @@ export const StatusModal = memo<Props>(({
       </Typography>
 
       <Typography className={ classes.modalMessage }>
-        { processing ? 'Please wait' : text }
+        { processing ? processingText || 'Please wait' : text }
       </Typography>
 
       <Button

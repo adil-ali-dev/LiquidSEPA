@@ -13,7 +13,8 @@ const socketExternalHandlers: SocketHandler = {
   [SocketEndpoint.AUTHORIZE]: [sessionActions.authorizeSuccess, sessionActions.authorizeFailure],
 
   [SocketEndpoint.VALIDATE_ADDRESS]: [addressesActions.validateAddressSuccess, addressesActions.validateAddressFailure],
-  [SocketEndpoint.WHITELIST_ADDRESS]: [addressesActions.whitelistAddressSuccess, addressesActions.whitelistAddressFailure],
+  [SocketEndpoint.WHITELIST_ADDRESS]: [null, addressesActions.whitelistAddressFailure],
+  [SocketEndpoint.WHITELISTING_STATUS]: [addressesActions.updateWhitelistingStatus, addressesActions.whitelistAddressFailure],
   [SocketEndpoint.GET_ADDRESSES]: [addressesActions.getAddressesSuccess, addressesActions.getAddressesFailure],
 
   [SocketEndpoint.CREATE_BANK_ACCOUNT]: [bankAccountsActions.createBankAccountSuccess, bankAccountsActions.createBankAccountFailure],

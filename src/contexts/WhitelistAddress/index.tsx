@@ -1,25 +1,17 @@
-import React, { useContext, useState, createContext, FC, ReactNode, useCallback, useEffect } from 'react';
+import React, { useContext, useState, createContext, FC, useCallback } from 'react';
 
-type Props = {
-  children: ReactNode;
-};
+import { Context, Props } from './typedef';
 
-const WhitelistAddressContext = createContext({
+const WhitelistAddressContext = createContext<Context>({
   modalStatus: false,
-  success: false,
-  error: null as null | string,
   controls: {
     open: () => {},
     close: () => {},
-    openStatus: (_?: string) => {},
-    closeStatus: () => {}
   }
 });
 
 export const WhitelistAddressProvider: FC<Props> = ({ children }) => {
   const [modalStatus, setModalStatus] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<null | string>(null);
 
   const open = useCallback(() => {
     setModalStatus(true);
@@ -29,32 +21,10 @@ export const WhitelistAddressProvider: FC<Props> = ({ children }) => {
     setModalStatus(false);
   }, []);
 
-  const openStatus = useCallback((errorMsg?: string) => {
-    close();
-
-    if (errorMsg) {
-      setError(errorMsg);
-    } else {
-      setSuccess(true);
-    }
-  }, []);
-
-  const closeStatus = useCallback(() => {
-    setSuccess(false);
-    setError(null);
-  }, []);
-
   const value = {
     modalStatus,
-    success,
-    error,
-    controls: {
-      open,
-      close,
-      openStatus,
-      closeStatus,
-    }
-  }
+    controls: { open, close }
+  };
 
   return (
     <WhitelistAddressContext.Provider value={ value }>
