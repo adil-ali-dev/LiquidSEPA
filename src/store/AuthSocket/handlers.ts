@@ -1,7 +1,8 @@
+import { Dispatch } from 'redux';
+
 import { AuthSocketEndpoint, AuthSocketRes } from '../../typedef';
 import { AuthSocketHandler } from './typedef';
 import { sessionActions } from '../Session';
-import { Dispatch } from 'redux';
 
 
 const authSocketExternalHandlers: AuthSocketHandler = {
@@ -11,7 +12,10 @@ const authSocketExternalHandlers: AuthSocketHandler = {
   [AuthSocketEndpoint.LOG_IN]: [sessionActions.updateCreateSessionRequestId, sessionActions.createSessionFailure],
   [AuthSocketEndpoint.LOG_IN_STATUS]: [sessionActions.updateCreateSessionStatus, sessionActions.createSessionFailure],
 
-  [AuthSocketEndpoint.REFRESH_SESSION]: [sessionActions.refreshSuccess, sessionActions.refreshFailure]
+  [AuthSocketEndpoint.REFRESH_SESSION]: [sessionActions.refreshSuccess, sessionActions.refreshFailure],
+
+  // We don't get response to this request
+  [AuthSocketEndpoint.CANCEL_REQUEST]: [null, null]
 };
 
 

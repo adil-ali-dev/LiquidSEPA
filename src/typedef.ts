@@ -32,7 +32,9 @@ export enum AuthSocketEndpoint {
   LOG_IN = 'login_init',
   LOG_IN_STATUS = 'sign_status',
 
-  REFRESH_SESSION = 'renew'
+  REFRESH_SESSION = 'renew',
+
+  CANCEL_REQUEST = 'cancel'
 }
 
 export type AuthSocketReq<M = AuthSocketEndpoint, A = {}> = {
@@ -113,7 +115,7 @@ export enum AuthEidStatus {
   // Auth eID errors:
   TIMEOUT = 'TIMEOUT',
   CANCELLED = 'USER_CANCELLED',
-  REQUEST_CANCELLED = 'PR_CANCELLED',
+  REQUEST_CANCELLED = 'RP_CANCELLED',
   ACCOUNT_NOT_VERIFIED = 'ACCOUNT_NOT_VERIFIED',
 
   // API errors:

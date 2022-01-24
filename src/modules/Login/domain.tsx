@@ -2,13 +2,7 @@ import React, { FC, useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Props } from './typedef';
-import {
-  sessionActions,
-  sessionCreateLoadingSelector,
-  sessionLoginUrlSelector, sessionLoginRequestIdSelector,
-  sessionRegisterRequestIdSelector,
-  sessionWaitingForSignatureSelector
-} from '../../store/Session';
+import { sessionActions, sessionCreateLoadingSelector, sessionLoginUrlSelector, sessionLoginRequestIdSelector, sessionWaitingForSignatureSelector } from '../../store/Session';
 import { useSessionContext } from '../../contexts/Session';
 
 
