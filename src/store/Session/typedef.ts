@@ -68,10 +68,11 @@ export type AuthorizeReq = {
 export type CreateSessionApiReq = AuthSocketReq<AuthSocketEndpoint.LOG_IN, CreateSessionReq>;
 export type CreateAccountApiReq = AuthSocketReq<AuthSocketEndpoint.REGISTER, CreateAccountReq>;
 export type RefreshApiReq = AuthSocketReq<AuthSocketEndpoint.REFRESH_SESSION, RefreshReq>;
+export type CancelAuthEidReqApiReq = AuthSocketReq<AuthSocketEndpoint.CANCEL_REQUEST, CancelAuthEidReq>;
 
 export type AuthenticateApiReq = SocketReq<SocketEndpoint.AUTHORIZE, AuthorizeReq>;
 
-export type SessionApiAuthReqs = CreateSessionApiReq | CreateAccountApiReq | RefreshApiReq;
+export type SessionApiAuthReqs = CreateSessionApiReq | CreateAccountApiReq | RefreshApiReq | CancelAuthEidReqApiReq;
 export type SessionApiMainReqs = AuthenticateApiReq;
 
 

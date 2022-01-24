@@ -2,7 +2,7 @@ import { delay, select, takeLatest, put } from 'redux-saga/effects';
 
 import { SocketEndpoint } from '../../typedef';
 import { AuthEidStatus, AuthSocketEndpoint, StatusModalType } from '../../typedef';
-import { CreateSessionSuccess, Refresh, SessionConstants, UpdateCreateSessionStatus, UpdateCreateAccountStatus, Authorize, AuthorizeSuccess, RefreshSuccess } from './typedef';
+import { CreateSessionSuccess, Refresh, SessionConstants, UpdateCreateSessionStatus, UpdateCreateAccountStatus, Authorize, RefreshSuccess, CancelAuthEid } from './typedef';
 import { authSocketActions } from '../AuthSocket';
 import { sessionTokenExpiresInSelector, sessionTokenValueSelector } from './selectors';
 import { alertActions } from '../Alert';
@@ -47,10 +47,23 @@ function *createAccount() {
   }));
 }
 
+function *cancelRequest({ payload }: CancelAuthEid) {
+  yield put(authSocketActions.send({
+    method: AuthSocketEndpoint.CANCEL_REQUEST,
+    api: 'login',
+    messageId: `${Date.now()}`,
+    args: payload
+  }));
+}
+
 function *updateCreateAccountStatus({ payload }: UpdateCreateAccountStatus) {
   switch (payload.status) {
     case AuthEidStatus.NOT_SCANNED:
     case AuthEidStatus.NOT_READY:
+      break;
+
+    case AuthEidStatus.REQUEST_CANCELLED:
+      yield put(sessionActions.cancelAuthEidSuccess());
       break;
 
     // Refreshing the QR when timeout.
@@ -78,6 +91,10 @@ function *updateCreateSessionStatus({ payload }: UpdateCreateSessionStatus) {
     case AuthEidStatus.NOT_SCANNED:
     case AuthEidStatus.NOT_READY:
     case AuthEidStatus.SUCCESS:
+      break;
+
+    case AuthEidStatus.REQUEST_CANCELLED:
+      yield put(sessionActions.cancelAuthEidSuccess());
       break;
 
     // Refreshing the QR when timeout.
@@ -142,6 +159,8 @@ export function *sessionSaga() {
 
   yield takeLatest(SessionConstants.UPDATE_CREATE_ACCOUNT_STATUS, updateCreateAccountStatus);
   yield takeLatest(SessionConstants.UPDATE_CREATE_SESSION_STATUS, updateCreateSessionStatus);
+
+  yield takeLatest(SessionConstants.CANCEL_AUTH_EID_REQUEST, cancelRequest);
 
   yield takeLatest(SessionConstants.CREATE_ACCOUNT_SUCCESS, createAccountSuccess);
   yield takeLatest(SessionConstants.REFRESH_SESSION_SUCCESS, refreshSessionSuccess);
