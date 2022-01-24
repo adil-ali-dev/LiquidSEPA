@@ -2,7 +2,7 @@ import { AnyAction, combineReducers, Reducer } from 'redux';
 
 import { AppState } from './typedef';
 import { alertReducer } from './Alert';
-import { AuthSocketConstants, authSocketReducer } from './AuthSocket';
+import { authSocketReducer } from './AuthSocket';
 import { SocketConstants, socketReducer } from './Socket';
 import { sessionReducer, initialState as sessionInitialState, SessionState } from './Session';
 import { addressesReducer } from './Addresses';
@@ -26,7 +26,7 @@ const appReducer = combineReducers<AppState | { session: SessionState }>({
 
 export const rootReducer: Reducer = (state: AppState, action: AnyAction) => {
   // Reset all store data to initial if socket gets closed
-  if (state && action.type === AuthSocketConstants.CLOSED) {
+  if (state && action.type === SocketConstants.CLOSED) {
     const { session, bankAccounts } = state;
 
     const newState = {
