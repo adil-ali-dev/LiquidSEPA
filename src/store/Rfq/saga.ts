@@ -50,11 +50,11 @@ function *confirm({ payload }: Confirm) {
 }
 
 function *updateRfqData({ payload }: UpdateRfqData) {
-  if (payload.status !== RfqStatus.LIMIT_REACHED) return;
+  if (payload.status !== RfqStatus.PENDING_REVIEW) return;
 
   yield put(alertActions.show({
-    type: StatusModalType.ERROR,
-    message: 'Limit reached'
+    type: StatusModalType.WARNING,
+    message: 'Lorem ipsum (PENDING_REVIEW)'
   }));
 }
 

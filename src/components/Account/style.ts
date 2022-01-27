@@ -41,7 +41,7 @@ export const useStyles = makeStyles(({ palette }) => createStyles({
     marginRight: 12,
     minWidth: 48,
     height: 48,
-    borderRadius: 24,
+    borderRadius: 8,
     overflow: 'hidden',
     backgroundColor: '#FFF'
   },

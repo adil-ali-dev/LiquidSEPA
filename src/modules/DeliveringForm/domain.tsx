@@ -2,7 +2,7 @@ import React, { ChangeEvent, ComponentType, FormEvent, KeyboardEvent, useCallbac
 import { useDispatch, useSelector } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 
-import { Address, Currency, BankAccount } from '../../typedef';
+import { Address, Currency, BankAccount, StatusModalType } from '../../typedef';
 import { Props, Product } from './typedef';
 import { addressesActions, addressesItemsSelector } from '../../store/Addresses';
 import { rfqActions, rfqAnyActionLoadingSelector, rfqConfirmationSelector, rfqEstimatedFeeSelector, rfqEstimatedReceiveSelector, rfqConfirmationDetailsSelector, rfqPaymentDetailsSelector, rfqTxConfirmationsCountSelector } from '../../store/Rfq';
@@ -17,7 +17,6 @@ import { Payment } from './components/payment';
 import { RequisitesFooter } from './components/requisites-footer';
 import { RequisitesMain } from './components/requisites-main';
 import { StatusModal } from '../../components/StatusModal';
-import { StatusModalType } from '../../components/StatusModal/typedef';
 import { RequisitesHeader } from './components/requisites-header';
 import { Form } from './components/form';
 import { sessionLoginUrlSelector } from '../../store/Session';

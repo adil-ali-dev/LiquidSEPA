@@ -1,8 +1,9 @@
 import React, { memo, useMemo } from 'react';
 import { Button, CircularProgress, Grid, Typography } from '@material-ui/core';
 
-import { Props, StatusModalType } from './typedef';
-import { StatusError, StatusSuccess, StatusWaiting } from '../../assets/Icons';
+import { StatusModalType } from '../../typedef';
+import { Props } from './typedef';
+import { StatusErrorIcon, StatusSuccessIcon, StatusWaitingIcon, StatusWarningIcon } from '../../assets/Icons';
 import { useStyles } from './style';
 import { Modal } from '../Modal';
 
@@ -21,13 +22,16 @@ export const StatusModal = memo<Props>(({
   const icon = useMemo(() => {
     switch (type) {
       case StatusModalType.ERROR:
-        return <StatusError className={ classes.icon }/>;
+        return <StatusErrorIcon className={ classes.icon }/>;
 
       case StatusModalType.PROCESSING:
-        return <StatusWaiting className={ classes.icon }/>;
+        return <StatusWaitingIcon className={ classes.icon }/>;
+
+      case StatusModalType.WARNING:
+        return <StatusWarningIcon className={ classes.icon }/>;
 
       default:
-        return <StatusSuccess className={ classes.icon }/>;
+        return <StatusSuccessIcon className={ classes.icon }/>;
     }
   }, [type]);
 

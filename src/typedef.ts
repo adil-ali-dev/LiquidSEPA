@@ -211,7 +211,7 @@ export enum RfqDirection {
 }
 
 export enum RfqStatus {
-  LIMIT_REACHED = 'Limit_REACHED'
+  PENDING_REVIEW = 'PENDING_REVIEW'
 }
 
 export type RfqData<T> = {
@@ -280,7 +280,8 @@ export type RfqEstimation<T> = {
 export enum StatusModalType {
   SUCCESS = 'Success',
   PROCESSING = 'Processing',
-  ERROR = 'Error'
+  ERROR = 'Error',
+  WARNING = 'Warning'
 }
 
 

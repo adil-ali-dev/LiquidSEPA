@@ -1,13 +1,13 @@
 import React, { ChangeEvent, FC, FormEvent, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { StatusModalType } from '../../typedef';
 import { WrappedProps } from './typedef';
 import { addressesActions, addressesAddressValidSelector, addressesWhitelistAddressErrorSelector, addressesWhitelistAddressLoadingSelector } from '../../store/Addresses';
 import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
 import { useDebounce } from '../../hooks/Debounce';
 import { usePrevious } from '../../hooks/Previous';
 import { StatusModal } from '../../components/StatusModal';
-import { StatusModalType } from '../../components/StatusModal/typedef';
 
 
 export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () => {

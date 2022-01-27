@@ -1,8 +1,4 @@
-export enum StatusModalType {
-  SUCCESS = 'Success',
-  PROCESSING = 'Processing',
-  ERROR = 'Error'
-}
+import { StatusModalType } from '../../typedef';
 
 export type Props = {
   status: boolean;
