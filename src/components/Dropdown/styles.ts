@@ -85,7 +85,7 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
 
   selectIconWrap: {
     position: 'absolute',
-    top: 34,
+    top: 40,
     right: 12,
   },
 
@@ -99,7 +99,7 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
   },
 
   selectedContainer: {
-    marginTop: 7,
+    marginTop: 12,
     paddingRight: 24,
     display: 'flex',
     alignItems: 'center'

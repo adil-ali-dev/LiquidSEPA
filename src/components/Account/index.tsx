@@ -17,17 +17,12 @@ export const Account = memo<Props>(({ value, active, idx, cropAddress }) => {
 
   return isBank ? (
       <Grid className={ classes.container }>
-      {
-        // @ts-ignore
-        value.account_details?.bank_id && (
-          // @ts-ignore
-          <img className={ classes.logo } src={ value.logo } alt={ value.account_details?.bankName } />
-        )
-      }
+      {(value.accountDetails?.bankId && value.logo) && (
+        <img className={ classes.logo } src={ value.logo } alt={ value.accountDetails?.bankName } />
+      )}
       <Grid className={ classes.textContainer }>
         <Typography className={ clsx(classes.headline, active && classes.headlineActive) }>
-          {/* @ts-ignore */}
-          { value.account_details?.bankName || `Account ${ (idx || 0) + 1 }` }
+          { value.accountDetails?.bankName || `Account ${ (idx || 0) + 1 }` }
         </Typography>
         <Typography className={ classes.subHeadline }>
           { IbanService.format(value.name) }
@@ -42,6 +37,6 @@ export const Account = memo<Props>(({ value, active, idx, cropAddress }) => {
       <Typography className={ clsx(classes.subHeadline, active && classes.subHeadlineActive) }>
         { cropAddress ? BitcoinAddressService.crop(value.acctNum, 135) : value.acctNum }
       </Typography>
-    </Grid>   
+    </Grid>
     );
 });

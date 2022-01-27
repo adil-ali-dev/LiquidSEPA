@@ -3,12 +3,11 @@ import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { default as countries } from '../../constants/nordigen-countries';
-import { SupportedBank, Country } from '../../typedef';
+import { SupportedBank, Country, StatusModalType } from '../../typedef';
 import { Props } from './typedef';
 import { bankAccountsActions, bankAccountsAgreementLinkLoadingSelector, bankAccountsAgreementLinkSelector, bankAccountsCreateLoadingSelector, bankAccountsSupportedBanksLoadingSelector, bankAccountsSupportedBanksSelector, bankAccountsWaitingForContinueSelector } from '../../store/BankAccounts';
 import { sessionStatusSelector } from '../../store/Session';
 import { useBankAccountContext } from '../../contexts/BankAccount';
-import { StatusModalType } from '../../components/StatusModal/typedef';
 import { StatusModal } from '../../components/StatusModal';
 
 export const withBankAccountDomain = (Component: FC<Props>) => () => {

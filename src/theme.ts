@@ -14,6 +14,9 @@ const palette = {
   success: {
     main: '#00E9A3'
   },
+  warning: {
+    main: '#FFD000'
+  },
   text: {
     primary: '#FFF',
     secondary: '#56859F',
