@@ -250,6 +250,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
             <Payment
               paymentDetails={rfqPaymentDetails}
               sellSide={sellSide}
+              maxConfs={MAX_CONFS}
               confs={confirmations}
               handleTxCopyClick={handleTxCopyClick}
             />
