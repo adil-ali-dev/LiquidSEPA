@@ -13,7 +13,7 @@ import { ConverterService, IbanService } from '../../../services';
 export const Payment = memo<PaymentProps>(({
   sellSide,
   confs,
-  confirmed,
+  maxConfs,
   paymentDetails,
   handleTxCopyClick
 }) => {
@@ -23,40 +23,40 @@ export const Payment = memo<PaymentProps>(({
     <>
       <Row label="Txid" spaceLarge>
         <PaymentTxid
-          txId={ paymentDetails.txId }
-          link={ paymentDetails.link }
-          handleTxCopyClick={ handleTxCopyClick }
+          txId={paymentDetails.txId}
+          link={paymentDetails.link}
+          handleTxCopyClick={handleTxCopyClick}
         />
       </Row>
       <Row
         label="Received"
-        value={ ConverterService.separate(paymentDetails.received.amount.toFixed(8), ',') }
-        product={ Currency.EURX }
+        value={ConverterService.separate(paymentDetails.received.amount.toFixed(8), ',')}
+        product={Currency.EURX}
         spaceMedium
       />
       <Row
         label="Confirmations"
-        value={ `${ confs }/2` }
+        value={`${ confs }/${maxConfs}`}
         spaceSmall
       />
     </>
   );
 
   const sellDetails = (
-    <PaymentDetails label={ confirmed ? 'Payment sent' : 'Payment pending' }>
+    <PaymentDetails label={ paymentDetails.completed ? 'Payment sent' : 'Payment pending' }>
       <Row
         label="Account name"
-        value={ paymentDetails.sending.nameOnAccount }
+        value={paymentDetails.sending.nameOnAccount}
       />
       <Row
         label="IBAN"
-        value={ IbanService.format(paymentDetails.sending.iban) }
+        value={IbanService.format(paymentDetails.sending.iban)}
         spaceSmall
       />
       <Row
         label="Sending amount"
-        value={ ConverterService.separate(paymentDetails.sending.amount.toFixed(2), ',') }
-        product={ Currency.EUR }
+        value={ConverterService.separate(paymentDetails.sending.amount.toFixed(2), ',')}
+        product={Currency.EUR}
         spaceSmall
       />
     </PaymentDetails>
@@ -66,18 +66,18 @@ export const Payment = memo<PaymentProps>(({
     <>
       <Row
         label="Received amount"
-        value={ ConverterService.separate(paymentDetails.received.amount.toFixed(2), ',') }
-        product={ Currency.EUR }
+        value={ConverterService.separate(paymentDetails.received.amount.toFixed(2), ',')}
+        product={Currency.EUR}
         spaceMedium
       />
       <Row
         label="Account Name"
-        value={ paymentDetails.received.nameOnAccount }
+        value={paymentDetails.received.nameOnAccount}
         spaceSmall
       />
       <Row
         label="IBAN"
-        value={ IbanService.format(paymentDetails.received.iban) }
+        value={IbanService.format(paymentDetails.received.iban)}
         spaceSmall
       />
     </>
@@ -87,31 +87,31 @@ export const Payment = memo<PaymentProps>(({
     <PaymentDetails label="EURx broadcast">
       <Row label="Txid">
         <PaymentTxid
-          txId={ paymentDetails.txId }
-          link={ paymentDetails.link }
-          handleTxCopyClick={ handleTxCopyClick }
+          txId={paymentDetails.txId}
+          link={paymentDetails.link}
+          handleTxCopyClick={handleTxCopyClick}
         />
       </Row>
       <Row
         label="Sending amount"
-        value={ ConverterService.separate(paymentDetails.sending.amount.toFixed(8), ',') }
-        product={ Currency.EURX }
+        value={ConverterService.separate(paymentDetails.sending.amount.toFixed(8), ',')}
+        product={Currency.EURX}
         spaceLarge
       />
       <Row
         label="Confirmations"
-        value={ `${ confs }/2` }
+        value={`${ confs }/${maxConfs}`}
         spaceSmall
       />
     </PaymentDetails>
   );
 
   return (
-    <Grid className={ classes.payment }>
-      <PaymentHeader confirmed={ confirmed }>
-        { sellSide ? sellHeader : buyHeader }
+    <Grid className={classes.payment}>
+      <PaymentHeader completed={paymentDetails.completed}>
+        {sellSide ? sellHeader : buyHeader}
       </PaymentHeader>
-      { sellSide ? sellDetails : buyDetails }
+      {sellSide ? sellDetails : buyDetails}
     </Grid>
   );
 });

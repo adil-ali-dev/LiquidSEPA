@@ -211,7 +211,8 @@ export enum RfqDirection {
 }
 
 export enum RfqStatus {
-  PENDING_REVIEW = 'PENDING_REVIEW'
+  PENDING_REVIEW = 'PENDING_REVIEW',
+  COMPLETED = 'COMPLETED'
 }
 
 export type RfqData<T> = {
@@ -247,6 +248,7 @@ export type RfqConfirmationDetails = RfqConfirmation & {
 export type RfqPaymentDetails = {
   txId: string;
   link: string;
+  completed: boolean;
   received: {
     amount: number;
     iban?: string;
