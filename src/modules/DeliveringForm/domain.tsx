@@ -58,7 +58,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
 
   const whitelistAddress = useWhitelistAddressContext();
   const bankAccount = useBankAccountContext();
-  const { status: isLoggedIn, controls: authControls } = useSessionContext();
+  const { status: isLoggedIn, statusForUI: isLoggedInForUI, controls: authControls } = useSessionContext();
 
   const [deliver, setDeliver] = useState(initialDeliver);
   const [receive, setReceive] = useState(initialReceive);
@@ -285,7 +285,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
               fee={ estimatedFee }
               address={ address }
               deliver={ deliver }
-              isLoggedIn={ isLoggedIn }
+              isLoggedIn={ isLoggedInForUI }
               receive={ receive }
               textAreaRef={ textAreaRef }
               addresses={ whitelistedAddresses }

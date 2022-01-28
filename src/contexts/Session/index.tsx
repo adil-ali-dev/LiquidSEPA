@@ -1,12 +1,13 @@
 import React, { createContext, FC, ReactNode, useState, useContext, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { sessionActions, sessionStatusSelector } from '../../store/Session';
+import { sessionActions, sessionHadSessionSelector, sessionStatusSelector } from '../../store/Session';
 import { isMobile } from 'react-device-detect';
 
 
 const SessionContext = createContext({
   status: false,
+  statusForUI: false,
   loading: false,
   statusLoginModal: false,
   statusRegisterModal: false,
@@ -28,6 +29,7 @@ export const SessionProvider: FC<Props> = ({ children }) => {
   const dispatch = useDispatch();
 
   const status = useSelector(sessionStatusSelector);
+  const statusForUI = useSelector(sessionHadSessionSelector);
   const [statusLoginModal, setStatusLoginModal] = useState(false);
   const [statusRegisterModal, setStatusRegisterModal] = useState(false);
 
@@ -43,7 +45,6 @@ export const SessionProvider: FC<Props> = ({ children }) => {
 
   const openLogin = (url?: string | null) => {
     if (isMobile) {
-      console.log('HERE');
       openUrl(url);
     } else {
       setStatusLoginModal(true);
@@ -68,6 +69,7 @@ export const SessionProvider: FC<Props> = ({ children }) => {
 
   const value = {
     status: !!status,
+    statusForUI,
     statusLoginModal,
     statusRegisterModal,
     loading: status === null,

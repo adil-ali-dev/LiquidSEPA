@@ -119,7 +119,18 @@ export enum AuthEidStatus {
   ACCOUNT_NOT_VERIFIED = 'ACCOUNT_NOT_VERIFIED',
 
   // API errors:
-  REQUEST_ERROR = 'REQUEST_ERROR',
+  REQUEST_ERROR = 'REQUEST_ERROR'
+}
+
+
+/*
+ * Session Token
+ */
+
+export type SessionToken = {
+  value: string;
+  expirationDate: number;
+  expiresIn: number;
 }
 
 

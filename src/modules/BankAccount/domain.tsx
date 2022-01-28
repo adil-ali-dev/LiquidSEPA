@@ -35,12 +35,6 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
   }, [modalStatus]);
 
   useEffect(() => {
-    if (!bank || !country || loading) return;
-
-    dispatch(bankAccountsActions.getBankAccounts());
-  }, [loading]);
-
-  useEffect(() => {
     if (!country) return;
 
     dispatch(bankAccountsActions.getSupportedBanks({ countryCode: country.code }));

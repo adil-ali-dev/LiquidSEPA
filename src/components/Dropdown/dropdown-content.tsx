@@ -25,20 +25,20 @@ export const DropdownContent: FC<DropdownContentProps> = ({
   handleItemSelect
 }) => {
   const classes = useStyles();
-  const { status } = useSessionContext();
+  const { statusForUI } = useSessionContext();
 
   const alertText = useMemo(() => {
-    return (loginRequired && !status) ? 'You need to be logged in' : emptyText;
-  }, [status, emptyText]);
+    return (loginRequired && !statusForUI) ? 'You need to be logged in' : emptyText;
+  }, [statusForUI, emptyText]);
 
   const alertButtonText = useMemo(() => {
-    return (loginRequired && !status) ? 'Login' : '+ ADD';
-  }, [status]);
+    return (loginRequired && !statusForUI) ? 'Login' : '+ ADD';
+  }, [statusForUI]);
 
   const handleAlertButtonClick = useCallback(() => {
     handleAddClick?.();
     close();
-  }, [status, handleAddClick]);
+  }, [statusForUI, handleAddClick]);
 
   const renderDropdownItem = useCallback((item: any, idx: number) => {
     const handleDropdownItemClick = () => {
@@ -70,11 +70,11 @@ export const DropdownContent: FC<DropdownContentProps> = ({
         <DropdownHeader
           text={ headerText }
           close={ close }
-          buttonText={ (status && !!data.length) ? '+ ADD' : null }
+          buttonText={ (statusForUI && !!data.length) ? '+ ADD' : null }
           handleButtonClick={ handleAddClick }
         />
       )}
-      {(!data.length || !status) ? (
+      {(!data.length || !statusForUI) ? (
           <DropdownAlert
             text={ alertText }
             buttonText={ alertButtonText }

@@ -1,5 +1,6 @@
 import { AuthEidStatus } from '../../typedef';
 import { SessionAction, SessionConstants, SessionState } from './typedef';
+import { serializeToken } from './serializers';
 
 export const initialState: SessionState = {
   authenticated: null,
@@ -80,10 +81,7 @@ export const sessionReducer = (state = initialState, action: SessionAction): Ses
       return {
         ...state,
         loading: { ...state.loading, createSession: false, signature: false },
-        token: {
-          value: action.payload.accessToken,
-          expiresIn: action.payload.expiresIn
-        },
+        token: serializeToken(action.payload),
         loginRequestId: null
       };
     case SessionConstants.CREATE_SESSION_FAILURE:
@@ -118,10 +116,7 @@ export const sessionReducer = (state = initialState, action: SessionAction): Ses
       return {
         ...state,
         loading: { ...state.loading, refresh: false },
-        token: {
-          value: action.payload.accessToken,
-          expiresIn: action.payload.expiresIn
-        }
+        token: serializeToken(action.payload)
       };
     case SessionConstants.REFRESH_SESSION_FAILURE:
       return {

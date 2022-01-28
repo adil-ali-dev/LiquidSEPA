@@ -32,17 +32,13 @@ export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () =>
   }, [modalStatus]);
 
   useEffect(() => {
-    if (!address || error) return;
+    if (!address || error || !loading) return;
 
-    if (loading) {
-      controls.close();
-    } else {
-      dispatch(addressesActions.getAddresses());
-    }
+    controls.close();
   }, [loading]);
 
   useEffect(() => {
-    if (!debouncedAddress && !debouncedAddressPrev) return;
+    if ((!debouncedAddress && !debouncedAddressPrev) || loading) return;
 
     dispatch(addressesActions.validateAddress({ address: debouncedAddress }));
   }, [debouncedAddress]);
