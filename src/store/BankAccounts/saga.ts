@@ -1,14 +1,13 @@
-import { takeLatest, put, call } from 'redux-saga/effects';
+import { takeLatest, put } from 'redux-saga/effects';
 
 import { LIVE } from '../../constants';
 import { SocketEndpoint, StatusModalType } from '../../typedef';
-import { BankAccountsConstants, CreateAgreementLink, CreateAgreementLinkSuccess, CreateBankAccount, GetSupportedBanks } from './typedef';
+import { BankAccountsConstants, CreateAgreementLink, CreateBankAccount, GetSupportedBanks } from './typedef';
 import { alertActions } from '../Alert';
 import { socketActions } from '../Socket';
-import { bankAccountsActions } from '.';
+import { bankAccountsActions } from './actions';
 
 
-const WAITING_FOR_CONTINUE_KEY = 'waiting-for-continue';
 const ACCOUNT_API = 'account';
 
 
@@ -50,9 +49,10 @@ function *createBankAccount({ payload }: CreateBankAccount) {
 
 function *createBankAccountSuccess() {
   yield put(bankAccountsActions.getBankAccounts());
+
   yield put(alertActions.show({
     type: StatusModalType.SUCCESS,
-    message: 'Account successfully added'
+    message: 'Account added successfully'
   }));
 }
 

@@ -1,4 +1,14 @@
-import { Action, FailureAction, EmptyAction, AuthEidStatus, SocketReq, AuthSocketEndpoint, SocketEndpoint, AuthSocketReq } from '../../typedef';
+import {
+  Action,
+  FailureAction,
+  EmptyAction,
+  AuthEidStatus,
+  SocketReq,
+  AuthSocketEndpoint,
+  SocketEndpoint,
+  AuthSocketReq,
+  SessionToken
+} from '../../typedef';
 
 
 export enum SessionConstants {
@@ -88,7 +98,7 @@ export type AuthEidIdStatusRes = {
   status: AuthEidStatus;
 };
 
-type CreateSessionRes = {
+export type CreateSessionRes = {
   accessToken: string;
   expiresIn: number; // Seconds
 };
@@ -214,10 +224,7 @@ export type SessionState = {
   authenticated: null | boolean;
   loginRequestId: null | string;
   registerRequestId: null | string;
-  token: null | {
-    value: string;
-    expiresIn: number;
-  };
+  token: null | SessionToken;
   loading: { [K in ActionKeys]: boolean };
   error: { [K in ActionKeys]: null | string };
 };

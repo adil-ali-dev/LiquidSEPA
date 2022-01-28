@@ -23,7 +23,7 @@ export const Header = memo(() => {
 
   const [burgerStatus, setBurgerStatus] = useState(false);
 
-  const { status, destroy } = useSessionContext();
+  const { statusForUI, destroy } = useSessionContext();
 
   const rfqConfirmation = useSelector(rfqConfirmationSelector);
 
@@ -35,10 +35,10 @@ export const Header = memo(() => {
   }, [burgerStatus]);
 
   useEffect(() => {
-    if (!status) return;
+    if (!statusForUI) return;
 
     setBurgerStatus(false);
-  }, [status])
+  }, [statusForUI])
 
   // Resetting RFQ
   const handleLogoClick = useCallback(() => {
@@ -75,7 +75,7 @@ export const Header = memo(() => {
               FAQ
             </Link>
             {
-              status ? (
+              statusForUI ? (
                 <Button className={ classes.headerButton } onClick={ handleLogoutClick }>
                   Logout
                 </Button>

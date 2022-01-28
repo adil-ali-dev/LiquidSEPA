@@ -63,9 +63,10 @@ function *updateWhitelistingStatus({ payload }: UpdateCreateAccountStatus) {
 
 function *whitelistAddressSuccess() {
   yield put(addressesActions.getAddresses());
+
   yield put(alertActions.show({
     type: StatusModalType.SUCCESS,
-    message: 'Address successfully whitelisted'
+    message: 'Address whitelisted successfully'
   }));
 }
 

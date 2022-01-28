@@ -1,6 +1,6 @@
-import { AppState } from '../typedef';
 import { createSelector } from 'reselect';
 
+import { AppState } from '../typedef';
 import { AUTH_EID_URL_REQ_PREFIX } from '../../constants';
 
 
@@ -8,6 +8,7 @@ export const sessionSelector = (state: AppState) => state.session;
 export const sessionStatusSelector = (state: AppState) => state.session.authenticated;
 export const sessionTokenSelector = (state: AppState) => state.session.token;
 export const sessionTokenValueSelector = (state: AppState) => state.session.token?.value;
+export const sessionTokenExpirationDateSelector = (state: AppState) => state.session.token?.expirationDate;
 export const sessionTokenExpiresInSelector = (state: AppState) => state.session.token?.expiresIn;
 export const sessionLoginRequestIdSelector = (state: AppState) => state.session.loginRequestId;
 export const sessionRegisterRequestIdSelector = (state: AppState) => state.session.registerRequestId;
@@ -27,4 +28,9 @@ export const sessionLoginUrlSelector = createSelector(
 export const sessionRegisterUrlSelector = createSelector(
   [sessionRegisterRequestIdSelector],
   requestId => requestId ? `${ AUTH_EID_URL_REQ_PREFIX }${ requestId }` : null
+);
+
+export const sessionHadSessionSelector = createSelector(
+  [sessionTokenValueSelector],
+  token => !!token
 );
