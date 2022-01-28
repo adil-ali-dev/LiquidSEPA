@@ -249,7 +249,6 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
           !!rfqConfirmation && (rfqPaymentDetails ? (
             <Payment
               paymentDetails={rfqPaymentDetails}
-              confirmed={confirmations === MAX_CONFS}
               sellSide={sellSide}
               confs={confirmations}
               handleTxCopyClick={handleTxCopyClick}

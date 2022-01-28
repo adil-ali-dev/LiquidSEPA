@@ -17,14 +17,14 @@ export type NameOnAccount = {
 
 export type PaymentProps = {
   paymentDetails: RfqPaymentDetails;
-  confirmed: boolean;
   sellSide: boolean;
   confs: number;
+  maxConfs: number;
   handleTxCopyClick: () => void;
 };
 
 export type PaymentHeaderProps = {
-  confirmed: boolean;
+  completed: boolean;
   children: ReactNode | ReactNode[];
 };
 

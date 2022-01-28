@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 
 import { BLOCKSTREAM_ASSET_ID, SIDESWAP_PREFIX } from '../../constants';
-import { Currency } from '../../typedef';
+import { Currency, RfqStatus } from '../../typedef';
 import { AppState } from '../typedef';
 
 
@@ -82,6 +82,7 @@ export const rfqPaymentDetailsSelector = createSelector(
     return {
       txId: tx.txid,
       link: tx.unblindedLink,
+      completed: rfq.status === RfqStatus.COMPLETED,
       received: {
         amount: rfq.depositAmount,
         iban: rfq.depositorIban,
