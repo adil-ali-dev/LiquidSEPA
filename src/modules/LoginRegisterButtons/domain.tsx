@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 
@@ -38,12 +38,18 @@ export const withLoginAndRegisterButtonsDomain = (Component: FC<WrappedProps>) =
     }
   }, [isMobile]);
 
+  const handleLoginClick = useCallback(() => {
+    controls.openLogin(loginUrl);
+  }, [loginUrl]);
+
+  const handleRegisterClick = useCallback(() => {
+    controls.openRegister(registerUrl);
+  }, [registerUrl]);
+
   return (
     <Component
-      loginUrl={loginUrl}
-      registerUrl={registerUrl}
-      handleLoginClick={controls.openLogin}
-      handleRegisterClick={controls.openRegister}
+      handleLoginClick={handleLoginClick}
+      handleRegisterClick={handleRegisterClick}
     />
   );
 }

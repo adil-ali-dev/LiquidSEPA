@@ -1,8 +1,18 @@
-import React, { createContext, FC, ReactNode, useState, useContext, useEffect, useCallback } from 'react';
+import React, {
+  createContext,
+  FC,
+  ReactNode,
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+  useLayoutEffect
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { sessionActions, sessionHadSessionSelector, sessionStatusSelector } from '../../store/Session';
 import { isMobile } from 'react-device-detect';
+import { socketActions } from '../../store/Socket';
 
 
 const SessionContext = createContext({
