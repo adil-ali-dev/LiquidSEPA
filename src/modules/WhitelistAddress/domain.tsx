@@ -38,7 +38,7 @@ export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () =>
   }, [loading]);
 
   useEffect(() => {
-    if ((!debouncedAddress && !debouncedAddressPrev) || loading) return;
+    if ((!debouncedAddress && !debouncedAddressPrev) || loading || !address) return;
 
     dispatch(addressesActions.validateAddress({ address: debouncedAddress }));
   }, [debouncedAddress]);

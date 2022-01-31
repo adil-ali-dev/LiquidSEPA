@@ -102,18 +102,21 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   }, [deliverAmountDebounced]);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      deliverInputRef.current?.focus();
-      dispatch(addressesActions.getAddresses());
-      dispatch(bankAccountsActions.getBankAccounts());
-      return;
-    }
+    if (!isLoggedIn) return;
+
+    deliverInputRef.current?.focus();
+    dispatch(addressesActions.getAddresses());
+    dispatch(bankAccountsActions.getBankAccounts());
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    if (isLoggedInForUI) return;
 
     setDeliver(initialDeliver);
     setReceive(initialReceive);
     setAccount(null);
     setAddress(null);
-  }, [isLoggedIn]);
+  }, [isLoggedInForUI]);
 
   useEffect(() => {
     if (!whitelistedAddresses.length || address) return;
@@ -178,7 +181,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const handleContinueClick =(event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!isLoggedIn) {
+    if (!isLoggedInForUI) {
       handleLoginClick();
       return;
     }
@@ -219,7 +222,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   }, []);
 
   const handleAddPress = useCallback(() => {
-    if (isLoggedIn) {
+    if (isLoggedInForUI) {
       if (sellSide) {
         bankAccount.controls.open();
       } else {
@@ -228,7 +231,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     } else {
       handleLoginClick();
     }
-  }, [isLoggedIn, sellSide, loginUrl]);
+  }, [sellSide, loginUrl, isLoggedInForUI]);
 
   const handleAddressSelect = useCallback((value: Address) => {
     setAddress(value);

@@ -33,12 +33,12 @@ export const DropdownContent: FC<DropdownContentProps> = ({
 
   const alertButtonText = useMemo(() => {
     return (loginRequired && !statusForUI) ? 'Login' : '+ ADD';
-  }, [statusForUI]);
+  }, [statusForUI, loginRequired]);
 
   const handleAlertButtonClick = useCallback(() => {
     handleAddClick?.();
     close();
-  }, [statusForUI, handleAddClick]);
+  }, [handleAddClick]);
 
   const renderDropdownItem = useCallback((item: any, idx: number) => {
     const handleDropdownItemClick = () => {

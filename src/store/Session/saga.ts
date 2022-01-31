@@ -1,6 +1,6 @@
-import { delay, select, takeLatest, put } from 'redux-saga/effects';
+import { delay, select, takeLatest, put, call } from 'redux-saga/effects';
 
-import { SocketEndpoint } from '../../typedef';
+import { SocketCloseStatus, SocketEndpoint } from '../../typedef';
 import { AuthEidStatus, AuthSocketEndpoint, StatusModalType } from '../../typedef';
 import { CreateSessionSuccess, Refresh, SessionConstants, UpdateCreateSessionStatus, UpdateCreateAccountStatus, Authorize, RefreshSuccess, CancelAuthEid } from './typedef';
 import { authSocketActions } from '../AuthSocket';
@@ -118,7 +118,7 @@ function *authorize({ payload }: Authorize) {
 }
 
 function *refresh({ payload }: Refresh) {
-  yield put(authSocketActions.send({
+  yield put(authSocketActions.disposableSend({
     method: AuthSocketEndpoint.REFRESH_SESSION,
     api: 'login',
     messageId: `${Date.now()}`,
@@ -127,6 +127,8 @@ function *refresh({ payload }: Refresh) {
 }
 
 function *createAccountSuccess() {
+  yield call(closeAuthSocket);
+
   yield put(alertActions.show({
     type: StatusModalType.SUCCESS,
     message: 'Account has been created'
@@ -134,10 +136,14 @@ function *createAccountSuccess() {
 }
 
 function *createSessionSuccess({ payload }: CreateSessionSuccess) {
+  yield call(closeAuthSocket);
+
   yield put(sessionActions.authorize({ accessToken: payload.accessToken }));
 }
 
 function *refreshSessionSuccess({ payload }: RefreshSuccess) {
+  yield call(closeAuthSocket);
+
   yield put(sessionActions.authorize({ accessToken: payload.accessToken }));
 }
 
@@ -148,6 +154,14 @@ function *authorizeSuccess() {
 
   yield delay((expiresIn - 60) * 1000);
   yield put(sessionActions.refresh({ accessToken }));
+}
+
+function *closeAuthSocket() {
+  yield put(authSocketActions.close({ code: SocketCloseStatus.WITHOUT_RECONNECT }));
+}
+
+function *closeMainSocket() {
+  yield put(socketActions.close({ code: SocketCloseStatus.WITH_RECONNECT }));
 }
 
 
@@ -166,4 +180,14 @@ export function *sessionSaga() {
   yield takeLatest(SessionConstants.REFRESH_SESSION_SUCCESS, refreshSessionSuccess);
   yield takeLatest(SessionConstants.CREATE_SESSION_SUCCESS, createSessionSuccess);
   yield takeLatest(SessionConstants.AUTHORIZE_SESSION_SUCCESS, authorizeSuccess);
+
+  // Auth socket management
+  yield takeLatest([
+    SessionConstants.CREATE_ACCOUNT_FAILURE,
+    SessionConstants.CREATE_SESSION_FAILURE,
+    SessionConstants.REFRESH_SESSION_FAILURE
+  ], closeAuthSocket);
+
+  // Main socket management
+  yield takeLatest(SessionConstants.DESTROY_SESSION_REQUEST, closeMainSocket);
 }

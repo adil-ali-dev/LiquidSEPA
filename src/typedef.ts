@@ -22,6 +22,16 @@ export enum Environment {
 
 
 /*
+ * Socket Closing Statuses
+ */
+
+export enum SocketCloseStatus {
+  WITH_RECONNECT = 1000,
+  WITHOUT_RECONNECT = 4000
+}
+
+
+/*
  * Auth WS API
  */
 

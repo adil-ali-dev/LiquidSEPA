@@ -31,10 +31,11 @@ export type CloseReq = {
  * API Requests
  */
 
-type SendReq = SessionApiMainReqs
-| AddressesApiMainReqs
-| BankAccountsApiMainReqs
-| RfqApiMainReqs;
+type SendReq =
+  SessionApiMainReqs
+  | AddressesApiMainReqs
+  | BankAccountsApiMainReqs
+  | RfqApiMainReqs;
 
 
 /*
@@ -72,12 +73,13 @@ export type Closed = ClosedAction<SocketConstants.CLOSED>;
  * Action
  */
 
-export type SocketAction = Connect
-| Connected
-| Send
-| Error
-| Close
-| Closed;
+export type SocketAction =
+  Connect
+  | Connected
+  | Send
+  | Error
+  | Close
+  | Closed;
 
 
 /*

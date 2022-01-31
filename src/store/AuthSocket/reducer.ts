@@ -1,8 +1,9 @@
-import { AuthSocketConstants, AuthSocketState, AuthSocketAction } from './typedef';
+import { AuthSocketAction, AuthSocketConstants, AuthSocketState } from './typedef';
 
 
 const initialState: AuthSocketState = {
   status: false,
+  callbackPayload: null,
   error: null
 };
 
@@ -11,6 +12,9 @@ export const authSocketReducer = (state = initialState, action: AuthSocketAction
 
     case AuthSocketConstants.CONNECTED:
       return { ...state, status: true };
+
+    case AuthSocketConstants.DISPOSABLE_SEND:
+      return { ...state, callbackPayload: state.status ? null : action.payload }
 
     case AuthSocketConstants.ERROR:
       return { ...state, error: action.error };
