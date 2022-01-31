@@ -18,7 +18,7 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
     backgroundAttachment: 'fixed',
 
     [breakpoints.down('md')]: {
-      backgroundSize: 'cover'
+      backgroundAttachment: 'none'
     }
   },
 

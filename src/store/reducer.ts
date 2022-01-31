@@ -26,16 +26,19 @@ const appReducer = combineReducers<AppState | { session: SessionState }>({
 
 export const rootReducer: Reducer = (state: AppState, action: AnyAction) => {
   // Reset all store data to initial if socket gets closed
-  if (state && action.type === SocketConstants.CLOSED) {
-    const { session, bankAccounts, authSocket } = state;
+  if (state) {
+    const { session, bankAccounts, authSocket, rfq, addresses } = state;
 
-    const newState = {
-      authSocket,
-      session: { ...sessionInitialState, token: session.token },
-      bankAccounts: { ...bankAccountsInitialState, waitingForContinue: bankAccounts.waitingForContinue },
-    };
+    if (action.type === SocketConstants.CLOSED) {
+      return appReducer({
+        authSocket,
+        session: { ...session, authenticated: false },
+        addresses,
+        rfq,
+        bankAccounts,
+      }, action);
+    }
 
-    return appReducer(newState, action);
   }
 
   return appReducer(state, action);

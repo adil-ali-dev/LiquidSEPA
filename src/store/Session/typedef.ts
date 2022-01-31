@@ -164,13 +164,14 @@ export type DestroyFailure = FailureAction<SessionConstants.DESTROY_SESSION_FAIL
  * Action
  */
 
-export type SessionAction = CancelAuthEid | CancelAuthEidSuccess | CancelAuthEidFailure
-| UpdateCreateAccountRequestId | UpdateCreateSessionRequestId
-| CreateAccount | UpdateCreateAccountStatus | CreateAccountSuccess | CreateAccountFailure
-| CreateSession | UpdateCreateSessionStatus | CreateSessionSuccess | CreateSessionFailure
-| Authorize | AuthorizeSuccess | AuthorizeFailure
-| Refresh | RefreshSuccess | RefreshFailure
-| Destroy | DestroySuccess | DestroyFailure;
+export type SessionAction =
+  CancelAuthEid | CancelAuthEidSuccess | CancelAuthEidFailure
+  | UpdateCreateAccountRequestId | UpdateCreateSessionRequestId
+  | CreateAccount | UpdateCreateAccountStatus | CreateAccountSuccess | CreateAccountFailure
+  | CreateSession | UpdateCreateSessionStatus | CreateSessionSuccess | CreateSessionFailure
+  | Authorize | AuthorizeSuccess | AuthorizeFailure
+  | Refresh | RefreshSuccess | RefreshFailure
+  | Destroy | DestroySuccess | DestroyFailure;
 
 
 /*

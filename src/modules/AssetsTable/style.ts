@@ -98,6 +98,10 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
       bottom: 0,
       right: '50%',
       transform: 'translateX(50%)'
-    }
+    },
+
+    [breakpoints.down('sm')]: {
+      display: 'none'
+    },
   }
 }), { index: 1 });

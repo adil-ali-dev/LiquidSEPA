@@ -1,11 +1,10 @@
 import { takeLatest, put } from 'redux-saga/effects';
 
 import { AuthEidStatus, SocketEndpoint, StatusModalType } from '../../typedef';
-import { AddressesConstants, ValidateAddress, WhitelistAddress } from './typedef';
+import { AddressesConstants, ValidateAddress, WhitelistAddress, UpdateWhitelistingStatus } from './typedef';
 import { socketActions } from '../Socket';
 import { alertActions } from '../Alert';
 import { addressesActions } from './actions';
-import { sessionActions, UpdateCreateAccountStatus } from '../Session';
 
 
 const authEidErrors = {
@@ -18,33 +17,45 @@ const authEidErrors = {
 
 
 function *validateAddress({ payload }: ValidateAddress) {
-  yield put(socketActions.send({
-    method: SocketEndpoint.VALIDATE_ADDRESS,
-    api: 'account',
-    messageId: `${Date.now()}`,
-    args: payload
-  }));
+  try {
+    yield put(socketActions.send({
+      method: SocketEndpoint.VALIDATE_ADDRESS,
+      api: 'account',
+      messageId: `${Date.now()}`,
+      args: payload
+    }));
+  } catch {
+    yield put(addressesActions.validateAddressFailure('Socket is not connected'))
+  }
 }
 
 function *whitelistAddress({ payload }: WhitelistAddress) {
-  yield put(socketActions.send({
-    method: SocketEndpoint.WHITELIST_ADDRESS,
-    api: 'account',
-    messageId: `${Date.now()}`,
-    args: payload
-  }));
+  try {
+    yield put(socketActions.send({
+      method: SocketEndpoint.WHITELIST_ADDRESS,
+      api: 'account',
+      messageId: `${Date.now()}`,
+      args: payload
+    }));
+  } catch {
+    yield put(addressesActions.whitelistAddressFailure('Socket is not connected'))
+  }
 }
 
 function *getAddresses() {
-  yield put(socketActions.send({
-    method: SocketEndpoint.GET_ADDRESSES,
-    api: 'account',
-    messageId: `${Date.now()}`,
-    args: {}
-  }));
+  try {
+    yield put(socketActions.send({
+      method: SocketEndpoint.GET_ADDRESSES,
+      api: 'account',
+      messageId: `${Date.now()}`,
+      args: {}
+    }));
+  } catch {
+    yield put(addressesActions.getAddressesFailure('Socket is not connected'))
+  }
 }
 
-function *updateWhitelistingStatus({ payload }: UpdateCreateAccountStatus) {
+function *updateWhitelistingStatus({ payload }: UpdateWhitelistingStatus) {
   switch (payload.status) {
     case AuthEidStatus.NOT_SCANNED:
     case AuthEidStatus.NOT_READY:

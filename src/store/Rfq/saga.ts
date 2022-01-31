@@ -10,34 +10,46 @@ import { rfqActions } from './actions';
 const RFQ_API = 'rfq' as const;
 
 function *getEstimation({ payload }: GetEstimation) {
-  yield put(socketActions.send({
-    method: SocketEndpoint.GET_RFQ_ESTIMATION,
-    api: RFQ_API,
-    messageId: `${Date.now()}`,
-    args: payload
-  }));
+  try {
+    yield put(socketActions.send({
+      method: SocketEndpoint.GET_RFQ_ESTIMATION,
+      api: RFQ_API,
+      messageId: `${Date.now()}`,
+      args: payload
+    }));
+  } catch {
+    yield put(rfqActions.getEstimationFailure('Socket is not connected'))
+  }
 }
 
 function *sell({ payload }: Sell) {
   const { iban, ...restArgs } = payload;
 
-  yield put(socketActions.send({
-    method: SocketEndpoint.RFQ_SELL,
-    api: RFQ_API,
-    messageId: `${Date.now()}`,
-    args: { ...restArgs, payoutAccount: iban }
-  }));
+  try {
+    yield put(socketActions.send({
+      method: SocketEndpoint.RFQ_SELL,
+      api: RFQ_API,
+      messageId: `${Date.now()}`,
+      args: { ...restArgs, payoutAccount: iban }
+    }));
+  } catch {
+    yield put(rfqActions.sellFailure('Socket is not connected'))
+  }
 }
 
 function *buy({ payload }: Buy) {
   const { label, ...restArgs } = payload;
 
-  yield put(socketActions.send({
-    method: SocketEndpoint.RFQ_BUY,
-    api: RFQ_API,
-    messageId: `${Date.now()}`,
-    args: { ...restArgs, payoutAccount: label }
-  }));
+  try {
+    yield put(socketActions.send({
+      method: SocketEndpoint.RFQ_BUY,
+      api: RFQ_API,
+      messageId: `${Date.now()}`,
+      args: { ...restArgs, payoutAccount: label }
+    }));
+  } catch {
+    yield put(rfqActions.buyFailure('Socket is not connected'))
+  }
 }
 
 function *confirm({ payload }: Confirm) {
