@@ -28,7 +28,7 @@ const authEidLoginErrors = {
 
 
 function *createSession() {
-  yield put(authSocketActions.send({
+  yield put(authSocketActions.disposableSend({
     method: AuthSocketEndpoint.LOG_IN,
     api: 'login',
     messageId: `${Date.now()}`,
@@ -39,7 +39,7 @@ function *createSession() {
 }
 
 function *createAccount() {
-  yield put(authSocketActions.send({
+  yield put(authSocketActions.disposableSend({
     method: AuthSocketEndpoint.REGISTER,
     api: 'signup',
     messageId: `${Date.now()}`,
@@ -48,7 +48,7 @@ function *createAccount() {
 }
 
 function *cancelRequest({ payload }: CancelAuthEid) {
-  yield put(authSocketActions.send({
+  yield put(authSocketActions.disposableSend({
     method: AuthSocketEndpoint.CANCEL_REQUEST,
     api: 'login',
     messageId: `${Date.now()}`,
