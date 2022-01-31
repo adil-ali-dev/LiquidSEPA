@@ -9,11 +9,7 @@ import { authSocketActions } from './actions';
 function *disposableSend({ payload }: DisposableSend) {
   const status: boolean = yield select(authSocketStatusSelector);
 
-  if (status) {
-    yield put(authSocketActions.send(payload));
-  } else {
-    yield put(authSocketActions.connect());
-  }
+  yield put(status ? authSocketActions.send(payload) : authSocketActions.connect());
 }
 
 function *connected() {
