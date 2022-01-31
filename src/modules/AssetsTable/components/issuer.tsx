@@ -16,7 +16,7 @@ export const Issuer: FC<IssuerProps> = ({ issuer }) => {
       href={ `https://${ issuer }` }
       target="_blank"
     >
-      { issuer === 'pegx.io' ? <PEGxIcon/> : <img src={TetherIcon} /> }
+      { issuer === 'pegx.io' ? <PEGxIcon/> : <img className={ classes.assetsTableBodyCellLinkImg } src={TetherIcon} /> }
     </Link>
   );
 };

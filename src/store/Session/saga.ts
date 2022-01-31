@@ -181,13 +181,6 @@ export function *sessionSaga() {
   yield takeLatest(SessionConstants.CREATE_SESSION_SUCCESS, createSessionSuccess);
   yield takeLatest(SessionConstants.AUTHORIZE_SESSION_SUCCESS, authorizeSuccess);
 
-  // Auth socket management
-  yield takeLatest([
-    SessionConstants.CREATE_ACCOUNT_FAILURE,
-    SessionConstants.CREATE_SESSION_FAILURE,
-    SessionConstants.REFRESH_SESSION_FAILURE
-  ], closeAuthSocket);
-
   // Main socket management
   yield takeLatest(SessionConstants.DESTROY_SESSION_REQUEST, closeMainSocket);
 }

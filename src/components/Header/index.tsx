@@ -10,6 +10,7 @@ import { useSessionContext } from '../../contexts/Session';
 import { LoginAndRegisterButtonsModule } from '../../modules/LoginRegisterButtons';
 import { Burger } from '../Burger';
 import { useStyles } from './style';
+import { sessionLoginUrlSelector, sessionRegisterUrlSelector } from '../../store/Session';
 
 
 const faqRegExp = new RegExp(FAQ_PATH);
@@ -26,6 +27,8 @@ export const Header = memo(() => {
   const { statusForUI, destroy } = useSessionContext();
 
   const rfqConfirmation = useSelector(rfqConfirmationSelector);
+  const a = useSelector(sessionRegisterUrlSelector);
+  const d = useSelector(sessionLoginUrlSelector);
 
   useLayoutEffect(() => {
     const root = document.getElementById('root');
