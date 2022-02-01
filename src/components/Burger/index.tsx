@@ -16,7 +16,9 @@ export const Burger = memo<Props>(({ className, status, handleClick }) => {
       disableRipple
       disableTouchRipple
     >
-      {Array.from({ length: 3 }, () => <Grid className={classes.burgerItem} />)}
+      {Array.from({ length: 3 }, (_, idx) => (
+        <Grid className={classes.burgerItem} key={idx} />
+      ))}
     </Button>
   );
 });

@@ -56,7 +56,7 @@ export const DropdownContent: FC<DropdownContentProps> = ({
         disableTouchRipple
         onClick={ handleDropdownItemClick }
       >
-        { renderItem(item,idx) }
+        { renderItem(item, idx) }
       </ButtonBase>
     )
   }, [handleItemSelect]);
@@ -75,17 +75,16 @@ export const DropdownContent: FC<DropdownContentProps> = ({
         />
       )}
       {(!data.length || !statusForUI) ? (
-          <DropdownAlert
-            text={ alertText }
-            buttonText={ alertButtonText }
-            handleButtonClick={ handleAlertButtonClick }
-          />
-        ) : (
-          <Grid className={ classes.selectList }>
-            { data.map(renderDropdownItem) }
-          </Grid>
-        )
-      }
+        <DropdownAlert
+          text={ alertText }
+          buttonText={ alertButtonText }
+          handleButtonClick={ handleAlertButtonClick }
+        />
+      ) : (
+        <Grid className={ classes.selectList }>
+          { data.map(renderDropdownItem) }
+        </Grid>
+      )}
     </Grid>
   ) : null;
 }
