@@ -31,6 +31,8 @@ export const sessionRegisterUrlSelector = createSelector(
 );
 
 export const sessionHadSessionSelector = createSelector(
-  [sessionTokenValueSelector],
-  token => !!token
+  [sessionTokenValueSelector, sessionTokenExpirationDateSelector],
+  (token, expirationDate) => {
+    return !!token && !!expirationDate && Date.now() < expirationDate
+  }
 );

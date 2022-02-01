@@ -26,6 +26,12 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
       '&:nth-child(4n)': {
         display: 'none'
       }
+    },
+
+    [breakpoints.down(385)]: {
+      '&:nth-child(2n)': {
+        display: 'none'
+      }
     }
   },
 
@@ -45,17 +51,23 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
     borderBottom: '1px solid #28536C',
 
     [breakpoints.down('sm')]: {
-      '&:nth-child(6n)': {
+      '&:nth-child(5n)': {
         display: 'none'
       },
 
-      '&:nth-child(5n)': {
+      '&:nth-child(6n)': {
         display: 'none'
-      }
+      },
     },
 
     [breakpoints.down('xs')]: {
       '&:nth-child(4n)': {
+        display: 'none'
+      }
+    },
+
+    [breakpoints.down(385)]: {
+      '&:nth-child(2n)': {
         display: 'none'
       }
     }
