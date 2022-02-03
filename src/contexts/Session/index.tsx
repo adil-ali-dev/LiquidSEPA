@@ -10,7 +10,7 @@ import React, {
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { sessionActions, sessionHadSessionSelector, sessionStatusSelector } from '../../store/Session';
+import { sessionActions, sessionStatusForUISelector, sessionStatusSelector } from '../../store/Session';
 import { isMobile } from 'react-device-detect';
 import { socketActions } from '../../store/Socket';
 
@@ -39,7 +39,7 @@ export const SessionProvider: FC<Props> = ({ children }) => {
   const dispatch = useDispatch();
 
   const status = useSelector(sessionStatusSelector);
-  const statusForUI = useSelector(sessionHadSessionSelector);
+  const statusForUI = useSelector(sessionStatusForUISelector);
   const [statusLoginModal, setStatusLoginModal] = useState(false);
   const [statusRegisterModal, setStatusRegisterModal] = useState(false);
 

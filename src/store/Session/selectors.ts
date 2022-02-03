@@ -30,7 +30,7 @@ export const sessionRegisterUrlSelector = createSelector(
   requestId => requestId ? `${ AUTH_EID_URL_REQ_PREFIX }${ requestId }` : null
 );
 
-export const sessionHadSessionSelector = createSelector(
+export const sessionStatusForUISelector = createSelector(
   [sessionTokenValueSelector, sessionTokenExpirationDateSelector],
   (token, expirationDate) => {
     return !!token && !!expirationDate && Date.now() < expirationDate
