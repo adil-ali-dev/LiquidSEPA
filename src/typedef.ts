@@ -233,7 +233,7 @@ export enum RfqDirection {
 
 export enum RfqStatus {
   PENDING_REVIEW = 'PENDING_REVIEW',
-  COMPLETED = 'COMPLETED'
+  COMPLETE = 'COMPLETE'
 }
 
 export type RfqData<T> = {

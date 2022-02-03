@@ -82,7 +82,7 @@ export const rfqPaymentDetailsSelector = createSelector(
     return {
       txId: tx.txid,
       link: tx.unblindedLink,
-      completed: rfq.status === RfqStatus.COMPLETED,
+      completed: rfq.status === RfqStatus.COMPLETE,
       received: {
         amount: rfq.depositAmount,
         iban: rfq.depositorIban,
