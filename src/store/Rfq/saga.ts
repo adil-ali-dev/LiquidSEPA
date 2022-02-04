@@ -62,12 +62,19 @@ function *confirm({ payload }: Confirm) {
 }
 
 function *updateRfqData({ payload }: UpdateRfqData) {
-  if (payload.status !== RfqStatus.PENDING_REVIEW) return;
+  if (payload.status === RfqStatus.PENDING_REVIEW) {
+    yield put(alertActions.show({
+      type: StatusModalType.WARNING,
+      message: 'Lorem ipsum (PENDING_REVIEW)'
+    }));
+  }
 
-  yield put(alertActions.show({
-    type: StatusModalType.WARNING,
-    message: 'Lorem ipsum (PENDING_REVIEW)'
-  }));
+  if (payload.status === RfqStatus.PENDING_IN_QUE) {
+    yield put(alertActions.show({
+      type: StatusModalType.WARNING,
+      message: 'Lorem ipsum (PENDING_IN_QUE)'
+    }));
+  }
 }
 
 function *sellSuccess({ payload }: SellSuccess) {

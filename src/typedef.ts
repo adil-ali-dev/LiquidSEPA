@@ -233,6 +233,7 @@ export enum RfqDirection {
 
 export enum RfqStatus {
   PENDING_REVIEW = 'PENDING_REVIEW',
+  PENDING_IN_QUE = 'PENDING_IN_QUE',
   COMPLETE = 'COMPLETE'
 }
 
