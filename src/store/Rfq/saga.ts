@@ -18,7 +18,7 @@ function *getEstimation({ payload }: GetEstimation) {
       args: payload
     }));
   } catch {
-    yield put(rfqActions.getEstimationFailure('Socket is not connected'))
+    yield put(rfqActions.getEstimationFailure('Socket not connected'))
   }
 }
 
@@ -33,7 +33,7 @@ function *sell({ payload }: Sell) {
       args: { ...restArgs, payoutAccount: iban }
     }));
   } catch {
-    yield put(rfqActions.sellFailure('Socket is not connected'))
+    yield put(rfqActions.sellFailure('Socket not connected'))
   }
 }
 
@@ -48,7 +48,7 @@ function *buy({ payload }: Buy) {
       args: { ...restArgs, payoutAccount: label }
     }));
   } catch {
-    yield put(rfqActions.buyFailure('Socket is not connected'))
+    yield put(rfqActions.buyFailure('Socket not connected'))
   }
 }
 

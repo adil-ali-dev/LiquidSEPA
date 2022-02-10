@@ -20,7 +20,7 @@ function *getBankAccounts() {
       args: {}
     }));
   } catch {
-    yield put(bankAccountsActions.getBankAccountsFailure('Socket is not connected'))
+    yield put(bankAccountsActions.getBankAccountsFailure('Socket not connected'))
   }
 }
 
@@ -33,7 +33,7 @@ function *getSupportedBanks({ payload }: GetSupportedBanks) {
       args: payload
     }));
   } catch {
-    yield put(bankAccountsActions.getSupportedBanksFailure('Socket is not connected'))
+    yield put(bankAccountsActions.getSupportedBanksFailure('Socket not connected'))
   }
 }
 
@@ -46,7 +46,7 @@ function *createAgreementLink({ payload }: CreateAgreementLink) {
       args: { ...payload, sandbox: !LIVE, redirectUrl: window.location.origin }
     }));
   } catch {
-    yield put(bankAccountsActions.createAgreementLinkFailure('Socket is not connected'))
+    yield put(bankAccountsActions.createAgreementLinkFailure('Socket not connected'))
   }
 }
 
@@ -59,7 +59,7 @@ function *createBankAccount({ payload }: CreateBankAccount) {
       args: payload
     }));
   } catch {
-    yield put(bankAccountsActions.getBankAccountsFailure('Socket is not connected'))
+    yield put(bankAccountsActions.getBankAccountsFailure('Socket not connected'))
   }
 }
 
@@ -68,7 +68,7 @@ function *createBankAccountSuccess() {
 
   yield put(alertActions.show({
     type: StatusModalType.SUCCESS,
-    message: 'Account added successfully'
+    message: 'Your account is now verified'
   }));
 }
 
