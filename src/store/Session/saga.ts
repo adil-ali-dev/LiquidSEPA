@@ -11,19 +11,19 @@ import { socketActions } from '../Socket';
 
 
 const authEidErrors = {
-  [AuthEidStatus.CANCELLED]: 'Auth eID signature has cancelled',
-  [AuthEidStatus.REQUEST_CANCELLED]: 'Auth eID signature has cancelled',
-  [AuthEidStatus.ACCOUNT_NOT_VERIFIED]: 'Auth eID account is not verified'
+  [AuthEidStatus.CANCELLED]: 'Auth eID signing cancelled',
+  [AuthEidStatus.REQUEST_CANCELLED]: 'Auth eID signing cancelled',
+  [AuthEidStatus.ACCOUNT_NOT_VERIFIED]: 'Auth eID account not verified'
 };
 
 const authEidRegisterErrors = {
   ...authEidErrors,
-  [AuthEidStatus.REQUEST_ERROR]: 'You already registered this account'
+  [AuthEidStatus.REQUEST_ERROR]: 'Account already registered'
 };
 
 const authEidLoginErrors = {
   ...authEidErrors,
-  [AuthEidStatus.REQUEST_ERROR]: 'You need to register this account first'
+  [AuthEidStatus.REQUEST_ERROR]: 'Account not found, please register'
 };
 
 

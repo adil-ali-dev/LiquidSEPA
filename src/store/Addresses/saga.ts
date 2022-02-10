@@ -8,11 +8,11 @@ import { addressesActions } from './actions';
 
 
 const authEidErrors = {
-  [AuthEidStatus.TIMEOUT]: 'Auth eID signature timeout',
-  [AuthEidStatus.CANCELLED]: 'Auth eID signature has cancelled',
-  [AuthEidStatus.REQUEST_CANCELLED]: 'Auth eID signature has cancelled',
-  [AuthEidStatus.ACCOUNT_NOT_VERIFIED]: 'Auth eID account is not verified',
-  [AuthEidStatus.REQUEST_ERROR]: 'Something went wrong'
+  [AuthEidStatus.TIMEOUT]: 'Auth eID signing elapsed',
+  [AuthEidStatus.CANCELLED]: 'Auth eID signing cancelled',
+  [AuthEidStatus.REQUEST_CANCELLED]: 'Auth eID signing cancelled',
+  [AuthEidStatus.ACCOUNT_NOT_VERIFIED]: 'Auth eID account not verified',
+  [AuthEidStatus.REQUEST_ERROR]: 'Address already registered'
 };
 
 
@@ -25,7 +25,7 @@ function *validateAddress({ payload }: ValidateAddress) {
       args: payload
     }));
   } catch {
-    yield put(addressesActions.validateAddressFailure('Socket is not connected'))
+    yield put(addressesActions.validateAddressFailure('Socket not connected'))
   }
 }
 
@@ -38,7 +38,7 @@ function *whitelistAddress({ payload }: WhitelistAddress) {
       args: payload
     }));
   } catch {
-    yield put(addressesActions.whitelistAddressFailure('Socket is not connected'))
+    yield put(addressesActions.whitelistAddressFailure('Socket not connected'))
   }
 }
 
@@ -51,7 +51,7 @@ function *getAddresses() {
       args: {}
     }));
   } catch {
-    yield put(addressesActions.getAddressesFailure('Socket is not connected'))
+    yield put(addressesActions.getAddressesFailure('Socket not connected'))
   }
 }
 
@@ -77,7 +77,7 @@ function *whitelistAddressSuccess() {
 
   yield put(alertActions.show({
     type: StatusModalType.SUCCESS,
-    message: 'Address whitelisted successfully'
+    message: 'Your Address is now whitelisted'
   }));
 }
 
