@@ -1,5 +1,5 @@
-import React, { FC, memo, useCallback, useMemo } from 'react';
-import { Button, ButtonBase, Grid, Link, Typography } from '@material-ui/core';
+import React, { FC, useCallback, useMemo } from 'react';
+import { ClickAwayListener, ButtonBase, Grid } from '@material-ui/core';
 import clsx from 'clsx';
 
 import { useStyles } from './styles';
@@ -7,7 +7,6 @@ import { DropdownContentProps } from './typedef';
 import { useSessionContext } from '../../contexts/Session';
 import { DropdownAlert } from './dropdown-alert';
 import { DropdownHeader } from './dropdown-header';
-import { isMobile } from 'react-device-detect';
 
 export const DropdownContent: FC<DropdownContentProps> = ({
   open,
@@ -62,29 +61,31 @@ export const DropdownContent: FC<DropdownContentProps> = ({
   }, [handleItemSelect]);
 
   return open ? (
-    <Grid
-      className={ clsx(classes.selectPopup, !data.length && classes.selectPopupPointer, className) }
-      onClick={ !data.length ? handleAlertButtonClick : undefined }
-    >
-      {headerText && (
-        <DropdownHeader
-          text={ headerText }
-          close={ close }
-          buttonText={ (statusForUI && !!data.length) ? '+ ADD' : null }
-          handleButtonClick={ handleAddClick }
-        />
-      )}
-      {(!data.length || !statusForUI) ? (
-        <DropdownAlert
-          text={ alertText }
-          buttonText={ alertButtonText }
-          handleButtonClick={ handleAlertButtonClick }
-        />
-      ) : (
-        <Grid className={ classes.selectList }>
-          { data.map(renderDropdownItem) }
-        </Grid>
-      )}
-    </Grid>
+    <ClickAwayListener onClickAway={ close }>
+      <Grid
+        className={ clsx(classes.selectPopup, !data.length && classes.selectPopupPointer, className) }
+        onClick={ !data.length ? handleAlertButtonClick : undefined }
+      >
+        {headerText && (
+          <DropdownHeader
+            text={ headerText }
+            close={ close }
+            buttonText={ (statusForUI && !!data.length) ? '+ ADD' : null }
+            handleButtonClick={ handleAddClick }
+          />
+        )}
+        {(!data.length || !statusForUI) ? (
+          <DropdownAlert
+            text={ alertText }
+            buttonText={ alertButtonText }
+            handleButtonClick={ handleAlertButtonClick }
+          />
+        ) : (
+          <Grid className={ classes.selectList }>
+            { data.map(renderDropdownItem) }
+          </Grid>
+        )}
+      </Grid>
+    </ClickAwayListener>
   ) : null;
 }

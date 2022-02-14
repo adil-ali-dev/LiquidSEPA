@@ -31,7 +31,8 @@ export const Form = memo<FormProps>(({
   handleContinueClick,
   handleAddPress,
   handleAddressSelect,
-  handleAccountSelect
+  handleAccountSelect,
+  handleDropdownExited
 }) => {
   const classes = useStyles();
 
@@ -53,6 +54,7 @@ export const Form = memo<FormProps>(({
         handleItemSelect={ handleAccountSelect }
         keyExtractor={ keyExtractor }
         renderItem={ renderDropDownItem }
+        handleExited={ handleDropdownExited }
         rowsMax={ 5 }
         data={ accounts }
       />
@@ -69,6 +71,7 @@ export const Form = memo<FormProps>(({
         handleItemSelect={ handleAddressSelect }
         keyExtractor={ keyExtractor }
         renderItem={ renderDropDownItem }
+        handleExited={ handleDropdownExited }
         rowsMax={ 5 }
         data={ addresses }
       />

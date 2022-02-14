@@ -36,6 +36,7 @@ export const WhitelistAddressModule = withWhitelistAddressDomain(({
               value={ label }
               placeholder="Address Label"
               background
+              autoFocus
               handleChange={ handleLabelChange }
             />
 

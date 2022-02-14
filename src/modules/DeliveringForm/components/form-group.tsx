@@ -41,7 +41,8 @@ export const FormGroup = memo<FormGroupProps>(({
           value={ product.placeholder }
           key={ `${product.product}-${editable}` }
           autoFocus={ !isMobile }
-          inputProps={{ className: clsx(classes.formGroupTextInput, !editable && classes.formGroupTextInputDisabled), ref: reference }}
+          inputRef={ reference }
+          inputProps={{ className: clsx(classes.formGroupTextInput, !editable && classes.formGroupTextInputDisabled) }}
           disabled={ !editable }
           onClick={ event => editable && event.stopPropagation() }
           onChange={ handleDeliverChange }

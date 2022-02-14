@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useState } from 'react';
-import { ClickAwayListener, Grid, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 
 import { useStyles } from './styles';
@@ -19,6 +19,7 @@ export const Dropdown: FC<DropdownProps> = ({
   background,
   rowsMax,
   value,
+  handleExited,
   ...dropdownContentProps
 }) => {
   const classes = useStyles();
@@ -31,29 +32,29 @@ export const Dropdown: FC<DropdownProps> = ({
 
   const handleClose = useCallback(() => {
     setOpen(false);
+    handleExited?.();
   }, []);
 
   return (
-    <ClickAwayListener onClickAway={ handleClose }>
-      <Grid className={ classes.container }>
-        <Grid
-          className={
-            clsx(
-              classes.formGroup,
-              classes.formGroupSpace,
-              background && classes.formGroupBackground,
-              withExtraProps && classes.formGroupFixedHeight,
-              rowsMax && classes.formGroupLong,
-              open && classes.selectActive,
-              open && classes.formGroupFocused
-            )
-          }
-          onClick={ handleContainerClick }
-        >
-          <Typography className={ classes.label }>
-            { label }
-          </Typography>
-          <Grid className={ classes.selectedContainer }>
+    <Grid className={ classes.container }>
+      <Grid
+        className={
+          clsx(
+            classes.formGroup,
+            classes.formGroupSpace,
+            background && classes.formGroupBackground,
+            withExtraProps && classes.formGroupFixedHeight,
+            rowsMax && classes.formGroupLong,
+            open && classes.selectActive,
+            open && classes.formGroupFocused
+          )
+        }
+        onClick={ handleContainerClick }
+      >
+        <Typography className={ classes.label }>
+          { label }
+        </Typography>
+        <Grid className={ classes.selectedContainer }>
           {
             !value ? (
               <Typography className={ classes.formGroupPlaceholder }>
@@ -61,18 +62,17 @@ export const Dropdown: FC<DropdownProps> = ({
                 </Typography>
             ) : dropdownContentProps.renderItem(value, dropdownContentProps.data.indexOf(value), true)
           }
-          </Grid>
-          <Grid className={ classes.selectIconWrap }>
-            <DropdownArrowIcon className={ clsx(classes.selectIcon, open && classes.selectIconRotated) } />
-          </Grid>
         </Grid>
-        <DropdownContent
-          headerText={ placeholder }
-          close={ handleClose }
-          open={ open }
-          { ...dropdownContentProps }
-        />
+        <Grid className={ classes.selectIconWrap }>
+          <DropdownArrowIcon className={ clsx(classes.selectIcon, open && classes.selectIconRotated) } />
+        </Grid>
       </Grid>
-    </ClickAwayListener>
+      <DropdownContent
+        headerText={ placeholder }
+        close={ handleClose }
+        open={ open }
+        { ...dropdownContentProps }
+      />
+    </Grid>
   );
 };
