@@ -7,7 +7,7 @@ export const initialState: BankAccountsState = {
   agreementLink: null,
   waitingForContinue: false,
   loading: {
-    bankAccounts: false,
+    bankAccounts: true,
     supportedBanks: false,
     agreementLink: false,
     create: false
