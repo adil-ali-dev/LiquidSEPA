@@ -18,6 +18,7 @@ export type DropdownProps = {
   renderItem: (item: any, idx: number, active?: boolean) => ReactNode;
   handleItemSelect: (item: any) => void;
   keyExtractor: (item: any) => string;
+  handleExited?: () => void;
   handleChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   handleAddClick: () => void;
 };

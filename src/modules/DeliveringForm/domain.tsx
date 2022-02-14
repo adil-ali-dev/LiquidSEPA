@@ -112,10 +112,15 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   useEffect(() => {
     if (!isLoggedIn) return;
 
-    deliverInputRef.current?.focus();
     dispatch(addressesActions.getAddresses());
     dispatch(bankAccountsActions.getBankAccounts());
   }, [isLoggedIn]);
+
+  useEffect(() => {
+    if (!isLoggedInForUI || bankAccount.modalStatus || whitelistAddress.modalStatus || welcomeModalVisible) return;
+
+    deliverInputRef.current?.focus();
+  }, [isLoggedInForUI, isLoggedIn, bankAccount.modalStatus, whitelistAddress.modalStatus, welcomeModalVisible]);
 
   useEffect(() => {
     if (bankAccountsLoading || whitelistedAddressesLoading || bankAccounts.length || whitelistedAddresses.length) return;
@@ -263,6 +268,10 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     setWelcomeModalVisible(false);
   }, []);
 
+  const handleDropdownExited = useCallback(() => {
+    deliverInputRef.current?.focus();
+  }, []);
+
   return (
     <>
       <Component next={!!rfqConfirmation} widgetRef={widgetRef}>
@@ -314,6 +323,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
               handleSwapClick={ handleSwapClick }
               handleDeliverChange={ handleDeliverChange }
               handleContinueClick={ handleContinueClick }
+              handleDropdownExited={ handleDropdownExited }
               handleAddPress={ handleAddPress }
               handleAddressSelect={ handleAddressSelect }
               handleAccountSelect={ handleAccountSelect }
