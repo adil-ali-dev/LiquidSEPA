@@ -40,8 +40,8 @@ export const StatusModal = memo<Props>(({
       { icon }
 
       <Typography className={ classes.modalHeadline }>
-        { type || StatusModalType.SUCCESS }
-      </Typography>
+      { type || StatusModalType.SUCCESS }
+    </Typography>
 
       <Typography className={ classes.modalMessage }>
         { processing ? processingText || 'Please wait' : text }

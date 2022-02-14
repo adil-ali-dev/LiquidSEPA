@@ -4,9 +4,13 @@ import { isMobile } from 'react-device-detect';
 
 import { Address, Currency, BankAccount, StatusModalType } from '../../typedef';
 import { Props, Product } from './typedef';
-import { addressesActions, addressesItemsSelector } from '../../store/Addresses';
+import { addressesActions, addressesItemsLoadingSelector, addressesItemsSelector } from '../../store/Addresses';
 import { rfqActions, rfqAnyActionLoadingSelector, rfqConfirmationSelector, rfqEstimatedFeeSelector, rfqEstimatedReceiveSelector, rfqConfirmationDetailsSelector, rfqPaymentDetailsSelector, rfqTxConfirmationsCountSelector } from '../../store/Rfq';
-import { bankAccountsActions, bankAccountsItemsSelector } from '../../store/BankAccounts';
+import {
+  bankAccountsActions,
+  bankAccountsItemsLoadingSelector,
+  bankAccountsItemsSelector
+} from '../../store/BankAccounts';
 import { useClipBoard } from '../../hooks/ClipBoard';
 import { useDebounce } from '../../hooks/Debounce';
 import { useSessionContext } from '../../contexts/Session';
@@ -20,6 +24,7 @@ import { StatusModal } from '../../components/StatusModal';
 import { RequisitesHeader } from './components/requisites-header';
 import { Form } from './components/form';
 import { sessionLoginUrlSelector } from '../../store/Session';
+import { WelcomeModal } from '../../components/WelcomeModal';
 
 const MAX_CONFS = 2;
 const WIDGET_MARGIN_TOP = 72;
@@ -60,6 +65,7 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const bankAccount = useBankAccountContext();
   const { status: isLoggedIn, statusForUI: isLoggedInForUI, controls: authControls } = useSessionContext();
 
+  const [welcomeModalVisible, setWelcomeModalVisible] = useState(false);
   const [deliver, setDeliver] = useState(initialDeliver);
   const [receive, setReceive] = useState(initialReceive);
   const [account, setAccount] = useState<null | BankAccount>(null);
@@ -79,7 +85,9 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const rfqPaymentDetails = useSelector(rfqPaymentDetailsSelector);
   const rfqTxConfirmationsCount = useSelector(rfqTxConfirmationsCountSelector);
   const whitelistedAddresses = useSelector(addressesItemsSelector);
+  const whitelistedAddressesLoading = useSelector(addressesItemsLoadingSelector);
   const bankAccounts = useSelector(bankAccountsItemsSelector);
+  const bankAccountsLoading = useSelector(bankAccountsItemsLoadingSelector);
 
   const sellSide = useMemo(() => {
     return deliver.product === Currency.EURX;
@@ -108,6 +116,12 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     dispatch(addressesActions.getAddresses());
     dispatch(bankAccountsActions.getBankAccounts());
   }, [isLoggedIn]);
+
+  useEffect(() => {
+    if (bankAccountsLoading || whitelistedAddressesLoading || bankAccounts.length || whitelistedAddresses.length) return;
+
+    setWelcomeModalVisible(true);
+  }, [whitelistedAddressesLoading, bankAccountsLoading]);
 
   useEffect(() => {
     if (isLoggedInForUI) return;
@@ -245,6 +259,10 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     setError(null);
   }, []);
 
+  const handleWelcomeClose = useCallback(() => {
+    setWelcomeModalVisible(false);
+  }, []);
+
   return (
     <>
       <Component next={!!rfqConfirmation} widgetRef={widgetRef}>
@@ -310,6 +328,10 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
         btnText={ 'OK' }
         handleClose={ handleErrorClose }
         handleButtonClick={ handleErrorClose }
+      />
+      <WelcomeModal
+        status={welcomeModalVisible}
+        handleClose={handleWelcomeClose}
       />
     </>
   );

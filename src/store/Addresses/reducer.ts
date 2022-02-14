@@ -7,7 +7,7 @@ export const initialState: AddressesState = {
   loading: {
     validate: false,
     whitelist: false,
-    addresses: false
+    addresses: true
   },
   error: {
     validate: null,
