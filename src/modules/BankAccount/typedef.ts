@@ -12,7 +12,7 @@ export type Props = {
   countries: Country[];
   loading: boolean;
   disabled: boolean;
-  handleClose: () => void;
+  handleClose?: () => void;
   handleCountryChange: (_: ChangeEvent<Record<string, unknown>>, value: null | Country) => void;
   handleBankChange: (_: ChangeEvent<Record<string, unknown>>, value: null | SupportedBank) => void;
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;

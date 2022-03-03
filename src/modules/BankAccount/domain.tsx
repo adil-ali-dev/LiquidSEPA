@@ -1,14 +1,24 @@
-import React, { ChangeEvent, FC, FormEvent, useCallback, useEffect, useState } from 'react';
+import React, { ChangeEvent, FC, FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { default as countries } from '../../constants/nordigen-countries';
 import { SupportedBank, Country, StatusModalType } from '../../typedef';
 import { Props } from './typedef';
-import { bankAccountsActions, bankAccountsAgreementLinkLoadingSelector, bankAccountsAgreementLinkSelector, bankAccountsCreateLoadingSelector, bankAccountsSupportedBanksLoadingSelector, bankAccountsSupportedBanksSelector, bankAccountsWaitingForContinueSelector } from '../../store/BankAccounts';
+import {
+  bankAccountsActions,
+  bankAccountsAgreementLinkLoadingSelector,
+  bankAccountsAgreementLinkSelector,
+  bankAccountsCreateLoadingSelector, bankAccountsItemsLoadingSelector,
+  bankAccountsItemsSelector,
+  bankAccountsSupportedBanksLoadingSelector,
+  bankAccountsSupportedBanksSelector,
+  bankAccountsWaitingForContinueSelector
+} from '../../store/BankAccounts';
 import { sessionStatusSelector } from '../../store/Session';
 import { useBankAccountContext } from '../../contexts/BankAccount';
 import { StatusModal } from '../../components/StatusModal';
+import { addressesItemsLoadingSelector, addressesItemsSelector } from '../../store/Addresses';
 
 export const withBankAccountDomain = (Component: FC<Props>) => () => {
   const dispatch = useDispatch();
@@ -20,12 +30,20 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
   const { modalStatus, controls } = useBankAccountContext();
 
   const sessionStatus = useSelector(sessionStatusSelector);
+  const addresses = useSelector(addressesItemsSelector);
+  const addressesLoading = useSelector(addressesItemsLoadingSelector);
+  const bankAccounts = useSelector(bankAccountsItemsSelector);
+  const bankAccountsLoading = useSelector(bankAccountsItemsLoadingSelector);
   const supportedBanks = useSelector(bankAccountsSupportedBanksSelector);
   const supportedBanksLoading = useSelector(bankAccountsSupportedBanksLoadingSelector);
   const agreementLink = useSelector(bankAccountsAgreementLinkSelector);
   const agreementLinkLoading = useSelector(bankAccountsAgreementLinkLoadingSelector);
   const loading = useSelector(bankAccountsCreateLoadingSelector);
   const waitingForContinue = useSelector(bankAccountsWaitingForContinueSelector);
+
+  const inputRequired = useMemo(() => {
+    return !bankAccountsLoading && !addressesLoading && !!addresses.length && !bankAccounts.length;
+  }, [bankAccountsLoading, addressesLoading]);
 
   useEffect(() => {
     if (modalStatus) return;
@@ -83,8 +101,8 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
   return (
     <>
       <Component
-        status={ modalStatus }
-        handleClose={ controls.close }
+        status={ inputRequired || modalStatus }
+        handleClose={ inputRequired ? undefined : controls.close }
         country={ country }
         banksLoading={ supportedBanksLoading }
         bank={ bank }

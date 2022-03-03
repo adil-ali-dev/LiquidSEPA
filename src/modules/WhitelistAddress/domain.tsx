@@ -1,9 +1,9 @@
-import React, { ChangeEvent, FC, FormEvent, useCallback, useEffect, useState } from 'react';
+import React, { ChangeEvent, FC, FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { StatusModalType } from '../../typedef';
 import { WrappedProps } from './typedef';
-import { addressesActions, addressesAddressValidSelector, addressesWhitelistAddressErrorSelector, addressesWhitelistAddressLoadingSelector } from '../../store/Addresses';
+import { addressesActions, addressesAddressValidSelector, addressesItemsLoadingSelector, addressesItemsSelector, addressesWhitelistAddressErrorSelector, addressesWhitelistAddressLoadingSelector } from '../../store/Addresses';
 import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
 import { useDebounce } from '../../hooks/Debounce';
 import { usePrevious } from '../../hooks/Previous';
@@ -20,9 +20,13 @@ export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () =>
 
   const debouncedAddressPrev = usePrevious(debouncedAddress);
 
+  const addresses = useSelector(addressesItemsSelector);
+  const addressesLoading = useSelector(addressesItemsLoadingSelector);
   const valid = useSelector(addressesAddressValidSelector);
   const loading = useSelector(addressesWhitelistAddressLoadingSelector);
   const error = useSelector(addressesWhitelistAddressErrorSelector);
+
+  const inputRequired = useMemo(() => !addressesLoading && !addresses.length, [addressesLoading]);
 
   useEffect(() => {
     if (modalStatus) return;
@@ -61,8 +65,8 @@ export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () =>
   return (
     <>
       <Component
-        status={ modalStatus }
-        handleClose={ controls.close }
+        status={ inputRequired || modalStatus }
+        handleClose={ inputRequired ? undefined : controls.close }
         label={ label }
         disabled={ !label || !address || !valid }
         addressValid={ valid }

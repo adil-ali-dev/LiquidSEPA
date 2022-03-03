@@ -7,7 +7,7 @@ export type WrappedProps = {
   addressValid: boolean;
   loading: boolean;
   disabled: boolean;
-  handleClose: () => void;
+  handleClose?: () => void;
   handleLabelChange: (event: ChangeEvent<HTMLInputElement>) => void;
   handleAddressChange: (event: ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
