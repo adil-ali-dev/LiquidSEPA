@@ -62,10 +62,10 @@ export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () =>
     dispatch(addressesActions.whitelistAddress({ label, address }));
   }, [label, address, valid]);
 
-  return (
+  return modalStatus ? (
     <>
       <Component
-        status={ inputRequired || modalStatus }
+        status={ inputRequired && !loading }
         handleClose={ inputRequired ? undefined : controls.close }
         label={ label }
         disabled={ !label || !address || !valid }
@@ -80,8 +80,8 @@ export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () =>
         type={ StatusModalType.PROCESSING }
         processingText="Waiting for Auth eID sign"
         status={ loading }
+        handleClose={ controls.close }
       />
     </>
-
-  );
+  ) : null;
 };

@@ -5,20 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { default as countries } from '../../constants/nordigen-countries';
 import { SupportedBank, Country, StatusModalType } from '../../typedef';
 import { Props } from './typedef';
-import {
-  bankAccountsActions,
-  bankAccountsAgreementLinkLoadingSelector,
-  bankAccountsAgreementLinkSelector,
-  bankAccountsCreateLoadingSelector, bankAccountsItemsLoadingSelector,
-  bankAccountsItemsSelector,
-  bankAccountsSupportedBanksLoadingSelector,
-  bankAccountsSupportedBanksSelector,
-  bankAccountsWaitingForContinueSelector
-} from '../../store/BankAccounts';
+import { bankAccountsActions, bankAccountsAgreementLinkLoadingSelector, bankAccountsAgreementLinkSelector, bankAccountsCreateLoadingSelector, bankAccountsItemsLoadingSelector, bankAccountsItemsSelector, bankAccountsSupportedBanksLoadingSelector, bankAccountsSupportedBanksSelector, bankAccountsWaitingForContinueSelector } from '../../store/BankAccounts';
 import { sessionStatusSelector } from '../../store/Session';
+import { addressesItemsLoadingSelector, addressesItemsSelector } from '../../store/Addresses';
 import { useBankAccountContext } from '../../contexts/BankAccount';
 import { StatusModal } from '../../components/StatusModal';
-import { addressesItemsLoadingSelector, addressesItemsSelector } from '../../store/Addresses';
 
 export const withBankAccountDomain = (Component: FC<Props>) => () => {
   const dispatch = useDispatch();
@@ -98,10 +89,10 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
     dispatch(bankAccountsActions.createAgreementLink({ bankId: bank.id }));
   }, [bank, country]);
 
-  return (
+  return modalStatus ? (
     <>
       <Component
-        status={ inputRequired || modalStatus }
+        status={ inputRequired && !loading }
         handleClose={ inputRequired ? undefined : controls.close }
         country={ country }
         banksLoading={ supportedBanksLoading }
@@ -117,7 +108,8 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
       <StatusModal
         type={ StatusModalType.PROCESSING }
         status={ loading }
+        handleClose={ controls.close }
       />
     </>
-  );
+  ) : null;
 };
