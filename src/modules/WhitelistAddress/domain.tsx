@@ -62,10 +62,10 @@ export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () =>
     dispatch(addressesActions.whitelistAddress({ label, address }));
   }, [label, address, valid]);
 
-  return modalStatus ? (
+  return (modalStatus || inputRequired) ? (
     <>
       <Component
-        status={ inputRequired && !loading }
+        status={ inputRequired || !loading }
         handleClose={ inputRequired ? undefined : controls.close }
         label={ label }
         disabled={ !label || !address || !valid }

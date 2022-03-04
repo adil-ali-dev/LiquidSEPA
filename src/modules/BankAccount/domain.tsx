@@ -89,10 +89,10 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
     dispatch(bankAccountsActions.createAgreementLink({ bankId: bank.id }));
   }, [bank, country]);
 
-  return modalStatus ? (
+  return (modalStatus || inputRequired) ? (
     <>
       <Component
-        status={ inputRequired && !loading }
+        status={ inputRequired || !loading }
         handleClose={ inputRequired ? undefined : controls.close }
         country={ country }
         banksLoading={ supportedBanksLoading }
