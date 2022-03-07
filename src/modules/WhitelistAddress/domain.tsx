@@ -8,6 +8,7 @@ import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
 import { useDebounce } from '../../hooks/Debounce';
 import { usePrevious } from '../../hooks/Previous';
 import { StatusModal } from '../../components/StatusModal';
+import { sessionWelcomeMessageStatusSelector } from '../../store/Session';
 
 
 export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () => {
@@ -20,6 +21,7 @@ export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () =>
 
   const debouncedAddressPrev = usePrevious(debouncedAddress);
 
+  const welcomeMessageStatus = useSelector(sessionWelcomeMessageStatusSelector);
   const addresses = useSelector(addressesItemsSelector);
   const addressesLoading = useSelector(addressesItemsLoadingSelector);
   const valid = useSelector(addressesAddressValidSelector);
@@ -27,6 +29,12 @@ export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () =>
   const error = useSelector(addressesWhitelistAddressErrorSelector);
 
   const inputRequired = useMemo(() => !addressesLoading && !addresses.length, [addressesLoading]);
+
+  useEffect(() => {
+    if (!inputRequired || !welcomeMessageStatus) return;
+
+    controls.open();
+  }, [inputRequired, welcomeMessageStatus]);
 
   useEffect(() => {
     if (modalStatus) return;
@@ -62,10 +70,10 @@ export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () =>
     dispatch(addressesActions.whitelistAddress({ label, address }));
   }, [label, address, valid]);
 
-  return (modalStatus || inputRequired) ? (
+  return (
     <>
       <Component
-        status={ inputRequired || !loading }
+        status={ modalStatus }
         handleClose={ inputRequired ? undefined : controls.close }
         label={ label }
         disabled={ !label || !address || !valid }
@@ -80,8 +88,7 @@ export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () =>
         type={ StatusModalType.PROCESSING }
         processingText="Waiting for Auth eID sign"
         status={ loading }
-        handleClose={ controls.close }
       />
     </>
-  ) : null;
+  );
 };

@@ -10,6 +10,7 @@ import { sessionStatusSelector } from '../../store/Session';
 import { addressesItemsLoadingSelector, addressesItemsSelector } from '../../store/Addresses';
 import { useBankAccountContext } from '../../contexts/BankAccount';
 import { StatusModal } from '../../components/StatusModal';
+import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
 
 export const withBankAccountDomain = (Component: FC<Props>) => () => {
   const dispatch = useDispatch();
@@ -19,6 +20,7 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
   const [bank, setBank] = useState<null | SupportedBank>(null);
 
   const { modalStatus, controls } = useBankAccountContext();
+  const { modalStatus: addressModalStatus } = useWhitelistAddressContext();
 
   const sessionStatus = useSelector(sessionStatusSelector);
   const addresses = useSelector(addressesItemsSelector);
@@ -33,8 +35,14 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
   const waitingForContinue = useSelector(bankAccountsWaitingForContinueSelector);
 
   const inputRequired = useMemo(() => {
-    return !bankAccountsLoading && !addressesLoading && !!addresses.length && !bankAccounts.length;
-  }, [bankAccountsLoading, addressesLoading]);
+    return !waitingForContinue && !bankAccountsLoading && !addressesLoading && !!addresses.length && !bankAccounts.length;
+  }, [bankAccountsLoading, addressesLoading, waitingForContinue]);
+
+  useEffect(() => {
+    if (!inputRequired || addressModalStatus) return;
+
+    controls.open();
+  }, [inputRequired, addressModalStatus]);
 
   useEffect(() => {
     if (modalStatus) return;
@@ -89,10 +97,10 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
     dispatch(bankAccountsActions.createAgreementLink({ bankId: bank.id }));
   }, [bank, country]);
 
-  return (modalStatus || inputRequired) ? (
+  return (
     <>
       <Component
-        status={ inputRequired || !loading }
+        status={ modalStatus }
         handleClose={ inputRequired ? undefined : controls.close }
         country={ country }
         banksLoading={ supportedBanksLoading }
@@ -108,8 +116,7 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
       <StatusModal
         type={ StatusModalType.PROCESSING }
         status={ loading }
-        handleClose={ controls.close }
       />
     </>
-  ) : null;
+  );
 };
