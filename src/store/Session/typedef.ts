@@ -1,14 +1,4 @@
-import {
-  Action,
-  FailureAction,
-  EmptyAction,
-  AuthEidStatus,
-  SocketReq,
-  AuthSocketEndpoint,
-  SocketEndpoint,
-  AuthSocketReq,
-  SessionToken
-} from '../../typedef';
+import { Action, FailureAction, EmptyAction, AuthEidStatus, SocketReq, AuthSocketEndpoint, SocketEndpoint, AuthSocketReq, SessionToken } from '../../typedef';
 
 
 export enum SessionConstants {
@@ -21,6 +11,8 @@ export enum SessionConstants {
 
   UPDATE_CREATE_SESSION_STATUS = '@session/UPDATE_CREATE_SESSION_STATUS',
   UPDATE_CREATE_ACCOUNT_STATUS = '@session/UPDATE_CREATE_ACCOUNT_STATUS',
+
+  UPDATE_WELCOME_MESSAGE_STATUS = '@session/UPDATE_WELCOME_MESSAGE_STATUS',
 
   CREATE_SESSION_REQUEST = '@session/CREATE_SESSION_REQUEST',
   CREATE_SESSION_SUCCESS = '@session/CREATE_SESSION_SUCCESS',
@@ -52,8 +44,6 @@ export type CreateSessionReq = {
   serviceUrl: string;
 };
 
-export type CreateAccountReq = Record<string, unknown>;
-
 export type AuthEidReq = {
   requestId: null | string;
 };
@@ -66,6 +56,10 @@ export type RefreshReq = {
   accessToken: string;
 };
 
+export type UpdateWelcomeMessageStatusReq = {
+  status: boolean;
+};
+
 export type AuthorizeReq = {
   accessToken: string;
 };
@@ -76,7 +70,7 @@ export type AuthorizeReq = {
  */
 
 export type CreateSessionApiReq = AuthSocketReq<AuthSocketEndpoint.LOG_IN, CreateSessionReq>;
-export type CreateAccountApiReq = AuthSocketReq<AuthSocketEndpoint.REGISTER, CreateAccountReq>;
+export type CreateAccountApiReq = AuthSocketReq<AuthSocketEndpoint.REGISTER, CreateSessionReq>;
 export type RefreshApiReq = AuthSocketReq<AuthSocketEndpoint.REFRESH_SESSION, RefreshReq>;
 export type CancelAuthEidReqApiReq = AuthSocketReq<AuthSocketEndpoint.CANCEL_REQUEST, CancelAuthEidReq>;
 
@@ -132,8 +126,10 @@ export type AuthEidStatusRes = {
 export type UpdateCreateAccountRequestId = Action<SessionConstants.UPDATE_CREATE_ACCOUNT_REQUEST_ID, AuthEidReq>;
 export type UpdateCreateSessionRequestId = Action<SessionConstants.UPDATE_CREATE_SESSION_REQUEST_ID, AuthEidReq>;
 
-export type UpdateCreateAccountStatus = Action<SessionConstants.UPDATE_CREATE_ACCOUNT_STATUS, AuthEidIdStatusRes>;
+export type UpdateCreateAccountStatus = Action<SessionConstants.UPDATE_CREATE_ACCOUNT_STATUS, CreateSessionStatusRes>;
 export type UpdateCreateSessionStatus = Action<SessionConstants.UPDATE_CREATE_SESSION_STATUS, CreateSessionStatusRes>;
+
+export type UpdateWelcomeMessageStatus = Action<SessionConstants.UPDATE_WELCOME_MESSAGE_STATUS, UpdateWelcomeMessageStatusReq>;
 
 export type CancelAuthEid = Action<SessionConstants.CANCEL_AUTH_EID_REQUEST, CancelAuthEidReq>;
 export type CancelAuthEidSuccess = EmptyAction<SessionConstants.CANCEL_AUTH_EID_SUCCESS>;
@@ -144,7 +140,7 @@ export type CreateSessionSuccess = Action<SessionConstants.CREATE_SESSION_SUCCES
 export type CreateSessionFailure = FailureAction<SessionConstants.CREATE_SESSION_FAILURE>;
 
 export type CreateAccount = EmptyAction<SessionConstants.CREATE_ACCOUNT_REQUEST>;
-export type CreateAccountSuccess = EmptyAction<SessionConstants.CREATE_ACCOUNT_SUCCESS>;
+export type CreateAccountSuccess = Action<SessionConstants.CREATE_ACCOUNT_SUCCESS, CreateSessionRes>;
 export type CreateAccountFailure = FailureAction<SessionConstants.CREATE_ACCOUNT_FAILURE>;
 
 export type Authorize = Action<SessionConstants.AUTHORIZE_SESSION_REQUEST, AuthorizeReq>;
@@ -167,6 +163,7 @@ export type DestroyFailure = FailureAction<SessionConstants.DESTROY_SESSION_FAIL
 export type SessionAction =
   CancelAuthEid | CancelAuthEidSuccess | CancelAuthEidFailure
   | UpdateCreateAccountRequestId | UpdateCreateSessionRequestId
+  | UpdateWelcomeMessageStatus
   | CreateAccount | UpdateCreateAccountStatus | CreateAccountSuccess | CreateAccountFailure
   | CreateSession | UpdateCreateSessionStatus | CreateSessionSuccess | CreateSessionFailure
   | Authorize | AuthorizeSuccess | AuthorizeFailure
@@ -182,8 +179,10 @@ export type SessionActions = {
   updateCreateAccountRequestId: (payload: AuthEidReq) => UpdateCreateAccountRequestId;
   updateCreateSessionRequestId: (payload: AuthEidReq) => UpdateCreateSessionRequestId;
 
-  updateCreateAccountStatus: (payload: AuthEidIdStatusRes) => UpdateCreateAccountStatus;
+  updateCreateAccountStatus: (payload: CreateSessionStatusRes) => UpdateCreateAccountStatus;
   updateCreateSessionStatus: (payload: CreateSessionStatusRes) => UpdateCreateSessionStatus;
+
+  updateWelcomeMessageStatus: (payload: UpdateWelcomeMessageStatusReq) => UpdateWelcomeMessageStatus;
 
   cancelAuthEid: (payload: CancelAuthEidReq) => CancelAuthEid;
   cancelAuthEidSuccess: () => CancelAuthEidSuccess;
@@ -194,7 +193,7 @@ export type SessionActions = {
   createSessionFailure: (error: string) => CreateSessionFailure;
 
   createAccount: () => CreateAccount;
-  createAccountSuccess: () => CreateAccountSuccess;
+  createAccountSuccess: (payload: CreateSessionRes) => CreateAccountSuccess;
   createAccountFailure: (error: string) => CreateAccountFailure;
 
   authorize: (payload: AuthorizeReq) => Authorize;
@@ -225,6 +224,7 @@ export type SessionState = {
   authenticated: null | boolean;
   loginRequestId: null | string;
   registerRequestId: null | string;
+  welcomeMessageSeen: boolean;
   token: null | SessionToken;
   loading: { [K in ActionKeys]: boolean };
   error: { [K in ActionKeys]: null | string };

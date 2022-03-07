@@ -7,6 +7,7 @@ export const initialState: SessionState = {
   token: null,
   loginRequestId: null,
   registerRequestId: null,
+  welcomeMessageSeen: false,
   loading: {
     signature: false,
     createSession: false,
@@ -49,7 +50,8 @@ export const sessionReducer = (state = initialState, action: SessionAction): Ses
       return {
         ...state,
         loading: { ...state.loading, createAccount: false, signature: false },
-        registerRequestId: null
+        registerRequestId: null,
+        token: serializeToken(action.payload)
       };
     case SessionConstants.CREATE_ACCOUNT_FAILURE:
       return {
@@ -126,6 +128,9 @@ export const sessionReducer = (state = initialState, action: SessionAction): Ses
         token: null,
         error: { ...state.error, refresh: action.error }
       };
+
+    case SessionConstants.UPDATE_WELCOME_MESSAGE_STATUS:
+      return { ...state, welcomeMessageSeen: action.payload.status };
 
     case SessionConstants.DESTROY_SESSION_REQUEST:
       return initialState;

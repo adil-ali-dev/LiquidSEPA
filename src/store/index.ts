@@ -21,7 +21,7 @@ const blacklistedActions = new Set([SocketConstants.SEND, AuthSocketConstants.SE
 
 
 const sessionTransform = createTransform<SessionState, {}>(
-  state => ({ token: state.token }),
+  state => ({ token: state.token, welcomeMessageSeen: state.welcomeMessageSeen }),
   null,
   { whitelist: ['session'] }
 );

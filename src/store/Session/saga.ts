@@ -1,8 +1,16 @@
-import { delay, select, takeLatest, put, call } from 'redux-saga/effects';
+import { call, delay, put, select, takeLatest } from 'redux-saga/effects';
 
-import { SocketCloseStatus, SocketEndpoint } from '../../typedef';
-import { AuthEidStatus, AuthSocketEndpoint, StatusModalType } from '../../typedef';
-import { CreateSessionSuccess, Refresh, SessionConstants, UpdateCreateSessionStatus, UpdateCreateAccountStatus, Authorize, RefreshSuccess, CancelAuthEid } from './typedef';
+import { AuthEidStatus, AuthSocketEndpoint, SocketCloseStatus, SocketEndpoint, StatusModalType } from '../../typedef';
+import {
+  Authorize,
+  CancelAuthEid,
+  CreateSessionSuccess,
+  Refresh,
+  RefreshSuccess,
+  SessionConstants,
+  UpdateCreateAccountStatus,
+  UpdateCreateSessionStatus
+} from './typedef';
 import { authSocketActions } from '../AuthSocket';
 import { sessionTokenExpiresInSelector, sessionTokenValueSelector } from './selectors';
 import { alertActions } from '../Alert';
@@ -43,7 +51,9 @@ function *createAccount() {
     method: AuthSocketEndpoint.REGISTER,
     api: 'signup',
     messageId: `${Date.now()}`,
-    args: {}
+    // TODO: Uncomment the line below when BE is ready.
+    // args: { serviceUrl: WS_MAIN_URL }
+    args: { serviceUrl: 'https://liquidsepa.com' }
   }));
 }
 
@@ -57,9 +67,15 @@ function *cancelRequest({ payload }: CancelAuthEid) {
 }
 
 function *updateCreateAccountStatus({ payload }: UpdateCreateAccountStatus) {
+  if (payload.accessToken) {
+    yield put(sessionActions.createAccountSuccess(payload));
+    return;
+  }
+
   switch (payload.status) {
     case AuthEidStatus.NOT_SCANNED:
     case AuthEidStatus.NOT_READY:
+    case AuthEidStatus.SUCCESS:
       break;
 
     case AuthEidStatus.REQUEST_CANCELLED:
@@ -69,10 +85,6 @@ function *updateCreateAccountStatus({ payload }: UpdateCreateAccountStatus) {
     // Refreshing the QR when timeout.
     case AuthEidStatus.TIMEOUT:
       yield put(sessionActions.createAccount());
-      break;
-
-    case AuthEidStatus.SUCCESS:
-      yield put(sessionActions.createAccountSuccess());
       break;
 
     default:
@@ -126,15 +138,6 @@ function *refresh({ payload }: Refresh) {
   }));
 }
 
-function *createAccountSuccess() {
-  yield call(closeAuthSocket);
-
-  yield put(alertActions.show({
-    type: StatusModalType.SUCCESS,
-    message: 'Account has been created'
-  }));
-}
-
 function *createSessionSuccess({ payload }: CreateSessionSuccess) {
   yield call(closeAuthSocket);
 
@@ -176,10 +179,12 @@ export function *sessionSaga() {
 
   yield takeLatest(SessionConstants.CANCEL_AUTH_EID_REQUEST, cancelRequest);
 
-  yield takeLatest(SessionConstants.CREATE_ACCOUNT_SUCCESS, createAccountSuccess);
   yield takeLatest(SessionConstants.REFRESH_SESSION_SUCCESS, refreshSessionSuccess);
-  yield takeLatest(SessionConstants.CREATE_SESSION_SUCCESS, createSessionSuccess);
   yield takeLatest(SessionConstants.AUTHORIZE_SESSION_SUCCESS, authorizeSuccess);
+  yield takeLatest([
+    SessionConstants.CREATE_SESSION_SUCCESS,
+    SessionConstants.CREATE_ACCOUNT_SUCCESS
+  ], createSessionSuccess);
 
   // Main socket management
   yield takeLatest(SessionConstants.DESTROY_SESSION_REQUEST, closeMainSocket);

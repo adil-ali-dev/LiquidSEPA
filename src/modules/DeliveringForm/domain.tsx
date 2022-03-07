@@ -65,7 +65,6 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   const bankAccount = useBankAccountContext();
   const { status: isLoggedIn, statusForUI: isLoggedInForUI, controls: authControls } = useSessionContext();
 
-  const [welcomeModalVisible, setWelcomeModalVisible] = useState(false);
   const [deliver, setDeliver] = useState(initialDeliver);
   const [receive, setReceive] = useState(initialReceive);
   const [account, setAccount] = useState<null | BankAccount>(null);
@@ -117,16 +116,10 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
   }, [isLoggedIn]);
 
   useEffect(() => {
-    if (!isLoggedInForUI || bankAccount.modalStatus || whitelistAddress.modalStatus || welcomeModalVisible) return;
+    if (!isLoggedInForUI || bankAccount.modalStatus || whitelistAddress.modalStatus) return;
 
     deliverInputRef.current?.focus();
-  }, [isLoggedInForUI, isLoggedIn, bankAccount.modalStatus, whitelistAddress.modalStatus, welcomeModalVisible]);
-
-  useEffect(() => {
-    if (bankAccountsLoading || whitelistedAddressesLoading || bankAccounts.length || whitelistedAddresses.length) return;
-
-    setWelcomeModalVisible(true);
-  }, [whitelistedAddressesLoading, bankAccountsLoading]);
+  }, [isLoggedInForUI, isLoggedIn, bankAccount.modalStatus, whitelistAddress.modalStatus]);
 
   useEffect(() => {
     if (isLoggedInForUI) return;
@@ -264,10 +257,6 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
     setError(null);
   }, []);
 
-  const handleWelcomeClose = useCallback(() => {
-    setWelcomeModalVisible(false);
-  }, []);
-
   const handleDropdownExited = useCallback(() => {
     deliverInputRef.current?.focus();
   }, []);
@@ -338,10 +327,6 @@ export const withDeliveringFormDomain = (Component: ComponentType<Props>) => () 
         btnText={ 'OK' }
         handleClose={ handleErrorClose }
         handleButtonClick={ handleErrorClose }
-      />
-      <WelcomeModal
-        status={welcomeModalVisible}
-        handleClose={handleWelcomeClose}
       />
     </>
   );

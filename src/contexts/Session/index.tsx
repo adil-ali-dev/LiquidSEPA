@@ -1,18 +1,9 @@
-import React, {
-  createContext,
-  FC,
-  ReactNode,
-  useState,
-  useContext,
-  useEffect,
-  useCallback,
-  useLayoutEffect
-} from 'react';
+import React, { createContext, FC, ReactNode, useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { isMobile } from 'react-device-detect';
 
 import { sessionActions, sessionStatusForUISelector, sessionStatusSelector } from '../../store/Session';
-import { isMobile } from 'react-device-detect';
-import { socketActions } from '../../store/Socket';
+import { WelcomeModule } from '../../modules/Welcome';
 
 
 const SessionContext = createContext({
@@ -95,6 +86,7 @@ export const SessionProvider: FC<Props> = ({ children }) => {
   return (
     <SessionContext.Provider value={ value }>
       { children }
+      <WelcomeModule />
     </SessionContext.Provider>
   );
 };
