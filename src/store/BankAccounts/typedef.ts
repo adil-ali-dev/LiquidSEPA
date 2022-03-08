@@ -2,20 +2,20 @@ import { Action, FailureAction, EmptyAction, BankAccount, SocketReq, SocketEndpo
 
 
 export enum BankAccountsConstants {
-  GET_BANK_ACCOUNTS_REQUEST = '@bank-accounts/GET_BANK_ACCOUNTS_REQUEST', 
-  GET_BANK_ACCOUNTS_SUCCESS = '@bank-accounts/GET_BANK_ACCOUNTS_SUCCESS', 
+  GET_BANK_ACCOUNTS_REQUEST = '@bank-accounts/GET_BANK_ACCOUNTS_REQUEST',
+  GET_BANK_ACCOUNTS_SUCCESS = '@bank-accounts/GET_BANK_ACCOUNTS_SUCCESS',
   GET_BANK_ACCOUNTS_FAILURE = '@bank-accounts/GET_BANK_ACCOUNTS_FAILURE',
 
-  GET_SUPPORTED_BANKS_REQUEST = '@bank-accounts/GET_SUPPORTED_BANKS_REQUEST', 
-  GET_SUPPORTED_BANKS_SUCCESS = '@bank-accounts/GET_SUPPORTED_BANKS_SUCCESS', 
+  GET_SUPPORTED_BANKS_REQUEST = '@bank-accounts/GET_SUPPORTED_BANKS_REQUEST',
+  GET_SUPPORTED_BANKS_SUCCESS = '@bank-accounts/GET_SUPPORTED_BANKS_SUCCESS',
   GET_SUPPORTED_BANKS_FAILURE = '@bank-accounts/GET_SUPPORTED_BANKS_FAILURE',
 
-  CREATE_AGREEMENT_LINK_REQUEST = '@bank-accounts/CREATE_AGREEMENT_LINK_REQUEST', 
-  CREATE_AGREEMENT_LINK_SUCCESS = '@bank-accounts/CREATE_AGREEMENT_LINK_SUCCESS', 
+  CREATE_AGREEMENT_LINK_REQUEST = '@bank-accounts/CREATE_AGREEMENT_LINK_REQUEST',
+  CREATE_AGREEMENT_LINK_SUCCESS = '@bank-accounts/CREATE_AGREEMENT_LINK_SUCCESS',
   CREATE_AGREEMENT_LINK_FAILURE = '@bank-accounts/CREATE_AGREEMENT_LINK_FAILURE',
 
-  CREATE_BANK_ACCOUNT_REQUEST = '@bank-accounts/CREATE_BANK_ACCOUNT_REQUEST', 
-  CREATE_BANK_ACCOUNT_SUCCESS = '@bank-accounts/CREATE_BANK_ACCOUNT_SUCCESS', 
+  CREATE_BANK_ACCOUNT_REQUEST = '@bank-accounts/CREATE_BANK_ACCOUNT_REQUEST',
+  CREATE_BANK_ACCOUNT_SUCCESS = '@bank-accounts/CREATE_BANK_ACCOUNT_SUCCESS',
   CREATE_BANK_ACCOUNT_FAILURE = '@bank-accounts/CREATE_BANK_ACCOUNT_FAILURE',
 
   RESET_WAITING_FOR_CONTINUE = '@bank-accounts/RESET_WAITING_FOR_CONTINUE'
@@ -43,6 +43,7 @@ export type CreateAgreementLinkExtendedReq = CreateAgreementLinkReq & {
 
 export type CreateBankAccountReq = {
   ref: string;
+  closeCb?: () => void;
 };
 
 
@@ -151,6 +152,7 @@ export type BankAccountsState = {
   supportedBanks: SupportedBank[];
   agreementLink: null | string;
   waitingForContinue: boolean;
+  closeCb: null | (() => void);
   loading: { [K in ActionKeys]: boolean };
   error: { [K in ActionKeys]: null | string };
 };

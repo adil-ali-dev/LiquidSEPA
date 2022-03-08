@@ -23,8 +23,9 @@ export const withAlertDomain = (Component: FC<Props>) => () => {
   }, []);
 
   const handleExited = useCallback(() => {
+    alert?.onExited?.();
     dispatch(alertActions.hide());
-  }, []);
+  }, [alert]);
 
   return (
     <Component

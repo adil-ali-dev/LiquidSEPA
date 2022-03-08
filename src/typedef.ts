@@ -318,4 +318,5 @@ export type Alert = {
   message: string;
   button?: string;
   onButtonPress?: () => void;
+  onExited?: null | (() => void);
 };

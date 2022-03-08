@@ -12,8 +12,6 @@ export enum SessionConstants {
   UPDATE_CREATE_SESSION_STATUS = '@session/UPDATE_CREATE_SESSION_STATUS',
   UPDATE_CREATE_ACCOUNT_STATUS = '@session/UPDATE_CREATE_ACCOUNT_STATUS',
 
-  UPDATE_WELCOME_MESSAGE_STATUS = '@session/UPDATE_WELCOME_MESSAGE_STATUS',
-
   CREATE_SESSION_REQUEST = '@session/CREATE_SESSION_REQUEST',
   CREATE_SESSION_SUCCESS = '@session/CREATE_SESSION_SUCCESS',
   CREATE_SESSION_FAILURE = '@session/CREATE_SESSION_FAILURE',
@@ -109,13 +107,9 @@ export type AuthorizeRes = {
   session: {
     valid: boolean;
     info: {
-        user: string;
+      user: string;
     }
-}
-};
-
-export type AuthEidStatusRes = {
-  status: AuthEidStatus;
+  }
 };
 
 
@@ -128,8 +122,6 @@ export type UpdateCreateSessionRequestId = Action<SessionConstants.UPDATE_CREATE
 
 export type UpdateCreateAccountStatus = Action<SessionConstants.UPDATE_CREATE_ACCOUNT_STATUS, CreateSessionStatusRes>;
 export type UpdateCreateSessionStatus = Action<SessionConstants.UPDATE_CREATE_SESSION_STATUS, CreateSessionStatusRes>;
-
-export type UpdateWelcomeMessageStatus = Action<SessionConstants.UPDATE_WELCOME_MESSAGE_STATUS, UpdateWelcomeMessageStatusReq>;
 
 export type CancelAuthEid = Action<SessionConstants.CANCEL_AUTH_EID_REQUEST, CancelAuthEidReq>;
 export type CancelAuthEidSuccess = EmptyAction<SessionConstants.CANCEL_AUTH_EID_SUCCESS>;
@@ -163,7 +155,6 @@ export type DestroyFailure = FailureAction<SessionConstants.DESTROY_SESSION_FAIL
 export type SessionAction =
   CancelAuthEid | CancelAuthEidSuccess | CancelAuthEidFailure
   | UpdateCreateAccountRequestId | UpdateCreateSessionRequestId
-  | UpdateWelcomeMessageStatus
   | CreateAccount | UpdateCreateAccountStatus | CreateAccountSuccess | CreateAccountFailure
   | CreateSession | UpdateCreateSessionStatus | CreateSessionSuccess | CreateSessionFailure
   | Authorize | AuthorizeSuccess | AuthorizeFailure
@@ -181,8 +172,6 @@ export type SessionActions = {
 
   updateCreateAccountStatus: (payload: CreateSessionStatusRes) => UpdateCreateAccountStatus;
   updateCreateSessionStatus: (payload: CreateSessionStatusRes) => UpdateCreateSessionStatus;
-
-  updateWelcomeMessageStatus: (payload: UpdateWelcomeMessageStatusReq) => UpdateWelcomeMessageStatus;
 
   cancelAuthEid: (payload: CancelAuthEidReq) => CancelAuthEid;
   cancelAuthEidSuccess: () => CancelAuthEidSuccess;
@@ -215,16 +204,15 @@ export type SessionActions = {
  */
 
 type ActionKeys = 'refresh'
-| 'createSession'
-| 'createAccount'
-| 'signature'
-| 'cancel';
+  | 'createSession'
+  | 'createAccount'
+  | 'signature'
+  | 'cancel';
 
 export type SessionState = {
   authenticated: null | boolean;
   loginRequestId: null | string;
   registerRequestId: null | string;
-  welcomeMessageSeen: boolean;
   token: null | SessionToken;
   loading: { [K in ActionKeys]: boolean };
   error: { [K in ActionKeys]: null | string };

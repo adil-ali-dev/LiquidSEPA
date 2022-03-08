@@ -1,11 +1,19 @@
-import { takeLatest, put } from 'redux-saga/effects';
+import { takeLatest, put, select } from 'redux-saga/effects';
 
 import { LIVE } from '../../constants';
 import { SocketEndpoint, StatusModalType } from '../../typedef';
-import { BankAccountsConstants, CreateAgreementLink, CreateBankAccount, GetSupportedBanks } from './typedef';
+import {
+  BankAccountsConstants,
+  CreateAgreementLink,
+  CreateBankAccount,
+  CreateBankAccountFailure,
+  GetSupportedBanks
+} from './typedef';
 import { alertActions } from '../Alert';
 import { socketActions } from '../Socket';
 import { bankAccountsActions } from './actions';
+import { addressesWhitelistingCbSelector } from '../Addresses';
+import { bankAccountsCbSelector } from './selectors';
 
 
 const ACCOUNT_API = 'account';
@@ -64,11 +72,24 @@ function *createBankAccount({ payload }: CreateBankAccount) {
 }
 
 function *createBankAccountSuccess() {
+  const closeCallback: null | (() => void) = yield select(bankAccountsCbSelector);
+
   yield put(bankAccountsActions.getBankAccounts());
 
   yield put(alertActions.show({
     type: StatusModalType.SUCCESS,
-    message: 'Your account is now verified'
+    message: 'Your account is now verified',
+    onClose: closeCallback
+  }));
+}
+
+function *createBankAccountFailure({ error }: CreateBankAccountFailure) {
+  const closeCallback: null | (() => void) = yield select(bankAccountsCbSelector);
+
+  yield put(alertActions.show({
+    type: StatusModalType.ERROR,
+    message: error,
+    onClose: closeCallback
   }));
 }
 
@@ -80,4 +101,5 @@ export function *bankAccountsSaga() {
   yield takeLatest(BankAccountsConstants.CREATE_BANK_ACCOUNT_REQUEST, createBankAccount);
 
   yield takeLatest(BankAccountsConstants.CREATE_BANK_ACCOUNT_SUCCESS, createBankAccountSuccess);
+  yield takeLatest(BankAccountsConstants.CREATE_BANK_ACCOUNT_FAILURE, createBankAccountFailure);
 }

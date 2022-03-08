@@ -4,6 +4,8 @@ import { AddressesAction, AddressesConstants, AddressesState } from './typedef';
 export const initialState: AddressesState = {
   addresses: [],
   addressValid: false,
+  requestId: null,
+  closeCb: null,
   loading: {
     validate: false,
     whitelist: false,
@@ -43,18 +45,31 @@ export const addressesReducer = (state = initialState, action: AddressesAction):
       return {
         ...state,
         loading: { ...state.loading, whitelist: true },
+        closeCb: action.payload.closeCb || null,
         error: { ...state.error, whitelist: null }
       };
     case AddressesConstants.WHITELIST_ADDRESS_SUCCESS:
       return {
         ...state,
-        loading: { ...state.loading, whitelist: false }
+        loading: { ...state.loading, whitelist: false },
+        closeCb: null
       };
     case AddressesConstants.WHITELIST_ADDRESS_FAILURE:
       return {
         ...state,
         loading: { ...state.loading, whitelist: false },
+        closeCb: null,
         error: { ...state.error, whitelist: action.error }
+      };
+
+    case AddressesConstants.UPDATE_WHITELISTING_REQUEST_ID:
+      return { ...state, requestId: action.payload.requestId };
+
+    case AddressesConstants.CANCEL_WHITELISTING_REQUEST:
+      return {
+        ...state,
+        loading: { ...state.loading, whitelist: false },
+        requestId: null
       };
 
     case AddressesConstants.GET_ADDRESSES_REQUEST:

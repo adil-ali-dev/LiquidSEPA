@@ -1,28 +1,19 @@
-import { FC, useCallback, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { FC } from 'react';
 
 import { WrappedProps } from './typedef';
-import { sessionActions, sessionStatusSelector, sessionWelcomeMessageStatusSelector } from '../../store/Session';
+import { useWelcomeContext } from '../../contexts/Welcome';
+import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
 
 
 export const withWelcomeDomain = (Component: FC<WrappedProps>) => () => {
-  const dispatch = useDispatch();
-
-  const sessionStatus = useSelector(sessionStatusSelector);
-  const welcomeMessageStatus = useSelector(sessionWelcomeMessageStatusSelector);
-
-  const visible = useMemo(() => {
-    return !!sessionStatus && !welcomeMessageStatus;
-  }, [sessionStatus, welcomeMessageStatus]);
-
-  const handleClose = useCallback(() => {
-    dispatch(sessionActions.updateWelcomeMessageStatus({ status: true }));
-  }, []);
+  const { modalStatus, controls } = useWelcomeContext();
+  const { controls: addressModalControls } = useWhitelistAddressContext();
 
   return (
     <Component
-      status={visible}
-      handleClose={handleClose}
+      status={ !!modalStatus }
+      handleClose={ controls.close }
+      handleExited={ addressModalControls.open }
     />
   );
 }

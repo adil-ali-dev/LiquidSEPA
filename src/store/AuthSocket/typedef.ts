@@ -3,6 +3,7 @@ import { CloseAction, ClosedAction } from 'redux-awesome-socket-middleware';
 
 import { AuthSocketEndpoint, Action, EmptyAction, FailureAction, AuthSocketRes } from '../../typedef';
 import { SessionApiAuthReqs } from '../Session';
+import { AddressesApiAuthReqs } from '../Addresses';
 
 
 export enum AuthSocketConstants {
@@ -29,7 +30,7 @@ export type CloseReq = {
  * Api Requests
  */
 
-type SendReq = SessionApiAuthReqs;
+type SendReq = SessionApiAuthReqs | AddressesApiAuthReqs;
 
 
 /*

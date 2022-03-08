@@ -90,25 +90,7 @@ export type FormInputProps = {
   rowsMax?: number;
   withExtraProps?: boolean;
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  handleEnterTextAreaPress?: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
-};
-
-export type FormInputLoggedinProps = {
-  background?: boolean;
-  label: string;
-  value: string;
-  error?: boolean;
-  autoFocus?: boolean;
-  verified?: null | boolean;
-  rowsMax?: number;
-  withExtraProps?: boolean;
-  selectOpened: boolean;
-  account: any;
-  handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  handleEnterTextAreaPress?: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
-  handleAddPress: (type: string) => void
-  handleSelectPress: (state: boolean) => void
-  handleChooseAccount: (address: string) => void
+  handleKeyDown?: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
 };
 
 export type RequisitesHeaderProps = {

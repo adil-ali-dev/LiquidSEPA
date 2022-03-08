@@ -3,7 +3,7 @@ import { Dispatch } from 'redux';
 
 import { SocketEndpoint, SocketRes } from '../../typedef';
 import { SocketHandler } from './typedef';
-import { sessionActions } from '../Session/actions';
+import { sessionActions } from '../Session';
 import { addressesActions } from '../Addresses';
 import { bankAccountsActions } from '../BankAccounts';
 import { rfqActions } from '../Rfq';
@@ -13,7 +13,7 @@ const socketExternalHandlers: SocketHandler = {
   [SocketEndpoint.AUTHORIZE]: [sessionActions.authorizeSuccess, sessionActions.authorizeFailure],
 
   [SocketEndpoint.VALIDATE_ADDRESS]: [addressesActions.validateAddressSuccess, addressesActions.validateAddressFailure],
-  [SocketEndpoint.WHITELIST_ADDRESS]: [null, addressesActions.whitelistAddressFailure],
+  [SocketEndpoint.WHITELIST_ADDRESS]: [addressesActions.updateWhitelistingRequestId, addressesActions.whitelistAddressFailure],
   [SocketEndpoint.WHITELISTING_STATUS]: [addressesActions.updateWhitelistingStatus, addressesActions.whitelistAddressFailure],
   [SocketEndpoint.GET_ADDRESSES]: [addressesActions.getAddressesSuccess, addressesActions.getAddressesFailure],
 

@@ -17,7 +17,7 @@ export const FormInput = memo<FormInputProps>(({
   background,
   placeholder,
   handleChange,
-  handleEnterTextAreaPress
+  handleKeyDown
 }) => {
   const classes = useStyles();
 
@@ -51,11 +51,11 @@ export const FormInput = memo<FormInputProps>(({
           value={ value }
           inputRef={ reference }
           onChange={ handleChange }
+          onKeyDown={ handleKeyDown }
           autoFocus={ autoFocus }
           { ...withExtraProps && {
             multiline: true,
-            rowsMax: rowsMax || 5,
-            onKeyDown: handleEnterTextAreaPress
+            rowsMax: rowsMax || 5
           } }
         />
       </Grid>

@@ -1,10 +1,19 @@
-import { takeLatest, put } from 'redux-saga/effects';
+import { takeLatest, put, select } from 'redux-saga/effects';
 
-import { AuthEidStatus, SocketEndpoint, StatusModalType } from '../../typedef';
-import { AddressesConstants, ValidateAddress, WhitelistAddress, UpdateWhitelistingStatus } from './typedef';
+import { AuthEidStatus, AuthSocketEndpoint, SocketEndpoint, StatusModalType } from '../../typedef';
+import {
+  AddressesConstants,
+  ValidateAddress,
+  WhitelistAddress,
+  UpdateWhitelistingStatus,
+  CancelWhitelisting,
+  WhitelistAddressFailure
+} from './typedef';
 import { socketActions } from '../Socket';
 import { alertActions } from '../Alert';
 import { addressesActions } from './actions';
+import { authSocketActions } from '../AuthSocket';
+import { addressesWhitelistingCbSelector } from './selectors';
 
 
 const authEidErrors = {
@@ -42,6 +51,15 @@ function *whitelistAddress({ payload }: WhitelistAddress) {
   }
 }
 
+function *cancelRequest({ payload }: CancelWhitelisting) {
+  yield put(authSocketActions.disposableSend({
+    method: AuthSocketEndpoint.CANCEL_REQUEST,
+    api: 'login',
+    messageId: `${Date.now()}`,
+    args: payload
+  }));
+}
+
 function *getAddresses() {
   try {
     yield put(socketActions.send({
@@ -73,21 +91,35 @@ function *updateWhitelistingStatus({ payload }: UpdateWhitelistingStatus) {
 
 
 function *whitelistAddressSuccess() {
+  const closeCallback: null | (() => void) = yield select(addressesWhitelistingCbSelector);
+
   yield put(addressesActions.getAddresses());
 
   yield put(alertActions.show({
     type: StatusModalType.SUCCESS,
-    message: 'Your Address is now whitelisted'
+    message: 'Your Address is now whitelisted',
+    onClose: closeCallback
   }));
 }
 
+function *whitelistAddressFailure({ error }: WhitelistAddressFailure) {
+  const closeCallback: null | (() => void) = yield select(addressesWhitelistingCbSelector);
+
+  yield put(alertActions.show({
+    type: StatusModalType.ERROR,
+    message: error,
+    onClose: closeCallback
+  }));
+}
 
 export function *addressesSaga() {
   yield takeLatest(AddressesConstants.VALIDATE_ADDRESS_REQUEST, validateAddress);
   yield takeLatest(AddressesConstants.WHITELIST_ADDRESS_REQUEST, whitelistAddress);
   yield takeLatest(AddressesConstants.GET_ADDRESSES_REQUEST, getAddresses);
+  yield takeLatest(AddressesConstants.CANCEL_WHITELISTING_REQUEST, cancelRequest);
 
   yield takeLatest(AddressesConstants.UPDATE_WHITELISTING_STATUS, updateWhitelistingStatus);
 
   yield takeLatest(AddressesConstants.WHITELIST_ADDRESS_SUCCESS, whitelistAddressSuccess);
+  yield takeLatest(AddressesConstants.WHITELIST_ADDRESS_FAILURE, whitelistAddressFailure);
 }

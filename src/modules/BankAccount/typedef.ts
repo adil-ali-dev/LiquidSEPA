@@ -13,6 +13,7 @@ export type Props = {
   loading: boolean;
   disabled: boolean;
   handleClose?: () => void;
+  handleExited?: () => void;
   handleCountryChange: (_: ChangeEvent<Record<string, unknown>>, value: null | Country) => void;
   handleBankChange: (_: ChangeEvent<Record<string, unknown>>, value: null | SupportedBank) => void;
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;

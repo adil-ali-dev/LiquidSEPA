@@ -7,8 +7,6 @@ export const sessionActions: SessionActions = {
   updateCreateAccountStatus: payload => ({ type: SessionConstants.UPDATE_CREATE_ACCOUNT_STATUS, payload }),
   updateCreateSessionStatus: payload => ({ type: SessionConstants.UPDATE_CREATE_SESSION_STATUS, payload }),
 
-  updateWelcomeMessageStatus: payload => ({ type: SessionConstants.UPDATE_WELCOME_MESSAGE_STATUS, payload }),
-
   cancelAuthEid: payload => ({ type: SessionConstants.CANCEL_AUTH_EID_REQUEST, payload }),
   cancelAuthEidSuccess: () => ({ type: SessionConstants.CANCEL_AUTH_EID_SUCCESS }),
   cancelAuthEidFailure: error => ({ type: SessionConstants.CANCEL_AUTH_EID_FAILURE, error }),
