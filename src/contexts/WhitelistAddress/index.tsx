@@ -1,6 +1,7 @@
 import React, { useContext, useState, createContext, FC, useCallback } from 'react';
 
 import { Context, Props } from './typedef';
+import { log } from 'util';
 
 const WhitelistAddressContext = createContext<Context>({
   modalStatus: false,

@@ -12,6 +12,7 @@ import { ErrorBoundary } from './error';
 import { SessionProvider } from './contexts/Session';
 import { WhitelistAddressProvider } from './contexts/WhitelistAddress';
 import { BankAccountProvider } from './contexts/BankAccount';
+import { WelcomeProvider } from './contexts/Welcome';
 
 
 const queryClient = new QueryClient();
@@ -30,9 +31,11 @@ export const App: FC = () => (
               <CssBaseline />
               <SessionProvider>
                 <WhitelistAddressProvider>
-                  <BankAccountProvider>
-                    <Routes />
-                  </BankAccountProvider>
+                  <WelcomeProvider>
+                    <BankAccountProvider>
+                      <Routes />
+                    </BankAccountProvider>
+                  </WelcomeProvider>
                 </WhitelistAddressProvider>
               </SessionProvider>
             </ThemeProvider>

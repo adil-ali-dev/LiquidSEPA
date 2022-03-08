@@ -3,14 +3,26 @@ import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { default as countries } from '../../constants/nordigen-countries';
-import { SupportedBank, Country, StatusModalType } from '../../typedef';
+import { Country, StatusModalType, SupportedBank } from '../../typedef';
 import { Props } from './typedef';
-import { bankAccountsActions, bankAccountsAgreementLinkLoadingSelector, bankAccountsAgreementLinkSelector, bankAccountsCreateLoadingSelector, bankAccountsItemsLoadingSelector, bankAccountsItemsSelector, bankAccountsSupportedBanksLoadingSelector, bankAccountsSupportedBanksSelector, bankAccountsWaitingForContinueSelector } from '../../store/BankAccounts';
+import {
+  bankAccountsActions,
+  bankAccountsAgreementLinkLoadingSelector,
+  bankAccountsAgreementLinkSelector,
+  bankAccountsCreateLoadingSelector,
+  bankAccountsItemsLoadingSelector,
+  bankAccountsItemsSelector,
+  bankAccountsSupportedBanksLoadingSelector,
+  bankAccountsSupportedBanksSelector,
+  bankAccountsWaitingForContinueSelector
+} from '../../store/BankAccounts';
 import { sessionStatusSelector } from '../../store/Session';
 import { addressesItemsLoadingSelector, addressesItemsSelector } from '../../store/Addresses';
 import { useBankAccountContext } from '../../contexts/BankAccount';
 import { StatusModal } from '../../components/StatusModal';
 import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
+import { usePrevious } from '../../hooks/Previous';
+import { alertActions } from '../../store/Alert';
 
 export const withBankAccountDomain = (Component: FC<Props>) => () => {
   const dispatch = useDispatch();
@@ -34,22 +46,22 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
   const loading = useSelector(bankAccountsCreateLoadingSelector);
   const waitingForContinue = useSelector(bankAccountsWaitingForContinueSelector);
 
-  const inputRequired = useMemo(() => {
-    return !waitingForContinue && !bankAccountsLoading && !addressesLoading && !!addresses.length && !bankAccounts.length;
-  }, [bankAccountsLoading, addressesLoading, waitingForContinue]);
+  const debouncedLoadingPrev = usePrevious(loading);
+
+  const inputRequired = useMemo(() => (
+    !waitingForContinue &&
+    !bankAccountsLoading &&
+    !addressesLoading &&
+    !!addresses.length &&
+    !bankAccounts.length &&
+    !addressModalStatus
+  ), [bankAccountsLoading, addressesLoading, waitingForContinue, addressModalStatus]);
 
   useEffect(() => {
-    if (!inputRequired || addressModalStatus) return;
+    if (debouncedLoadingPrev && !loading) return;
 
-    controls.open();
-  }, [inputRequired, addressModalStatus]);
-
-  useEffect(() => {
-    if (modalStatus) return;
-
-    setBank(null);
-    setCountry(null);
-  }, [modalStatus]);
+    controls.close();
+  }, [loading]);
 
   useEffect(() => {
     if (!country) return;
@@ -68,11 +80,16 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
     history.replace('');
 
     if (error) {
-      dispatch(bankAccountsActions.createBankAccountFailure(error));
+      dispatch(alertActions.show({
+        type: StatusModalType.ERROR,
+        message: error,
+        onClose: controls.open
+      }));
+
       return;
     }
 
-    dispatch(bankAccountsActions.createBankAccount({ ref }));
+    dispatch(bankAccountsActions.createBankAccount({ ref, closeCb: controls.close }));
   }, [sessionStatus]);
 
   useEffect(() => {
@@ -97,10 +114,15 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
     dispatch(bankAccountsActions.createAgreementLink({ bankId: bank.id }));
   }, [bank, country]);
 
+  const handleExited = useCallback(() => {
+    setBank(null);
+    setCountry(null);
+  }, []);
+
   return (
     <>
       <Component
-        status={ modalStatus }
+        status={ modalStatus || inputRequired }
         handleClose={ inputRequired ? undefined : controls.close }
         country={ country }
         banksLoading={ supportedBanksLoading }
@@ -111,6 +133,7 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
         handleCountryChange={ handleCountryChange }
         handleBankChange={ handleBankChange }
         handleSubmit={ handleSubmit }
+        handleExited={ handleExited }
         disabled={ !bank || !country }
       />
       <StatusModal

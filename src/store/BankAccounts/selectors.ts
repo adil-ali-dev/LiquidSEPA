@@ -12,6 +12,7 @@ export const bankAccountsSupportedBanksSelector = (state: AppState) => state.ban
 export const bankAccountsSupportedBanksLoadingSelector = (state: AppState) => state.bankAccounts.loading.supportedBanks;
 export const bankAccountsCreateLoadingSelector = (state: AppState) => state.bankAccounts.loading.create;
 export const bankAccountsWaitingForContinueSelector = (state: AppState) => state.bankAccounts.waitingForContinue;
+export const bankAccountsCbSelector = (state: AppState) => state.bankAccounts.closeCb;
 
 export const bankAccountsItemsSelector = createSelector([bankAccountsRawItemsSelector], accounts => {
   return accounts.map(account => ({ ...account, logo: `${NORDIGEN_BANK_LOGO_PREFIX}${account.accountDetails?.bankId}.png` }))

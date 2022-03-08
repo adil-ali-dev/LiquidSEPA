@@ -15,7 +15,7 @@ export type CreateReq = {
   type: StatusModalType;
   message: string;
   button?: string;
-  onClose?: () => void;
+  onClose?: null | (() => void);
 };
 
 

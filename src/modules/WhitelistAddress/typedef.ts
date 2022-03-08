@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent } from 'react';
+import { ChangeEvent, FormEvent, KeyboardEvent } from 'react';
 
 export type WrappedProps = {
   status: boolean;
@@ -8,7 +8,9 @@ export type WrappedProps = {
   loading: boolean;
   disabled: boolean;
   handleClose?: () => void;
+  handleExited?: () => void;
   handleLabelChange: (event: ChangeEvent<HTMLInputElement>) => void;
   handleAddressChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  handleAddressKeyDown: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
+  handleSubmit: (event?: FormEvent<HTMLFormElement>) => void;
 };

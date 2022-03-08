@@ -4,9 +4,9 @@ import { AppState } from './typedef';
 import { alertReducer } from './Alert';
 import { authSocketReducer } from './AuthSocket';
 import { SocketConstants, socketReducer } from './Socket';
-import { sessionReducer, initialState as sessionInitialState, SessionState } from './Session';
+import { sessionReducer, initialState as sessionInitialState, SessionState, SessionConstants } from './Session';
 import { addressesReducer } from './Addresses';
-import { bankAccountsReducer, initialState as bankAccountsInitialState } from './BankAccounts';
+import { bankAccountsReducer } from './BankAccounts';
 import { rfqReducer } from './Rfq';
 
 
@@ -27,7 +27,11 @@ const appReducer = combineReducers<AppState | { session: SessionState }>({
 export const rootReducer: Reducer = (state: AppState, action: AnyAction) => {
   // Reset all store data to initial if socket gets closed
   if (state) {
-    const { session, bankAccounts, authSocket, rfq, addresses } = state;
+    const { session, bankAccounts, authSocket, rfq, addresses, socket } = state;
+
+    if (action.type === SessionConstants.DESTROY_SESSION_REQUEST) {
+      return appReducer({ authSocket, socket, session: sessionInitialState }, action);
+    }
 
     if (action.type === SocketConstants.CLOSED) {
       return appReducer({
@@ -38,7 +42,6 @@ export const rootReducer: Reducer = (state: AppState, action: AnyAction) => {
         bankAccounts,
       }, action);
     }
-
   }
 
   return appReducer(state, action);

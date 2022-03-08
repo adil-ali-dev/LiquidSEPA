@@ -1,4 +1,13 @@
-import { Action, FailureAction, EmptyAction, Address, SocketReq, SocketEndpoint, AuthEidStatus } from '../../typedef';
+import {
+  Action,
+  FailureAction,
+  EmptyAction,
+  Address,
+  SocketReq,
+  SocketEndpoint,
+  AuthEidStatus,
+  AuthSocketEndpoint
+} from '../../typedef';
 
 
 export enum AddressesConstants {
@@ -9,6 +18,12 @@ export enum AddressesConstants {
   WHITELIST_ADDRESS_REQUEST = '@addresses/WHITELIST_ADDRESS_REQUEST',
   WHITELIST_ADDRESS_SUCCESS = '@addresses/WHITELIST_ADDRESS_SUCCESS',
   WHITELIST_ADDRESS_FAILURE = '@addresses/WHITELIST_ADDRESS_FAILURE',
+
+  UPDATE_WHITELISTING_REQUEST_ID = '@addresses/UPDATE_WHITELISTING_REQUEST_ID',
+
+  CANCEL_WHITELISTING_REQUEST = '@addresses/CANCEL_WHITELISTING_REQUEST',
+  CANCEL_WHITELISTING_SUCCESS = '@addresses/CANCEL_WHITELISTING_SUCCESS',
+  CANCEL_WHITELISTING_FAILURE = '@addresses/CANCEL_WHITELISTING_FAILURE',
 
   UPDATE_WHITELISTING_STATUS = '@addresses/UPDATE_WHITELISTING_STATUS',
 
@@ -29,6 +44,11 @@ export type ValidateAddressReq = {
 export type WhitelistAddressReq = {
   address: string;
   label: string;
+  closeCb?: null | (() => void);
+};
+
+export type CancelAuthEidReq = {
+  requestId: string;
 };
 
 export type GetAddressesReq = Record<string, unknown>;
@@ -42,6 +62,9 @@ export type ValidateAddressApiReq = SocketReq<SocketEndpoint.VALIDATE_ADDRESS, V
 export type WhitelistAddressApiReq = SocketReq<SocketEndpoint.WHITELIST_ADDRESS, WhitelistAddressReq>;
 export type GetAddressesApiReq = SocketReq<SocketEndpoint.GET_ADDRESSES, GetAddressesReq>;
 
+export type CancelWhitelistingReq = SocketReq<AuthSocketEndpoint.CANCEL_REQUEST, CancelAuthEidReq>;
+
+export type AddressesApiAuthReqs = CancelWhitelistingReq;
 export type AddressesApiMainReqs = ValidateAddressApiReq | WhitelistAddressApiReq | GetAddressesApiReq;
 
 
@@ -51,6 +74,10 @@ export type AddressesApiMainReqs = ValidateAddressApiReq | WhitelistAddressApiRe
 
 export type WhitelistingStatusRes = {
   status: AuthEidStatus;
+};
+
+export type AuthEidIdRes = {
+  requestId: string;
 };
 
 export type ValidateAddressRes = {
@@ -72,6 +99,12 @@ export type WhitelistAddress = Action<AddressesConstants.WHITELIST_ADDRESS_REQUE
 export type WhitelistAddressSuccess = EmptyAction<AddressesConstants.WHITELIST_ADDRESS_SUCCESS>;
 export type WhitelistAddressFailure = FailureAction<AddressesConstants.WHITELIST_ADDRESS_FAILURE>;
 
+export type UpdateWhitelistingRequestId = Action<AddressesConstants.UPDATE_WHITELISTING_REQUEST_ID, AuthEidIdRes>;
+
+export type CancelWhitelisting = Action<AddressesConstants.CANCEL_WHITELISTING_REQUEST, CancelAuthEidReq>;
+export type CancelWhitelistingSuccess = EmptyAction<AddressesConstants.CANCEL_WHITELISTING_SUCCESS>;
+export type CancelWhitelistingFailure = FailureAction<AddressesConstants.CANCEL_WHITELISTING_FAILURE>;
+
 export type UpdateWhitelistingStatus = Action<AddressesConstants.UPDATE_WHITELISTING_STATUS, WhitelistingStatusRes>;
 
 export type GetAddresses = EmptyAction<AddressesConstants.GET_ADDRESSES_REQUEST>;
@@ -86,6 +119,8 @@ export type GetAddressesFailure = FailureAction<AddressesConstants.GET_ADDRESSES
 export type AddressesAction =
   ValidateAddress | ValidateAddressSuccess | ValidateAddressFailure
   | WhitelistAddress | WhitelistAddressSuccess | WhitelistAddressFailure
+  | UpdateWhitelistingRequestId
+  | CancelWhitelisting | CancelWhitelistingSuccess | CancelWhitelistingFailure
   | UpdateWhitelistingStatus
   | GetAddresses | GetAddressesSuccess | GetAddressesFailure;
 
@@ -102,6 +137,12 @@ export type AddressesActions = {
   whitelistAddress: (payload: WhitelistAddressReq) => WhitelistAddress;
   whitelistAddressSuccess: () => WhitelistAddressSuccess;
   whitelistAddressFailure: (error: string) => WhitelistAddressFailure;
+
+  updateWhitelistingRequestId: (payload: AuthEidIdRes) => UpdateWhitelistingRequestId;
+
+  cancelWhitelisting: (payload: CancelAuthEidReq) => CancelWhitelisting;
+  cancelWhitelistingSuccess: () => CancelWhitelistingSuccess;
+  cancelWhitelistingFailure: (error: string) => CancelWhitelistingFailure;
 
   updateWhitelistingStatus: (payload: WhitelistingStatusRes) => UpdateWhitelistingStatus;
 
@@ -122,6 +163,8 @@ type ActionKeys = 'validate'
 export type AddressesState = {
   addresses: Address[];
   addressValid: boolean;
+  requestId: null | string;
+  closeCb: null | (() => void);
   loading: { [K in ActionKeys]: boolean };
   error: { [K in ActionKeys]: null | string };
 };

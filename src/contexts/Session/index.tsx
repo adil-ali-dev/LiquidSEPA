@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 
 import { sessionActions, sessionStatusForUISelector, sessionStatusSelector } from '../../store/Session';
-import { WelcomeModule } from '../../modules/Welcome';
 
 
 const SessionContext = createContext({
@@ -86,7 +85,6 @@ export const SessionProvider: FC<Props> = ({ children }) => {
   return (
     <SessionContext.Provider value={ value }>
       { children }
-      <WelcomeModule />
     </SessionContext.Provider>
   );
 };

@@ -1,8 +1,7 @@
 import { all, take } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist';
 
-import { alertSaga } from './Alert';
-import { authSocketSaga, AuthSocketConstants } from './AuthSocket';
+import { authSocketSaga } from './AuthSocket';
 import { socketSaga } from './Socket';
 import { sessionSaga } from './Session';
 import { addressesSaga } from './Addresses';
@@ -16,10 +15,6 @@ export function *rootSaga() {
 
   // Run sagas
   yield all([
-    // Misc:
-    alertSaga(),
-
-    // Main:
     authSocketSaga(),
     socketSaga(),
     sessionSaga(),

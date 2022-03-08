@@ -1,11 +1,11 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { Button, CircularProgress, Grid, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 
-import { useStyles } from './style';
-import { Modal } from '../../components/Modal';
 import { withWhitelistAddressDomain } from './domain';
+import { Modal } from '../../components/Modal';
 import { FormInput } from '../DeliveringForm/components/form-input';
+import { useStyles } from './style';
 
 
 export const WhitelistAddressModule = withWhitelistAddressDomain(({
@@ -16,6 +16,7 @@ export const WhitelistAddressModule = withWhitelistAddressDomain(({
   loading,
   handleLabelChange,
   handleAddressChange,
+  handleAddressKeyDown,
   disabled,
   handleSubmit,
   ...modalProps
@@ -48,6 +49,7 @@ export const WhitelistAddressModule = withWhitelistAddressDomain(({
               error={ !!address.length && !addressValid }
               withExtraProps
               handleChange={ handleAddressChange }
+              handleKeyDown={ handleAddressKeyDown }
             />
           </Grid>
 

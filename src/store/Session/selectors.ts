@@ -18,7 +18,6 @@ export const sessionCreateLoadingSelector = (state: AppState) => state.session.l
 export const sessionCreateAccountLoadingSelector = (state: AppState) => state.session.loading.createAccount;
 export const sessionCreateErrorSelector = (state: AppState) => state.session.error.createSession;
 export const sessionCreateAccountErrorSelector = (state: AppState) => state.session.error.createAccount;
-export const sessionWelcomeMessageStatusSelector = (state: AppState) => state.session.welcomeMessageSeen;
 export const sessionCountryValueSelector = (state: AppState, value: string) => value;
 
 export const sessionLoginUrlSelector = createSelector(
