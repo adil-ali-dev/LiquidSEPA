@@ -1,19 +1,9 @@
 import { call, delay, put, select, takeLatest } from 'redux-saga/effects';
 
-import { AuthEidStatus, AuthSocketEndpoint, SocketCloseStatus, SocketEndpoint, StatusModalType } from '../../typedef';
-import {
-  Authorize,
-  CancelAuthEid,
-  CreateSessionSuccess,
-  Refresh,
-  RefreshSuccess,
-  SessionConstants,
-  UpdateCreateAccountStatus,
-  UpdateCreateSessionStatus
-} from './typedef';
+import { AuthEidStatus, AuthSocketEndpoint, SocketCloseStatus, SocketEndpoint } from '../../typedef';
+import { Authorize, CancelAuthEid, CreateSessionSuccess, Refresh, RefreshSuccess, SessionConstants, UpdateCreateAccountStatus, UpdateCreateSessionStatus } from './typedef';
 import { authSocketActions } from '../AuthSocket';
 import { sessionTokenExpiresInSelector, sessionTokenValueSelector } from './selectors';
-import { alertActions } from '../Alert';
 import { sessionActions } from './actions';
 import { socketActions } from '../Socket';
 
@@ -155,7 +145,7 @@ function *authorizeSuccess() {
   const accessToken: undefined | string = yield select(sessionTokenValueSelector);
   if (!expiresIn || !accessToken) return;
 
-  yield delay((expiresIn - 60) * 1000);
+  yield delay(expiresIn);
   yield put(sessionActions.refresh({ accessToken }));
 }
 
