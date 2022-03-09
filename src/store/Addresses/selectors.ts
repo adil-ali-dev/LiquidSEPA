@@ -9,4 +9,5 @@ export const addressesValidateAddressLoadingSelector = (state: AppState) => stat
 export const addressesWhitelistAddressLoadingSelector = (state: AppState) => state.addresses.loading.whitelist;
 export const addressesWhitelistAddressErrorSelector = (state: AppState) => state.addresses.error.whitelist;
 export const addressesWhitelistingRequestIdSelector = (state: AppState) => state.addresses.requestId;
-export const addressesWhitelistingCbSelector = (state: AppState) => state.addresses.closeCb;
+export const addressesWhitelistingCbSuccessSelector = (state: AppState) => state.addresses.closeCbSuccess;
+export const addressesWhitelistingCbFailureSelector = (state: AppState) => state.addresses.closeCbFailure;

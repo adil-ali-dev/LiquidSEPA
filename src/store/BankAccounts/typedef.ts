@@ -43,7 +43,8 @@ export type CreateAgreementLinkExtendedReq = CreateAgreementLinkReq & {
 
 export type CreateBankAccountReq = {
   ref: string;
-  closeCb?: () => void;
+  closeCbSuccess?: null | (() => void);
+  closeCbFailure?: null | (() => void);
 };
 
 
@@ -152,7 +153,8 @@ export type BankAccountsState = {
   supportedBanks: SupportedBank[];
   agreementLink: null | string;
   waitingForContinue: boolean;
-  closeCb: null | (() => void);
+  closeCbSuccess: null | (() => void);
+  closeCbFailure: null | (() => void);
   loading: { [K in ActionKeys]: boolean };
   error: { [K in ActionKeys]: null | string };
 };

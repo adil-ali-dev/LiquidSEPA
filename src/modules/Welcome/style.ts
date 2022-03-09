@@ -48,7 +48,7 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
   },
 
   steps: {
-    marginTop: 16,
+    marginTop: 32,
     padding: 16,
     display: 'flex',
     maxWidth: 335,
@@ -72,5 +72,22 @@ export const useStyles = makeStyles(({ palette, breakpoints }: Theme) => createS
     fontSize: '14px',
     lineHeight: '22px',
     color: '#A1C9DE'
-  }
+  },
+
+  button: {
+    marginTop: 32,
+    maxWidth: 335,
+    padding: '17px 0 16px !important',
+    fontSize: '18px !important',
+    lineHeight: '21px !important',
+    color: ` ${ palette.text.primary } !important`,
+    // @ts-ignore
+    textTransform: 'none !important',
+    borderRadius: '12px !important',
+    width: '100% !important',
+
+    [breakpoints.down('xs')]: {
+      marginTop: '25px !important'
+    }
+  },
 }), { index: 1 });

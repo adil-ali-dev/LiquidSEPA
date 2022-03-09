@@ -5,7 +5,8 @@ export const initialState: AddressesState = {
   addresses: [],
   addressValid: false,
   requestId: null,
-  closeCb: null,
+  closeCbSuccess: null,
+  closeCbFailure: null,
   loading: {
     validate: false,
     whitelist: false,
@@ -45,20 +46,23 @@ export const addressesReducer = (state = initialState, action: AddressesAction):
       return {
         ...state,
         loading: { ...state.loading, whitelist: true },
-        closeCb: action.payload.closeCb || null,
+        closeCbSuccess: action.payload.closeCbSuccess || null,
+        closeCbFailure: action.payload.closeCbFailure || null,
         error: { ...state.error, whitelist: null }
       };
     case AddressesConstants.WHITELIST_ADDRESS_SUCCESS:
       return {
         ...state,
         loading: { ...state.loading, whitelist: false },
-        closeCb: null
+        closeCbSuccess: null,
+        closeCbFailure: null
       };
     case AddressesConstants.WHITELIST_ADDRESS_FAILURE:
       return {
         ...state,
         loading: { ...state.loading, whitelist: false },
-        closeCb: null,
+        closeCbSuccess: null,
+        closeCbFailure: null,
         error: { ...state.error, whitelist: action.error }
       };
 

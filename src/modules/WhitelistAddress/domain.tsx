@@ -62,10 +62,10 @@ export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () =>
     dispatch(addressesActions.whitelistAddress({
       label,
       address,
-      ...(inputRequired ? { closeCb: bankAccountsModalControls.open } : {}),
-      ...(error ? { closeCb: controls.open } : {})
+      closeCbSuccess: inputRequired ? bankAccountsModalControls.open : null,
+      closeCbFailure: inputRequired ? controls.open : null
     }));
-  }, [label, address, valid, inputRequired, error]);
+  }, [label, address, valid, inputRequired]);
 
   const handleCancel = useCallback(() => {
     controls.close();
@@ -78,7 +78,7 @@ export const withWhitelistAddressDomain = (Component: FC<WrappedProps>) => () =>
     if (event.code !== 'Enter') return;
 
     handleSubmit();
-  }, [valid, addresses, label, inputRequired, error]);
+  }, [valid, addresses, label, inputRequired]);
 
   const handleExited = useCallback(() => {
     setLabel('');
