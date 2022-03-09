@@ -6,7 +6,8 @@ export const initialState: BankAccountsState = {
   supportedBanks: [],
   agreementLink: null,
   waitingForContinue: false,
-  closeCb: null,
+  closeCbSuccess: null,
+  closeCbFailure: null,
   loading: {
     bankAccounts: true,
     supportedBanks: false,
@@ -87,21 +88,24 @@ export const bankAccountsReducer = (state = initialState, action: BankAccountsAc
       return {
         ...state,
         loading: { ...state.loading, create: true },
-        closeCb: action.payload.closeCb || null,
+        closeCbSuccess: action.payload.closeCbSuccess || null,
+        closeCbFailure: action.payload.closeCbFailure || null,
         error: { ...state.error, create: null }
       };
     case BankAccountsConstants.CREATE_BANK_ACCOUNT_SUCCESS:
       return {
         ...state,
         loading: { ...state.loading, create: false },
-        closeCb: null,
+        closeCbSuccess: null,
+        closeCbFailure: null,
         waitingForContinue: false
       };
     case BankAccountsConstants.CREATE_BANK_ACCOUNT_FAILURE:
       return {
         ...state,
         loading: { ...state.loading, create: false },
-        closeCb: null,
+        closeCbSuccess: null,
+        closeCbFailure: null,
         waitingForContinue: false,
         error: { ...state.error, create: action.error }
       };

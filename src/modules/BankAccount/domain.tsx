@@ -5,24 +5,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { default as countries } from '../../constants/nordigen-countries';
 import { Country, StatusModalType, SupportedBank } from '../../typedef';
 import { Props } from './typedef';
-import {
-  bankAccountsActions,
-  bankAccountsAgreementLinkLoadingSelector,
-  bankAccountsAgreementLinkSelector,
-  bankAccountsCreateLoadingSelector,
-  bankAccountsItemsLoadingSelector,
-  bankAccountsItemsSelector,
-  bankAccountsSupportedBanksLoadingSelector,
-  bankAccountsSupportedBanksSelector,
-  bankAccountsWaitingForContinueSelector
-} from '../../store/BankAccounts';
+import { bankAccountsActions, bankAccountsAgreementLinkLoadingSelector, bankAccountsAgreementLinkSelector, bankAccountsCreateLoadingSelector, bankAccountsItemsLoadingSelector, bankAccountsItemsSelector, bankAccountsSupportedBanksLoadingSelector, bankAccountsSupportedBanksSelector, bankAccountsWaitingForContinueSelector } from '../../store/BankAccounts';
 import { sessionStatusSelector } from '../../store/Session';
+import { alertActions } from '../../store/Alert';
 import { addressesItemsLoadingSelector, addressesItemsSelector } from '../../store/Addresses';
 import { useBankAccountContext } from '../../contexts/BankAccount';
-import { StatusModal } from '../../components/StatusModal';
 import { useWhitelistAddressContext } from '../../contexts/WhitelistAddress';
 import { usePrevious } from '../../hooks/Previous';
-import { alertActions } from '../../store/Alert';
+import { StatusModal } from '../../components/StatusModal';
 
 export const withBankAccountDomain = (Component: FC<Props>) => () => {
   const dispatch = useDispatch();
@@ -89,7 +79,7 @@ export const withBankAccountDomain = (Component: FC<Props>) => () => {
       return;
     }
 
-    dispatch(bankAccountsActions.createBankAccount({ ref, closeCb: controls.close }));
+    dispatch(bankAccountsActions.createBankAccount({ ref, closeCbFailure: controls.open }));
   }, [sessionStatus]);
 
   useEffect(() => {

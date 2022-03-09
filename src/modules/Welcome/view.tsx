@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import React from 'react';
+import { Button, Grid, Typography } from '@material-ui/core';
 
 import { Modal } from '../../components/Modal';
 import { withWelcomeDomain } from './domain';
@@ -32,6 +32,15 @@ export const WelcomeModule = withWelcomeDomain(modalProps => {
             </li>
           </ul>
         </Grid>
+
+        <Button
+          className={ classes.button }
+          variant="contained"
+          color="primary"
+          onClick={ modalProps.handleClose }
+        >
+          Continue
+        </Button>
       </Grid>
     </Modal>
   );

@@ -1,19 +1,12 @@
 import { takeLatest, put, select } from 'redux-saga/effects';
 
 import { AuthEidStatus, AuthSocketEndpoint, SocketEndpoint, StatusModalType } from '../../typedef';
-import {
-  AddressesConstants,
-  ValidateAddress,
-  WhitelistAddress,
-  UpdateWhitelistingStatus,
-  CancelWhitelisting,
-  WhitelistAddressFailure
-} from './typedef';
+import { AddressesConstants, ValidateAddress, WhitelistAddress, UpdateWhitelistingStatus, CancelWhitelisting, WhitelistAddressFailure } from './typedef';
 import { socketActions } from '../Socket';
 import { alertActions } from '../Alert';
 import { addressesActions } from './actions';
 import { authSocketActions } from '../AuthSocket';
-import { addressesWhitelistingCbSelector } from './selectors';
+import { addressesWhitelistingCbSuccessSelector, addressesWhitelistingCbFailureSelector } from './selectors';
 
 
 const authEidErrors = {
@@ -39,12 +32,14 @@ function *validateAddress({ payload }: ValidateAddress) {
 }
 
 function *whitelistAddress({ payload }: WhitelistAddress) {
+  const { closeCbFailure, closeCbSuccess, ...args } = payload;
+
   try {
     yield put(socketActions.send({
       method: SocketEndpoint.WHITELIST_ADDRESS,
       api: 'account',
       messageId: `${Date.now()}`,
-      args: payload
+      args
     }));
   } catch {
     yield put(addressesActions.whitelistAddressFailure('Socket not connected'))
@@ -91,24 +86,24 @@ function *updateWhitelistingStatus({ payload }: UpdateWhitelistingStatus) {
 
 
 function *whitelistAddressSuccess() {
-  const closeCallback: null | (() => void) = yield select(addressesWhitelistingCbSelector);
+  const onClose: null | (() => void) = yield select(addressesWhitelistingCbSuccessSelector);
 
   yield put(addressesActions.getAddresses());
 
   yield put(alertActions.show({
     type: StatusModalType.SUCCESS,
     message: 'Your Address is now whitelisted',
-    onClose: closeCallback
+    onClose
   }));
 }
 
 function *whitelistAddressFailure({ error }: WhitelistAddressFailure) {
-  const closeCallback: null | (() => void) = yield select(addressesWhitelistingCbSelector);
+  const onClose: null | (() => void) = yield select(addressesWhitelistingCbFailureSelector);
 
   yield put(alertActions.show({
     type: StatusModalType.ERROR,
     message: error,
-    onClose: closeCallback
+    onClose
   }));
 }
 

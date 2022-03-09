@@ -44,7 +44,8 @@ export type ValidateAddressReq = {
 export type WhitelistAddressReq = {
   address: string;
   label: string;
-  closeCb?: null | (() => void);
+  closeCbSuccess?: null | (() => void);
+  closeCbFailure?: null | (() => void);
 };
 
 export type CancelAuthEidReq = {
@@ -164,7 +165,8 @@ export type AddressesState = {
   addresses: Address[];
   addressValid: boolean;
   requestId: null | string;
-  closeCb: null | (() => void);
+  closeCbSuccess: null | (() => void);
+  closeCbFailure: null | (() => void);
   loading: { [K in ActionKeys]: boolean };
   error: { [K in ActionKeys]: null | string };
 };

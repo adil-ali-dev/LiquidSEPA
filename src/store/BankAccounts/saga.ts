@@ -2,18 +2,11 @@ import { takeLatest, put, select } from 'redux-saga/effects';
 
 import { LIVE } from '../../constants';
 import { SocketEndpoint, StatusModalType } from '../../typedef';
-import {
-  BankAccountsConstants,
-  CreateAgreementLink,
-  CreateBankAccount,
-  CreateBankAccountFailure,
-  GetSupportedBanks
-} from './typedef';
+import { BankAccountsConstants, CreateAgreementLink, CreateBankAccount, CreateBankAccountFailure, GetSupportedBanks } from './typedef';
 import { alertActions } from '../Alert';
 import { socketActions } from '../Socket';
 import { bankAccountsActions } from './actions';
-import { addressesWhitelistingCbSelector } from '../Addresses';
-import { bankAccountsCbSelector } from './selectors';
+import { bankAccountsCbSuccessSelector, bankAccountsCbFailureSelector } from './selectors';
 
 
 const ACCOUNT_API = 'account';
@@ -59,12 +52,14 @@ function *createAgreementLink({ payload }: CreateAgreementLink) {
 }
 
 function *createBankAccount({ payload }: CreateBankAccount) {
+  const { closeCbFailure, closeCbSuccess, ...args } = payload;
+
   try {
     yield put(socketActions.send({
       method: SocketEndpoint.CREATE_BANK_ACCOUNT,
       api: ACCOUNT_API,
       messageId: `${Date.now()}`,
-      args: payload
+      args
     }));
   } catch {
     yield put(bankAccountsActions.getBankAccountsFailure('Socket not connected'))
@@ -72,24 +67,24 @@ function *createBankAccount({ payload }: CreateBankAccount) {
 }
 
 function *createBankAccountSuccess() {
-  const closeCallback: null | (() => void) = yield select(bankAccountsCbSelector);
+  const onClose: null | (() => void) = yield select(bankAccountsCbSuccessSelector);
 
   yield put(bankAccountsActions.getBankAccounts());
 
   yield put(alertActions.show({
     type: StatusModalType.SUCCESS,
     message: 'Your account is now verified',
-    onClose: closeCallback
+    onClose
   }));
 }
 
 function *createBankAccountFailure({ error }: CreateBankAccountFailure) {
-  const closeCallback: null | (() => void) = yield select(bankAccountsCbSelector);
+  const onClose: null | (() => void) = yield select(bankAccountsCbFailureSelector);
 
   yield put(alertActions.show({
     type: StatusModalType.ERROR,
     message: error,
-    onClose: closeCallback
+    onClose
   }));
 }
 
