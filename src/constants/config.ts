@@ -6,7 +6,7 @@ export const ENV = process.env.NODE_ENV;
 export const PRODUCTION = ENV === 'production';
 
 export const MODE = process.env.REACT_APP_MODE as Environment;
-export const LIVE = MODE === 'live';
+export const LIVE = MODE === Environment.LIVE || MODE === Environment.PROD;
 
 export const BLOCKSTREAM_ASSET_ID = process.env.REACT_APP_BLOCKSTREAM_ASSET_ID as string;
 export const BLOCKSTREAM_API_ASSET_URL = process.env.REACT_APP_BLOCKSTREAM_API_ASSET_URL as string;
@@ -24,13 +24,15 @@ export const NORDIGEN_BANK_LOGO_PREFIX = process.env.REACT_APP_NORDIGEN_BANK_LOG
 const wsAuthApi = {
   [Environment.DEV]: process.env.REACT_APP_WS_AUTH_API_URL_DEV,
   [Environment.TESTING]: process.env.REACT_APP_WS_AUTH_API_URL_TESTING,
-  [Environment.LIVE]: process.env.REACT_APP_WS_AUTH_API_URL_LIVE
+  [Environment.LIVE]: process.env.REACT_APP_WS_AUTH_API_URL_LIVE,
+  [Environment.PROD]: process.env.REACT_APP_WS_AUTH_API_URL_PROD
 }
 
 const wsMainApi = {
   [Environment.DEV]: process.env.REACT_APP_WS_MAIN_API_URL_DEV,
   [Environment.TESTING]: process.env.REACT_APP_WS_MAIN_API_URL_TESTING,
-  [Environment.LIVE]: process.env.REACT_APP_WS_MAIN_API_URL_LIVE
+  [Environment.LIVE]: process.env.REACT_APP_WS_MAIN_API_URL_LIVE,
+  [Environment.PROD]: process.env.REACT_APP_WS_MAIN_API_URL_PROD
 }
 
 export const WS_AUTH_URL = wsAuthApi[MODE] as string;
