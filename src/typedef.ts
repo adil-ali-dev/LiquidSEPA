@@ -17,7 +17,8 @@ export interface FailureAction<T> extends ReduxAction<T> { error: string }
 export enum Environment {
   DEV = 'dev',
   TESTING = 'testing',
-  LIVE = 'live'
+  LIVE = 'live',
+  PROD = 'prod'
 }
 
 
