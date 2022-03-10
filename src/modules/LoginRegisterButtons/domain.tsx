@@ -16,7 +16,6 @@ export const withLoginAndRegisterButtonsDomain = (Component: FC<WrappedProps>) =
   const registerUrl = useSelector(sessionRegisterUrlSelector);
   const loginRequestId = useSelector(sessionLoginRequestIdSelector);
   const registerRequestId = useSelector(sessionRegisterRequestIdSelector);
-
   const { controls } = useSessionContext();
 
   useEffect(() => {
