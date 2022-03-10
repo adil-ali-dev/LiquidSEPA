@@ -9,7 +9,6 @@
     "node": ">=14 <15"
   },
   "scripts": {
-    "start:dev": "cross-env PORT=8080 REACT_APP_MODE=dev react-scripts start",
     "start:testing": "cross-env PORT=8080 REACT_APP_MODE=testing react-scripts start",
     "start:live": "cross-env PORT=8080 REACT_APP_MODE=live react-scripts start",
     "start:prod": "cross-env PORT=8080 REACT_APP_MODE=prod react-scripts start",

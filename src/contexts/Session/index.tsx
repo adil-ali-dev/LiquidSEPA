@@ -1,8 +1,10 @@
-import React, { createContext, FC, ReactNode, useState, useContext } from 'react';
+import React, { createContext, FC, ReactNode, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { isMobile } from 'react-device-detect';
 
 import { sessionActions, sessionStatusForUISelector, sessionStatusSelector } from '../../store/Session';
+import { isMobile } from 'react-device-detect';
+import { alertActions } from '../../store/Alert';
+import { StatusModalType } from '../../typedef';
 
 
 const SessionContext = createContext({

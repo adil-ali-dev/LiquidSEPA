@@ -1,8 +1,8 @@
-import { withLoginAndRegisterButtonsDomain } from './domain';
+import React from 'react';
 import { Button } from '@material-ui/core';
 import clsx from 'clsx';
-import React from 'react';
 
+import { withLoginAndRegisterButtonsDomain } from './domain';
 import { useStyles } from './style';
 
 
