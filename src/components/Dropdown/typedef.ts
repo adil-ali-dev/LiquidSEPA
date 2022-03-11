@@ -14,6 +14,7 @@ export type DropdownProps = {
   notEditable?: boolean;
   headerText?: string;
   data: any[];
+  disabled?: boolean;
   checkSelected?: (item: any) => boolean;
   renderItem: (item: any, idx: number, active?: boolean) => ReactNode;
   handleItemSelect: (item: any) => void;
@@ -29,6 +30,7 @@ export type DropdownContentProps = {
   className?: string;
   emptyText: string;
   loginRequired?: boolean;
+  disabled?: boolean;
   headerText?: string;
   checkSelected?: (item: any) => boolean;
   close: () => void;
@@ -41,6 +43,7 @@ export type DropdownContentProps = {
 
 export type DropdownAlertProps = {
   text: string;
+  disabled?: boolean;
   buttonText?: string;
   handleButtonClick?: () => void;
 };

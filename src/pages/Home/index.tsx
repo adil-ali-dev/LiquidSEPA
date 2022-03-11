@@ -24,7 +24,8 @@ export const HomePage: FC = () => {
                 Liquid Network assets
               </Typography>
               <Typography className={ classes.introSubHeadline } component="p">
-                Instant SEPA bank settlement in 60 seconds or less
+                {/*Instant SEPA bank settlement in 60 seconds or less*/}
+                Coming soon
               </Typography>
             </Grid>
             <Grid className={ classes.introForm }>

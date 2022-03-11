@@ -51,6 +51,7 @@ export const Form = memo<FormProps>(({
         handleAddClick={ handleAddPress }
         loginRequired
         notEditable
+        disabled
         handleItemSelect={ handleAccountSelect }
         keyExtractor={ keyExtractor }
         renderItem={ renderDropDownItem }
@@ -68,6 +69,7 @@ export const Form = memo<FormProps>(({
         handleAddClick={ handleAddPress }
         loginRequired
         notEditable
+        disabled
         handleItemSelect={ handleAddressSelect }
         keyExtractor={ keyExtractor }
         renderItem={ renderDropDownItem }
@@ -113,7 +115,8 @@ export const Form = memo<FormProps>(({
       </Grid>
       <Button
         className={ classes.button }
-        disabled={ isLoggedIn && (disabled || loading) }
+        // disabled={ isLoggedIn && (disabled || loading) }
+        disabled
         type="submit"
         variant="contained"
         color="primary"

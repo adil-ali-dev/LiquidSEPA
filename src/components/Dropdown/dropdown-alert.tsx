@@ -7,6 +7,7 @@ import { DropdownAlertProps } from './typedef';
 export const DropdownAlert: FC<DropdownAlertProps> = ({
   text,
   buttonText,
+  disabled,
   handleButtonClick,
 }) => {
   const classes = useStyles();
@@ -19,6 +20,7 @@ export const DropdownAlert: FC<DropdownAlertProps> = ({
       {buttonText && (
         <Button
           className={classes.addItemButton}
+          disabled={disabled}
           variant="contained"
           color="primary"
           onClick={handleButtonClick}
