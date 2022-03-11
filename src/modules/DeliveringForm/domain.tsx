@@ -24,7 +24,6 @@ import { StatusModal } from '../../components/StatusModal';
 import { RequisitesHeader } from './components/requisites-header';
 import { Form } from './components/form';
 import { sessionLoginUrlSelector } from '../../store/Session';
-import { WelcomeModal } from '../../components/WelcomeModal';
 
 const MAX_CONFS = 2;
 const WIDGET_MARGIN_TOP = 72;

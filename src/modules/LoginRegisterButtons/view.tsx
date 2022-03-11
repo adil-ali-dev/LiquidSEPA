@@ -12,14 +12,16 @@ export const LoginAndRegisterButtonsModule = withLoginAndRegisterButtonsDomain((
 }) => {
   const classes = useStyles();
 
+  // TODO: Remove disabled when released
   return (
     <>
-      <Button className={ classes.button } onClick={ handleLoginClick }>
+      <Button className={ classes.button } disabled onClick={ handleLoginClick }>
         Login
       </Button>
       <Button
         className={ clsx(classes.button, classes.buttonRegister) }
         onClick={ handleRegisterClick }
+        disabled
       >
         Register
       </Button>

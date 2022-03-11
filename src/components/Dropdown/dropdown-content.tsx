@@ -18,6 +18,7 @@ export const DropdownContent: FC<DropdownContentProps> = ({
   close,
   headerText,
   emptyText,
+  disabled,
   handleAddClick,
   keyExtractor,
   checkSelected,
@@ -35,9 +36,11 @@ export const DropdownContent: FC<DropdownContentProps> = ({
   }, [statusForUI, loginRequired]);
 
   const handleAlertButtonClick = useCallback(() => {
+    if (disabled) return;
+
     handleAddClick?.();
     close();
-  }, [handleAddClick]);
+  }, [handleAddClick, disabled]);
 
   const renderDropdownItem = useCallback((item: any, idx: number) => {
     const handleDropdownItemClick = () => {
@@ -77,6 +80,7 @@ export const DropdownContent: FC<DropdownContentProps> = ({
         {(!data.length || !statusForUI) ? (
           <DropdownAlert
             text={ alertText }
+            disabled
             buttonText={ alertButtonText }
             handleButtonClick={ handleAlertButtonClick }
           />
