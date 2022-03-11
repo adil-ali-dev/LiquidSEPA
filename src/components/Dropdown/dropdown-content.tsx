@@ -80,7 +80,7 @@ export const DropdownContent: FC<DropdownContentProps> = ({
         {(!data.length || !statusForUI) ? (
           <DropdownAlert
             text={ alertText }
-            disabled
+            disabled={disabled}
             buttonText={ alertButtonText }
             handleButtonClick={ handleAlertButtonClick }
           />

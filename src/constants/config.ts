@@ -1,12 +1,12 @@
 import { Environment } from '../typedef';
 
-export const APP_DEV = process.env.NODE_ENV === 'development';
-
 export const ENV = process.env.NODE_ENV;
-export const PRODUCTION = ENV === 'production';
+export const APP_DEV = ENV === 'development';
+export const APP_PROD = ENV === 'production';
 
 export const MODE = process.env.REACT_APP_MODE as Environment;
-export const LIVE = MODE === Environment.LIVE || MODE === Environment.PROD;
+export const PROD = MODE === Environment.PROD;
+export const LIVE = MODE === Environment.LIVE || PROD;
 
 export const BLOCKSTREAM_ASSET_ID = process.env.REACT_APP_BLOCKSTREAM_ASSET_ID as string;
 export const BLOCKSTREAM_API_ASSET_URL = process.env.REACT_APP_BLOCKSTREAM_API_ASSET_URL as string;
