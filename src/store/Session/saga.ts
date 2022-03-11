@@ -1,5 +1,6 @@
 import { call, delay, put, select, takeLatest } from 'redux-saga/effects';
 
+import { WS_MAIN_URL } from '../../constants';
 import { AuthEidStatus, AuthSocketEndpoint, SocketCloseStatus, SocketEndpoint } from '../../typedef';
 import { Authorize, CancelAuthEid, CreateSessionSuccess, Refresh, RefreshSuccess, SessionConstants, UpdateCreateAccountStatus, UpdateCreateSessionStatus } from './typedef';
 import { authSocketActions } from '../AuthSocket';
@@ -30,9 +31,7 @@ function *createSession() {
     method: AuthSocketEndpoint.LOG_IN,
     api: 'login',
     messageId: `${Date.now()}`,
-    // TODO: Uncomment the line below when BE is ready.
-    // args: { serviceUrl: WS_MAIN_URL }
-    args: { serviceUrl: 'https://liquidsepa.com' }
+    args: { serviceUrl: WS_MAIN_URL }
   }));
 }
 
@@ -41,9 +40,7 @@ function *createAccount() {
     method: AuthSocketEndpoint.REGISTER,
     api: 'signup',
     messageId: `${Date.now()}`,
-    // TODO: Uncomment the line below when BE is ready.
-    // args: { serviceUrl: WS_MAIN_URL }
-    args: { serviceUrl: 'https://liquidsepa.com' }
+    args: { serviceUrl: WS_MAIN_URL }
   }));
 }
 

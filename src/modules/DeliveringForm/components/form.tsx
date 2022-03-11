@@ -1,6 +1,7 @@
-import React, { FC, memo } from 'react';
+import React, { memo } from 'react';
 import { Button, Grid, Typography, CircularProgress } from '@material-ui/core';
 
+import { PROD } from '../../../constants';
 import { BankAccount, Address } from '../../../typedef';
 import { FormProps } from '../typedef';
 import { ConverterService } from '../../../services';
@@ -51,7 +52,7 @@ export const Form = memo<FormProps>(({
         handleAddClick={ handleAddPress }
         loginRequired
         notEditable
-        disabled
+        disabled={PROD}
         handleItemSelect={ handleAccountSelect }
         keyExtractor={ keyExtractor }
         renderItem={ renderDropDownItem }
@@ -69,7 +70,7 @@ export const Form = memo<FormProps>(({
         handleAddClick={ handleAddPress }
         loginRequired
         notEditable
-        disabled
+        disabled={PROD}
         handleItemSelect={ handleAddressSelect }
         keyExtractor={ keyExtractor }
         renderItem={ renderDropDownItem }
@@ -115,8 +116,7 @@ export const Form = memo<FormProps>(({
       </Grid>
       <Button
         className={ classes.button }
-        // disabled={ isLoggedIn && (disabled || loading) }
-        disabled
+        disabled={ PROD || (isLoggedIn && (disabled || loading)) }
         type="submit"
         variant="contained"
         color="primary"

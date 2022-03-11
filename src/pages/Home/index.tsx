@@ -2,12 +2,13 @@ import React, { FC } from 'react';
 import { Grid, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 
-import { useStyles } from './style';
+import { PROD } from '../../constants';
 import { DeliveringFormStatusProvider } from '../../contexts/DeliveringForm';
 import { DeliveringFormModule } from '../../modules/DeliveringForm';
 import { AssetsTableModule } from '../../modules/AssetsTable';
 import { Header } from '../../components/Header';
 import { Footer } from '../../components/Footer';
+import { useStyles } from './style';
 
 export const HomePage: FC = () => {
   const classes = useStyles();
@@ -24,8 +25,7 @@ export const HomePage: FC = () => {
                 Liquid Network assets
               </Typography>
               <Typography className={ classes.introSubHeadline } component="p">
-                {/*Instant SEPA bank settlement in 60 seconds or less*/}
-                Coming soon
+                {PROD ? 'Coming soon' : 'Instant SEPA bank settlement in 60 seconds or less' }
               </Typography>
             </Grid>
             <Grid className={ classes.introForm }>
