@@ -38,9 +38,11 @@ export enum SocketCloseStatus {
 export enum AuthSocketEndpoint {
   REGISTER = 'signup_init',
   REGISTER_STATUS = 'signup_status',
+  REGISTER_COMPLETE = 'signup_complete',
 
   LOG_IN = 'login_init',
   LOG_IN_STATUS = 'sign_status',
+  LOG_IN_COMPLETE = 'sign_complete',
 
   REFRESH_SESSION = 'renew',
 
