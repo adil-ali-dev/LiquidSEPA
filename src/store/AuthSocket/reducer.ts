@@ -14,7 +14,10 @@ export const authSocketReducer = (state = initialState, action: AuthSocketAction
       return { ...state, status: true };
 
     case AuthSocketConstants.DISPOSABLE_SEND:
-      return { ...state, callbackPayload: state.status ? null : action.payload }
+      return { ...state, callbackPayload: state.status ? null : action.payload };
+
+    case AuthSocketConstants.REMOVE_DISPOSABLE_PAYLOAD:
+      return { ...state, callbackPayload: null };
 
     case AuthSocketConstants.ERROR:
       return { ...state, error: action.error };
