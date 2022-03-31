@@ -25,6 +25,7 @@ function *connected() {
   if (!payload) return;
 
   yield put(authSocketActions.send(payload));
+  yield put(authSocketActions.removeDisposablePayload());
 
   if (payload.method === AuthSocketEndpoint.CANCEL_REQUEST) {
     yield put(authSocketActions.close({ code: SocketCloseStatus.WITHOUT_RECONNECT }));
