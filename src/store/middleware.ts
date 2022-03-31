@@ -11,6 +11,20 @@ import { AddressesConstants } from './Addresses';
 export const createAppMiddleware = () => {
   return (store: MiddlewareAPI<Dispatch, AppState>) => {
     return (next: (action: AnyAction) => void) => (action: AnyAction) => {
+      if (action.type === SessionConstants.CREATE_ACCOUNT_FAILURE) {
+        store.dispatch(alertActions.show({
+          type: StatusModalType.ERROR,
+          message: 'Account already registered'
+        }));
+      }
+
+      if (action.type === SessionConstants.CREATE_SESSION_FAILURE) {
+        store.dispatch(alertActions.show({
+          type: StatusModalType.ERROR,
+          message: 'Account not found, please register'
+        }));
+      }
+
       if (action.type === BankAccountsConstants.CREATE_BANK_ACCOUNT_FAILURE) {
         store.dispatch(alertActions.show({
           type: StatusModalType.ERROR,
@@ -20,6 +34,8 @@ export const createAppMiddleware = () => {
 
       if (
         action.type !== SessionConstants.REFRESH_SESSION_FAILURE
+        && action.type !== SessionConstants.CREATE_ACCOUNT_FAILURE
+        && action.type !== SessionConstants.CREATE_SESSION_FAILURE
         && action.type !== SessionConstants.AUTHORIZE_SESSION_FAILURE
         && action.type !== BankAccountsConstants.CREATE_BANK_ACCOUNT_FAILURE
         && action.type !== AddressesConstants.WHITELIST_ADDRESS_FAILURE

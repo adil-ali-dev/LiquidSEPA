@@ -13,6 +13,7 @@ export enum AuthSocketConstants {
   CLOSED = '@auth-socket/CLOSED',
   SEND = '@auth-socket/SEND',
   DISPOSABLE_SEND = '@auth-socket/DISPOSABLE_SEND',
+  REMOVE_DISPOSABLE_PAYLOAD = '@auth-socket/REMOVE_DISPOSABLE_PAYLOAD',
   ERROR = '@auth-socket/ERROR'
 }
 
@@ -60,6 +61,7 @@ export type Connect = EmptyAction<AuthSocketConstants.CONNECT>;
 export type Connected = EmptyAction<AuthSocketConstants.CONNECTED>;
 export type Send = Action<AuthSocketConstants.SEND, SendReq>;
 export type DisposableSend = Action<AuthSocketConstants.DISPOSABLE_SEND, SendReq>;
+export type RemoveDisposablePayload = EmptyAction<AuthSocketConstants.REMOVE_DISPOSABLE_PAYLOAD>;
 export type Error = FailureAction<AuthSocketConstants.ERROR>;
 export type Close = CloseAction<AuthSocketConstants.CLOSE>;
 export type Closed = ClosedAction<AuthSocketConstants.CLOSED>;
@@ -74,6 +76,7 @@ export type AuthSocketAction =
   | Connected
   | Send
   | DisposableSend
+  | RemoveDisposablePayload
   | Error
   | Close
   | Closed;
@@ -87,6 +90,7 @@ export type AuthSocketActions = {
   connect: () => Connect;
   send: (payload: SendReq) => Send;
   disposableSend: (payload: SendReq) => DisposableSend;
+  removeDisposablePayload: () => RemoveDisposablePayload;
   error: (error: string) => Error;
   close: (payload?: CloseReq) => Close;
 };
