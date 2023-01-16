@@ -12,10 +12,12 @@ import { authSocketOptions, AuthSocketConstants } from './AuthSocket';
 import { SessionState } from './Session';
 import { BankAccountsState } from './BankAccounts';
 import { mainSocketOptions, SocketConstants } from './Socket';
-import { rootReducer } from './reducer';
+import  rootReducer  from './reducer';
 import { rootSaga } from './saga';
 import { createAppMiddleware } from './middleware';
 
+import { createStateSyncMiddleware, initStateWithPrevTab } from 'redux-state-sync';
+import { PERSIST,PURGE } from 'redux-persist/es/constants';
 
 const blacklistedActions = new Set([SocketConstants.SEND, AuthSocketConstants.SEND]);
 
@@ -49,7 +51,7 @@ const initStore = () => {
   const mainSocketMiddleware = createSocketMiddleware(mainSocketOptions);
   const sagaMiddleware = createSagaMiddleware();
   const appMiddleware = createAppMiddleware();
-  const middleware: Middleware[] = [authSocketMiddleware, mainSocketMiddleware, appMiddleware, sagaMiddleware];
+  const middleware: Middleware[] = [createStateSyncMiddleware({blacklist: [PERSIST, PURGE],predicate: action => action.type !== '@status-modal/SHOW', }),authSocketMiddleware, mainSocketMiddleware, appMiddleware, sagaMiddleware];
 
   if (APP_DEV) {
     const loggerMiddleware = createLogger({
@@ -61,7 +63,12 @@ const initStore = () => {
   }
 
   const persistedReducer = persistReducer(persistConfig, rootReducer);
-  const store = createStore(persistedReducer, undefined, applyMiddleware(...middleware));
+  const store = createStore(
+    persistedReducer,
+    undefined,
+    applyMiddleware(...middleware)
+  );
+  initStateWithPrevTab(store)
   const persistor = persistStore(store);
 
   sagaMiddleware.run(rootSaga);

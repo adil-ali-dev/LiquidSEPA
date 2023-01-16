@@ -8,6 +8,7 @@ import { sessionReducer, initialState as sessionInitialState, SessionState, Sess
 import { addressesReducer } from './Addresses';
 import { bankAccountsReducer } from './BankAccounts';
 import { rfqReducer } from './Rfq';
+import { withReduxStateSync } from 'redux-state-sync';
 
 
 const appReducer = combineReducers<AppState | { session: SessionState }>({
@@ -24,7 +25,7 @@ const appReducer = combineReducers<AppState | { session: SessionState }>({
 });
 
 
-export const rootReducer: Reducer = (state: AppState, action: AnyAction) => {
+const rootReducer: Reducer = (state: AppState, action: AnyAction) => {
   // Reset all store data to initial if socket gets closed
   if (state) {
     const { session, bankAccounts, authSocket, rfq, addresses, socket } = state;
@@ -46,3 +47,4 @@ export const rootReducer: Reducer = (state: AppState, action: AnyAction) => {
 
   return appReducer(state, action);
 };
+export default withReduxStateSync(rootReducer)
